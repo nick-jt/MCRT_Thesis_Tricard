@@ -7,9 +7,11 @@ Over 80\% of energy produced on earth is produced through combustion. Adequate u
 The seminal equation for thermal radiation is the Radiative Transfer Equation (RTE), eq. \ref{eq:RTE}.
 
 \begin{equation}
-    \frac{dI}{ds} = \dot{s}{\div{I}}
+    \frac{dI}{ds} = \dot{s} \cdot \nabla{I}
+    \label{eq:RTE}
 \end{equation}
 
+This equation describes the change in intensity of a ray as it travels along a path length \cite{Modest2013RadiativeTransfer}.
 
 \section{Motivation}
 The immense computational expense required for integration of the multitude of coupled equations within a combustion simulation are infeasible even with modern computing resources. In particular, radiation becomes prohibitive due to its all-to-all nature. 
