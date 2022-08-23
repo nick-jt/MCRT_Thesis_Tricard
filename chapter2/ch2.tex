@@ -1,13 +1,36 @@
 \addchapheadtotoc
-\chapter{Models and Methods}\label{chapter:models_and_methods}
+\chapter{Modeling of radiation in combustion systems}\label{chapter:models_and_methods}
 
 
 
 % =============================================================== %
-\section{Soot physics}
+\section{Radiative Transfer Equation}
+The fundamental equation to describe radiation in an absorbing-emitting medium is the radiative transfer equation (RTE), eq. \ref{eq:RTE2}.
 
+\begin{equation}
+    \frac{dI_\eta{}}{d\textbf{s}} = \textbf{s} \cdot \nabla{I_\eta{}} = \kappa{}_\eta{}I_{b\eta{}}-\kappa{}_\eta{}I_\eta{}-\sigma{}_{s\eta{}}I_\eta{}+\frac{\sigma{}_s}{4\pi}\int_{4\pi{}}{I_\eta{}(\hat{s})\Phi_\eta{}(\hat{s}_i,\hat{s})}\,d\Omega{}_i
+    \label{eq:RTE2}
+\end{equation}
 
-\subsection{Soot formation}
+Where $I$ is ray intensity, $\textbf{s}$ is a path length (with both a direction and a location), $\kappa{}$ is the absorption coefficient, $I_b$ is the black-body intensity, $\sigma{}$ is the scattering coefficient, and $\Phi{}$ is the scattering phase-function (representing the probability a ray from direction $\hat{s}_i$ is scattered into direction $\hat{s}$). Subscript $\eta{}$ represents wavenumber (the inverse of wavelength) and $i$ marks an incident direction. This equation describes how the intensity of a pencil of rays changes along a path length $\hat{\textbf{s}}$. A ray intensity will decrease due to absorption ($\kappa{}_\eta{}I_\eta{}$) and out-scattering ($\sigma{}_{s\eta{}}I_\eta{}$). And the ray intensity will increase due to further emission along the path-length ($\kappa{}_\eta{}I_{b\eta{}}$) and scattering of rays from other directions into the path length of interest ($\frac{\sigma{}_s}{4\pi}\int_{4\pi{}}{I_\eta{}(\hat{s})\Phi_\eta{}(\hat{s}_i,\hat{s})}\,d\Omega{}_i$). 
+
+The existence of both an integral and a differential in \ref{eq:RTE2} poses a complexity problem as the equation being modeled is now an integro-differential equation. This requires both modeling of local phenomena and the influence of global phenomena on local conditions. This all-to-all nature is the reason for the immense computational difficulty of modeling the RTE. In addition, as is explained in section \ref{Ch:Nongray}, the highly irregular nature of the emission spectrum of gas imposes additional modeling difficulty.
+
+Equation \ref{eq:RTE2} can be solved for a given path length to give eq. \ref{eq:RTEsolved}.
+
+\begin{equation}
+    I_\eta{}(s) = I_\eta{}(0)e^{-\beta{}s}+\int^s_0{S_\eta{}(s',\hat{s})e^{-\beta{}_\eta(s-s')}\beta_\eta{}\,ds'}
+    \label{eq:RTEsolved}
+\end{equation}
+
+Where $S_\eta{}(s',\hat{s})$ is the ray-intensity source term eq. \ref{eq:RTE_S}.
+
+\begin{equation}
+
+    \label{eq:RTE_S}
+\end{equation}
+
+\subsection{Non-gray effects}\label{Ch:Nongray}
 
 
 \subsection{Soot growth and destruction}

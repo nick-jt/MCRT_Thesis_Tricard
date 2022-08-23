@@ -2,6 +2,8 @@
 
 \chapter{Introduction}
 % Brief synopsys
+Combustion has been an effective means of energy conversion for many years. Transportation systems, building heating and cooling, and power for electrical grids are just a few examples of it's many applications. 
+
 Over 80\% of energy produced on earth is produced through combustion. Adequate understanding of combustion requires modeling of thermal radiation in order to capture the high heat flux values transported through the domain.
 
 The seminal equation for thermal radiation is the Radiative Transfer Equation (RTE), eq. \ref{eq:RTE}.
@@ -20,9 +22,10 @@ In attempt to maximize accuracy at the limitations of present resources, a numbe
 Of those, many involve complex mathematical assumptions and simplifications which can be difficult to learn, account for, and may lead to inaccurate results for many circumstances. 
 
 
-Of those, the Monte-Carlo Ray Tracing (MCRT) method stands out as the most robust. 
+The Monte-Carlo Ray Tracing (MCRT) method stands out as the most robust. 
 MCRT is a direct physical interpretation of physical process by which the rays are transported through space.
-Within MCRT, random rays are initiated within the computational cells of the combustion simulation, and are tasked with traveling in a 
+Within MCRT, random rays are initiated within the computational cells of the combustion simulation, and are tasked with redistributing the energy originating from it's source cell throughout the medium. The resulting stochastic process closely resembles the redistirbution of thermal energy through 'photon packets' traveling through the domain.
+As a result of this direct approach, MCRT allows for 
 
 \section{Importance of soot and radiation in fire spread}
  
