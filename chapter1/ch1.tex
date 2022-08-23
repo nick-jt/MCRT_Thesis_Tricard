@@ -1,11 +1,26 @@
 \addchapheadtotoc
 
 \chapter{Introduction}
-Test.
+% Brief synopsys
+Over 80\% of energy produced on earth is produced through combustion. Adequate understanding of combustion requires modeling of thermal radiation in order to capture the high heat flux values transported through the domain.
+
+The seminal equation for thermal radiation is the Radiative Transfer Equation (RTE), eq. \ref{eq:RTE}.
+
+\begin{equation}
+    \frac{dI}{ds} = \dot{s}{\div{I}}
+\end{equation}
 
 
 \section{Motivation}
+The immense computational expense required for integration of the multitude of coupled equations within a combustion simulation are infeasible even with modern computing resources. In particular, radiation becomes prohibitive due to its all-to-all nature. 
 
+In attempt to maximize accuracy at the limitations of present resources, a number of models have been introduced to reduce the computational burden of radiation modeling. 
+Of those, many involve complex mathematical assumptions and simplifications which can be difficult to learn, account for, and may lead to inaccurate results for many circumstances. 
+
+
+Of those, the Monte-Carlo Ray Tracing (MCRT) method stands out as the most robust. 
+MCRT is a direct physical interpretation of physical process by which the rays are transported through space.
+Within MCRT, random rays are initiated within the computational cells of the combustion simulation, and are tasked with traveling in a 
 
 \section{Importance of soot and radiation in fire spread}
  

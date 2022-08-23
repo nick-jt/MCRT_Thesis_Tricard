@@ -471,11 +471,6 @@
     the University of Connecticut\\
     for the  degree of\\
     \MakeUppercase{\@degree} \\[\baselineskip]
-    \begin{figure}[ht!]
-    \begin{center}
-    \includegraphics[height=4cm]{Figures/UconnUniversityCrest.png}
-    \end{center}
-    \end{figure}
     \@Researchgroup\\
     \@Department\\
     \@College\\
