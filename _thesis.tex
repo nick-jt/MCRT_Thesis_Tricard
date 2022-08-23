@@ -1,0 +1,103 @@
+
+\documentclass[oneside,masters,etd]{UoBclass}
+
+\usepackage{import}
+\usepackage[section]{placeins}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+% preamble contains title page, signature page, acknowledgement and abstract texts
+\usepackage{_preamble}
+
+% Packages used
+\usepackage[utf8]{inputenc} % Remove warning on ascii conversion
+\usepackage[T1]{fontenc} % Remove warning on ascii conversion
+\usepackage{natbib}
+%\usepackage[refsection=part,citestyle=apa,style=authoryear,natbib=true,backend=biber]{biblatex}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+
+% My added packages [JNS]
+\usepackage{longtable}
+\usepackage{lipsum}
+\usepackage{setspace} 
+\usepackage{floatrow}
+\usepackage{caption}
+\usepackage{subcaption}
+
+
+% Make chapter numbers into string words 1 -> ONE
+\usepackage{fmtcount}
+\makeatletter
+\renewcommand{\@makechapterhead}[1]{\vspace *{40\p@ }{\parindent \z@ 
+\raggedright \normalfont \ifnum \c@secnumdepth >\m@ne \Huge \bfseries 
+\@chapapp \space \Numberstring{chapter} \vskip 10\p@ \fi #1\par \nobreak \vskip 30\p@ }}
+\makeatother
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[R]{\leftmark}
+\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
+\cfoot{\thepage}
+
+
+\begin{document}
+% \floatsetup[table]{capposition=top}
+\doublespacing
+\hypersetup{breaklinks=true}
+
+ % Start page counting in roman numerals
+ \frontmatter
+
+ % This command makes the formal preliminary pages.
+ % You can comment it out during the drafting process if you want to save paper.
+ \makepreliminarypages
+ 
+ \doublespace
+ % Make the table of contents.
+ \tableofcontents
+ \thispagestyle{plain}
+ 
+  % Make the list of figures
+ \mylistoffigures
+ \thispagestyle{plain}
+
+ % Make the list of tables
+ \mylistoftables
+ \thispagestyle{plain}
+ \vfill
+ \newpage
+ 
+ \abstractpage
+ \thispagestyle{plain}
+  
+  % This page is OPTIONAL. To remove, comment out and \dedicationpage in _thesis.tex
+ %\dedicationpage
+ \clearemptydoublepage
+
+ % Start regular page counting at page 1
+ \mainmatter
+
+% OK. Everything is set up. Type your thesis here.
+\include{chapter1/ch1}
+\include{chapter2/ch2}
+\include{chapter3/ch3}
+\include{chapter4/ch4}
+\include{chapter5/ch5}
+%\include{chapter6/ch6}
+\include{Conclusions/conclusions}
+%\include{_maintext}
+
+% Appendices
+\include{_appendix}
+
+% Bibliography
+\begingroup
+%    \setlength\bibitemsep{10pt}
+    \linespread{1}\selectfont
+    \bibliographystyle{unsrt} %unsrt
+\bibliography{}  %\bibliography{_bib}
+%    \printbibliography[title=References]
+\endgroup
+%\addcontentsline{toc}{part}{References}
+
+\end{document}
