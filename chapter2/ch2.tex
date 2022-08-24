@@ -5,7 +5,7 @@
 Beer's law, Kirchoff's law, black body radiation, gray vs non-gray.
 
 % =============================================================== %
-\section{Radiative Transfer Equation}
+\subsection{Radiative Transfer Equation}
 The fundamental equation to describe radiation in an absorbing-emitting medium is the radiative transfer equation (RTE), eq. \ref{eq:RTE2}.
 
 \begin{equation}
@@ -32,13 +32,13 @@ Absorption coefficient, $\kappa_{\eta{}}$ and scattering coefficient $\sigma{}_\
     \label{eq:RTE_S}
 \end{equation}
 
-Where $S_\eta{}(s',\hat{s})$ is the ray-intensity source term eq. \ref{eq:RTE_S}, and $\omega{}_\eta{}=\sigma{}_{s\eta{}}/\beta_{\eta{}}$ is the single-scattering albedo. Eq. \ref{eq:RTErewritten} shows that the ray intensity increases due to some source term, and decreases proportial to it's current intensity.
+Where $S_\eta{}(s',\hat{s})$ is the ray-intensity source term eq. \ref{eq:RTE_S}, and $\omega{}_\eta{}=\sigma{}_{s\eta{}}/\beta_{\eta{}}$ is the single-scattering albedo. Eq. \ref{eq:RTErewritten} shows that the ray intensity increases due to a source term, and decreases proportional to it's current intensity.
 
 \subsection{Non-gray effects}\label{Sec:Nongray}
 Like all substances, gases emit radiation along the electromagnetic spectrum. Under most conditions for combustion phenomena, radiative emission is isolated to the infrared part of the spectrum, between wavelengths of 0.7 to 14 $\mu{}$m.
 
 The black body spectrum in section \ref{Sec:FundOfRad} can approximate the emission spectrum of many solid materials, but is inadvisable to be used for gas emission. 
-Most solid structures have a multitude of modes of oscillations, from the crystal-lattice structure down to the molecular energy states. As a result, the emission spectrum is continuous and can be approximated as a constant fraction of the black body emission spectrum (gray) \cite{Howell2010ThermalTransfer}. 
+Most solid structures have a multitude of modes of oscillations, from the crystal-lattice structure down to the molecular energy states. As a result, the emission spectrum of solids is often continuous and can be approximated as a constant fraction of the black body emission spectrum (gray) \cite{Howell2010ThermalTransfer}. 
 Gases, however, are restricted to the oscillation modes from the natural energy states of the molecules in the mixture. Quantum mechanics postulates that these energy states are discrete, and therefore the change in energy states and resulting emission frequencies must also be discrete.
 
 
@@ -47,9 +47,22 @@ Gases, however, are restricted to the oscillation modes from the natural energy 
 Figure above shows the emission spectrum from a flame. The largest contributors to emission in most hydrocarbon flames are included: $CO_2$, $CO$, $H_2O$, and soot.
 \textit{Ab initio} modeling and empirical evidence can be used to obtain approximations for the emission spectra of a molecule at a specified pressure and temperature. This information can be tabulated to provide a radiation solver the ability to determine the absorption coefficient at a location in the combustion mixture, for a given intersecting ray wavelength. Various methods to model non-gray effects are introduced in Ch. \ref{chapter:Modeling}.
 
+\section{Effect of radiation in combustion systems}
+Thermal radiation has a known influence on the fluid dynamics and chemistry of combustion systems \cite{Modest2013RadiativeTransfer}.
+
+
 \subsection{Effect of radiation on fluid flow}
-Combustion sees a redistribution of thermal energy as a result of thermal radiation. 
-Neglecting thermal radiation may lead to large over-predictions of flow temperature by upwards of 200K \cite{Tur}
+Combustion sees a redistribution of thermal energy as a result of radiation. 
+Neglecting thermal radiation may lead to large over-predictions of flow temperature by upwards of 200K in some cases \cite{Modest2016RadiativeSystems,Wu2021LimitationsFires}, as well as underpredictions of flame temperature in others \cite{.
+
+\textbf{Finish reading Modest, Haworth}
+
+\subsection{Effect on walls}
+Increasingly stringent efficiency requirements for the reduction in green-house gas emissions have resulted in an increase in combustion temperatures. 
+The concomitant higher heat fluxes pose a significant problem for the materials enclosing these combustion systems, many of which are already existing in a state close to melting point. 
+As a result, an understanding of the influence of all modes of heat transfer along the boundaries have seen increasing importance in order to manage thermal loads through the various heat-transfer management techniques.
+
+Wall heat flux from thermal radiation is of the same order of magnitude as that of convection \cite{}
 
 % =============================================================== %
 \section{Soot models}
