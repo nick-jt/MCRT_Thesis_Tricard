@@ -21,11 +21,11 @@ graph TD
 ## Single-pass (backwards MC):
 ```mermaid
 graph TD
-    A[Absorbing node/tracing origin] -->|Ray information| B[Node 1]
+    A[Absorbing node] -->|Ray information| B[Node 1]
     A -->|Ray information| C[Node 2]
     A -->|Ray information| D[Node 3]
     A -->|Ray information| E[Node 4]
-    B -->|Added ray intensity| F[Absorbing node/tracing origin]
+    B -->|Added ray intensity| F[Absorbing node]
     C -->|Added ray intensity| F
     D -->|Added ray intensity| F
     E -->|Added ray intensity| F
