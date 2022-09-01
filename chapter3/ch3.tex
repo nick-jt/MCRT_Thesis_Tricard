@@ -1,7 +1,39 @@
 \addchapheadtotoc
 \chapter{Radiation Modeling}\label{chapter:Modeling}
+While radiation is essential to model, doing so comes at a large computational expense. 
+The RTE equation (eq. \ref{eq:RTE2}) is an integro-differential equation. This is representative of the \textit{all-to-all} nature of the process. In combustion CFD, there exist a large number of physical processes occuring simultaneously, from chemistry to compressible fluid dynamics. 
+These require extensive computational resources as it is. Imposing the additional requirement of modeling radiation, which can be up to 50\% of the overall CPU time, is often-times infeasible.
 
+Several radiation exist which promise to mitigate this problem. This chapter will first review the most common models and their assumptions, advantages, and drawbacks. 
+This includes a thorough explanation as to why the Monte-Carlo Ray Tracing (MCRT) method was the method of choice in this paper.
+Next, a description of a traditional implementation of MCRT will be presented, including a brief overview of the various non-gray models.
+Then, some methods of accelerating MCRT will be shown.
+Finally, a detailed account of the various improvements introduced in this study will be discussed.
 
-\section{Accelerated methods of MCRT}
+Gamil review of radiation models: \cite{Gamil2020AssessmentChamber}
 
-view Brent webb's review paper on binary-tree methods.
+\section{Models of the RTE}
+Three of the most common methods of modeling radiation are the method of spherical harmonics, the discrete ordinates method (FVM), and the MCRT. Alternative methods, such as the zonal method, assumptive methods (Milne-Eddington approximation, Schuster-Schwarzchild approximation, etc), and exact solutions to the RTE will not be discussed here.
+More information for those can be found in texts such as that of Modest \cite{Modest2013RadiativeTransfer} and Howell et. al. \cite{Howell2010ThermalTransfer}.
+
+\subsection{Method of spherical harmonics}
+\subsection{Method of discrete ordinates}
+\subsection{Monte-Carlo Ray Tracing}
+The Monte-Carlo method has long been fast and accurate method to numerically integrate many equations \cite{Howell2021TheTransfer}.
+
+\section{Acceleration methods for MCRT}
+Many improvements to the MCRT procedure have been introduced
+
+\textbf{GPUs and mesh coarsening:}
+Silvestri: \cite{Silvestri2019ASimulation}
+Uintah radiation code: \cite{Humphrey2012RadiationSystem,Humphrey2015ATracingb,Humphrey2016RadiativeRefinement,Holmen2017ImprovingTasks,Peterson2018DemonstratingComputations}
+Heymann: \cite{Heymann2012GPU-basedAGN}
+
+\textbf{Backwards/reciprocal:}
+Backwards MC: \cite{Modest2003BackwardTransfer,Walters1992RigorousMedia}
+Reciprocity methods (direct exchange): \cite{Tesse2002RadiativeApproach}
+
+\textbf{Bounding Volume hierarchy: }
+Nery BVH implementations: \cite{Nery2011MassivelyTracing,Nery2013ParallelGPGPUs}
+Zeeb: \cite{Zeeb2001AnGeometries}
+Mazumder: \cite{Mazumder2006MethodsTransport}
