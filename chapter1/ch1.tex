@@ -1,38 +1,72 @@
 \addchapheadtotoc
 
-\chapter{Introduction}
+\chapter{Introduction} \label{chapter:Introduction}
 % Brief synopsys
-Combustion has been an effective means of energy conversion for many years. Transportation systems, building heating and cooling, and power for electrical grids are just a few examples of it's many applications. 
+Combustion has long been an effective means of energy conversion. Transportation systems, building heating and cooling, and power for electrical grids are just a few examples of it's many applications. Over 80\% of energy produced on earth is produced through combustion. 
+At the same time, the explosive nature of the process may also result in its unwanted presence (e.g. rocket explosions, forest fires, house-fires, detonative combustion).
+Combustion is therefore a process which both can be used and must be managed. 
+Meanwhile the ongoing focus to reduce global emissions also imposes restraints on combustion researchers and scientists. Pollutants such as CO${}_2$, nitrous oxides, and soot have been shown to have a negative influence on our environment.
+So while the energy storage and release mechanisms that accompany combustion prove convenient for a lot of systems, they simultaneously presents a challenge for engineers and researchers.
+The need for improvement management of thermal loads, greater interconnected transport systems, development of heat-resistant materials, and an ongoing push to reduce global emissions must be met with an enhanced understanding of these physical systems.
+This enhanced understanding requires thorough understanding of the complex fluid dynamics, heat transfer, and chemistry that accompany combustion.
 
-Over 80\% of energy produced on earth is produced through combustion. Adequate understanding of combustion requires modeling of thermal radiation in order to capture the high heat flux values transported through the domain.
+Thermal radiation is the most dominant form of heat transfer that accompanies most combustion systems \cite{Coelho2018RadiativeSystems}. 
 
-Despite radiation often being the most dominant form of heat transfer in many combustion systems, it is continued to be modeled using simplified methods ref brent webb...
-
-The seminal equation for thermal radiation is the Radiative Transfer Equation (RTE), eq. \ref{eq:RTE}.
-
-\begin{equation}
-    \frac{dI}{ds} = \dot{s} \cdot \nabla{I}
-    \label{eq:RTE}
-\end{equation}
-
-This equation describes the change in intensity of a ray as it travels along a path length \cite{Modest2013RadiativeTransfer}.
 
 \section{Motivation}
-The immense computational expense required for integration of the multitude of coupled equations within a combustion simulation are infeasible even with modern computing resources. In particular, radiation becomes prohibitive due to its all-to-all nature. 
+The immense computational expense required for integration of the multitude of coupled equations within a combustion simulation are infeasible even with modern computing resources. Oftentimes, thermal radiation is ignored because it adds significantly to this expense.
 
-In attempt to maximize accuracy at the limitations of present resources, a number of models have been introduced to reduce the computational burden of radiation modeling. 
-Of those, many involve complex mathematical assumptions and simplifications which can be difficult to learn, account for, and may lead to inaccurate results for many circumstances. 
+In attempt to maximize accuracy at the limitations of present resources, a number of models have been introduced to model thermal radiation while minimizing computational burden.
+Of those, many rely on complex mathematical assumptions and simplifications which can be difficult to learn, implement, and may lead to inaccurate results for many circumstances. 
 
+The Monte-Carlo Ray Tracing (MCRT) method stands out as the most accurate \cite{Tesse2002RadiativeApproach,Modest2013RadiativeTransfer,Coelho2018RadiativeSystems}. 
+MCRT can be thought of as a direct physical interpretation of physical process by which the rays are transported through space.
+Within MCRT, random rays are initiated within the computational cells of the combustion simulation, and are tasked with redistributing the energy originating from it's source cell throughout the medium. The resulting stochastic process intuitively resembles the redistribution of thermal energy through 'photon packets' traveling through the domain.
+As a result of this approach, MCRT can account for many of the same effects that electromagnetic rays undergo during their travel.
 
-The Monte-Carlo Ray Tracing (MCRT) method stands out as the most robust. 
-MCRT is a direct physical interpretation of physical process by which the rays are transported through space.
-Within MCRT, random rays are initiated within the computational cells of the combustion simulation, and are tasked with redistributing the energy originating from it's source cell throughout the medium. The resulting stochastic process closely resembles the redistirbution of thermal energy through 'photon packets' traveling through the domain.
-As a result of this direct approach, MCRT allows for 
+Although MCRT is the most accurate, it has also been viewed traditionally as the most computationally expensive.
+This additional cost results from the stochastic nature of MCRT. A large sample size of rays must be emitted and traced to obtain a statistically meaningful solution. 
+Too few rays may result in a noisy solution, while too many will require a longer runtime.
+Much effort has been put into making the computation more manageable while maintaining the benefits MCRT has to offer over other methods \cite{Liu2020TheFlames,Tesse2002RadiativeApproach,Zeeb2001AnGeometries,Modest2003BackwardTransfer,Howell2010ThermalTransfer}.
 
-\section{Importance of soot and radiation in fire spread}
- 
+In this paper, we implement an accelerated implementation of MCRT that is coupled with the OpenFOAM open-sourced CFD platform \cite{Weller1998ATechniques}. 
+This implementation relies on Kokkos programming model for performance-portable parallel computing with interchangeable parallel computing back-ends \cite{Trott2021KokkosEra}. This enables the use of Graphics Processing Units (GPUs) to dramatically accelerate the ray-tracing procedure. Integrating MCRT with GPUs has been done very few times, but has shown significant speedups \cite{Silvestri2019ASimulation,Humphrey2016RadiativeRefinement,Heymann2012GPU-basedAGN}. 
+Additionally, the ArborX geometric search library is introduced to implement a bounding-volume hierarchy based structure for more efficiency parallel communications within the Message Passing Interface (MPI) for distributed memory computing \cite{Lebrun-Grandie2019ArborX:Library}. 
+The  reduces the need for $O(N)$ sequences of MPI communications down to a constant 1 or 2 pass approach. This dramatically improves the scalability for MCRT modeling on larger scale simulations. 
 
-\section{Buoyancy-driven diffusion flames}
-\section{Data-based approach}
+\section{Importance of radiation}
+In its most ideal form, radiative emission energy takes the form of eq. \ref{eq:RadEnergy}.
+\begin{equation}
+    E_{rad}=\epsilon{}\sigma{}T^4
+    \label{eq:RadEnergy}
+\end{equation}
+Where $E_{rad}$ is the radiative emissive power in $W/m^3$, $\epsilon{}$ is the dimensionless emissivity (or emittance), and $T$ is the temperature in Kelvin. 
+The fourth power relationship of emissive power with temperature represents why radiation is often more prominent in high temperature systems. With combustion temperatures upwards of 2000K, radiative heat loads throughout the system and boundaries becomes significant \cite{Modest2016RadiativeSystems}.
+
+Within combustion in particular, radiation becomes important for pollutant formation, flame speeds, and threshold phenomena (near-limits) \cite{Modest2016RadiativeSystems,Coelho2018RadiativeSystems,Liu2020TheFlames}. Including radiation can have an effect on the fluid dynamics, turbulence, boundaries, and mixture properties of a combustion simulation.
+
+Many turbulent flows are modeled using Reynolds-Averaged Navier-Stokes (RANS) and Large Eddy Simulations (LES), both of which rely on the averaging of the governing equations of combustion. This results in the need for models describing the unresolved fluctuations of radiative properties. The influence of unresolved scales on radiation is known as turbulence-radiation interaction (TRI). Emission-TRI and absorption-TRI are two radiative phenomena which can complicate radiation modeling, and have been extensively studied.
+
+Regarding modeling radiation in reacting flows, several trends may be universally declared, as discussed in reviews from Modest and Haworth \cite{Modest2016RadiativeSystems}, Coehlo \cite{Coelho2018RadiativeSystems}, and Liu et. al. \cite{Liu2020TheFlames}.
+
+\begin{enumerate}
+    \item Neglecting radiative emission results in temperature overprediction \cite{Gamil2020AssessmentChamber}
+    \item Neglecting radiative absorption (optically thin assumption) results in temperature underestimation
+    \item Radiation contributes thermal energy at the same order of magnitude as convection in many combustion systems \cite{Gamil2020AssessmentChamber,Johnson2021AnalysisMethod}
+    \item Radiation has importance in pollutant formations (NO${}_x$, soot, CO) \cite{Ihme2008ModelingFormulation,Habibi2007TurbulenceFlames}
+    \item TRI increases radiative emission and reduces temperatures
+    \item Soot dominates the emission and absorption spectrum
+    \item Nongray modeling increases radiation re-absorption \cite{Wu2021LimitationsFires}
+    \item The type of radiation model yields less importance than accurate non-gray modeling
+\end{enumerate}
+
+Evidently, radiation plays an important role in many reacting flow configurations including gas-turbine engines, open-flames, and rocket engines.
+As a result, neglecting radiation is a common source of error for combustion scientists and engineers. 
+This provides a rationalization for the effort to produce faster and more accurate radiation models.
+
 
 \section{Organization}
+This thesis will first present background on the importance on radiation and its importance in combustion in ch. \ref{chapter:Importance}. 
+Following the description of the reasons, various methods of modeling radiation will be presented in ch. \ref{chapter:Modeling}. Included in this chapter will be the description of a novel Monte-Carlo approach that can provide massive speedup on high performance computers (HPCs) using multiple layers of computing parallelism including Message Passing Interface (MPI) and Graphics Processing Units (GPUs).
+Chapter \ref{chapter:Example} will provide an example case applying the novel technique to a relevant combustion system. Thorough analysis of radiation importance, the effect of various models, and computational speedup will be presented in this chapter.
+Finally, conclusions and future work will be discussed in ch. \ref{chapter:conclusion}.
