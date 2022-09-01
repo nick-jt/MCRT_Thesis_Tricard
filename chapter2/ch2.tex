@@ -1,12 +1,38 @@
 \addchapheadtotoc
-\chapter{Modeling of radiation in combustion systems}\label{chapter:models_and_methods}
+\chapter{Radiation and it's importance in combustion}\label{chapter:Importance}
 
 \section{Fundamentals of radiation} \label{Sec:FundOfRad}
 Beer's law, Kirchoff's law, black body radiation, gray vs non-gray.
 
-% =============================================================== %
-\subsection{Radiative Transfer Equation}
-The fundamental equation to describe radiation in an absorbing-emitting medium is the radiative transfer equation (RTE), eq. \ref{eq:RTE2}.
+
+A brief synopsis of thermal radiation will first be described. Readers should review cited texts for more detailed descriptions \cite{Howell2010ThermalTransfer,Modest2013RadiativeTransfer}.
+
+\subsection{Basic laws of radiation}
+Thermal radiation is the transfer of thermal energy through electromagnetic waves. Common examples of radiative emitters include the sun and a campfire. Electromagnetic rays vary in wavelength from picometers ($10^{-12}$ m) for gamma rays to megameters ($10^6$ m) for ultra-low frequency radio waves. For combustion systems, where temperatures typically fall between 2000 and 2500K, relevant wavelengths generally fall between 1 and 15 $\mu{}$m ($10^{-6}$ m), in the infrared and visible light parts of the spectrum \cite{Liu2020TheFlames}.
+
+Thermal radiation is known to have an \textit{all-to-all} nature. Radiation emitted at one point has the ability to reach another point very far away. 
+This is in contrast to conductive and convective modes of heat transfer where thermal energy is transferred through direct contact and fluid motion (local phenomena). 
+It is for this reason that radiation plays a very important role in massive-scale studies such as in the vacuum of space.
+
+Assuming matter can only exist at discrete energy states, Max Planck derived blackbody emissive power spectrum (Planck's law), shown in eq. \ref{eq:PlancksLaw}.
+\begin{equation}
+    E_{bv}(T,\nu{}) = \frac{2\pi{}h\nu{}^3n^2}{c_0^2\left[e^\frac{h\nu{}}{kT}-1\right]}
+    \label{eq:PlancksLaw}
+\end{equation}
+
+Where $h$ is Planck's constant, $\nu{}$ is the wave frequency, $n$ is the refractive index of the medium, $c_0$ is the speed of light in a vacuum, $k$ is the Boltzmann constant, and $T$ is temperature. This equation can be integrated across the electromagnetic spectrum to produce an approximation for the net emissive power from a black body, as shown in eq. \ref{eq:PlancksLawIntegrated}.
+\begin{equation}
+    E_b(T) = n^2\sigma{}T^4
+    \label{eq:PlancksLawIntegrated}
+\end{equation}
+
+A body which absorbs perfectly cannot be seen and must therefore be black. Therefore, the term \textit{black body} refers to the an ideal absorber. 
+In a system of non-black bodies combined with a black body, the black body will absorb all incident radiation. If the black body re-emittings anything less than the ideal maximum, there will be a driven temperature difference in the system, which violates the second law of thermodynamics. 
+Therefore, according to \textit{Kirchoff's law}, this surface must also be an ideal emitter.
+The ideal nature of black bodies provides a useful basis for radiation calculations, and therefore appears often in radiation-relevant literature.
+
+\subsection{Thermal radiation in participating media}
+For combustion systems, thermal radiation interacts with the media as well as the walls. The fundamental equation to describe radiation in an absorbing-emitting medium is the radiative transfer equation (RTE), eq. \ref{eq:RTE2}.
 
 \begin{equation}
     \frac{dI_\eta{}}{d\textbf{s}} = \textbf{s} \cdot \nabla{I_\eta{}} = \kappa{}_\eta{}I_{b\eta{}}-\kappa{}_\eta{}I_\eta{}-\sigma{}_{s\eta{}}I_\eta{}+\frac{\sigma{}_{s\eta{}}}{4\pi}\int_{4\pi{}}{I_\eta{}(\hat{s})\Phi_\eta{}(\hat{s}_i,\hat{s})}\,d\Omega{}_i
@@ -18,15 +44,13 @@ Where $I$ is ray intensity, $\textbf{s}$ is a path length (with both a direction
 The existence of both an integral and a differential in \ref{eq:RTE2} poses a complexity problem as the equation being modeled is now an integro-differential equation. 
 This requires both modeling of local phenomena and the influence of global phenomena on local conditions. 
 This all-to-all nature is the reason for the immense computational difficulty of modeling the RTE. 
-In addition, as is explained in section \ref{Sec:Nongray}, the highly intermittent nature of the emission spectrum of gas imposes additional modeling difficulty.
+In addition, as is explained in section \ref{Sec:Nongray}, the highly intermittent nature of the emission spectrum of gas imposes an additional modeling difficulty.
 
 Absorption coefficient, $\kappa_{\eta{}}$ and scattering coefficient $\sigma{}_\eta{}$ are often combined into the extinction coefficient $\beta{}_\eta{}$. Equation \ref{eq:RTE2} can be rewritten for greater conceptual understanding to \ref{eq:RTErewritten}.
-
 \begin{equation}
     \frac{dI_\eta{}}{ds} = \beta{}_\eta{}[S(s',\hat{s})-I_\eta{}]
     \label{eq:RTErewritten}
 \end{equation}
-
 \begin{equation}
     S(s',\hat{s}) = (1-\omega{}_\eta{})I_{b\eta{}}-\frac{\omega{}_\eta{}}{4\pi}\int_{4\pi{}}{I_\eta{}(\hat{s})\Phi_\eta{}(\hat{s}_i,\hat{s})}\,d\Omega{}_i
     \label{eq:RTE_S}
@@ -35,34 +59,34 @@ Absorption coefficient, $\kappa_{\eta{}}$ and scattering coefficient $\sigma{}_\
 Where $S_\eta{}(s',\hat{s})$ is the ray-intensity source term eq. \ref{eq:RTE_S}, and $\omega{}_\eta{}=\sigma{}_{s\eta{}}/\beta_{\eta{}}$ is the single-scattering albedo. Eq. \ref{eq:RTErewritten} shows that the ray intensity increases due to a source term, and decreases proportional to it's current intensity.
 
 \subsection{Non-gray effects}\label{Sec:Nongray}
-Like all substances, gases emit radiation along the electromagnetic spectrum. Under most conditions for combustion phenomena, radiative emission is isolated to the infrared part of the spectrum, between wavelengths of 0.7 to 14 $\mu{}$m.
+Like all substances, gases emit radiation along the electromagnetic spectrum. Under most conditions for combustion phenomena, radiative emission is isolated to the infrared part of the spectrum, between wavelengths of 1 to 15 $\mu{}$m \cite{Liu2020TheFlames}.
 
 The black body spectrum in section \ref{Sec:FundOfRad} can approximate the emission spectrum of many solid materials, but is inadvisable to be used for gas emission. 
-Most solid structures have a multitude of modes of oscillations, from the crystal-lattice structure down to the molecular energy states. As a result, the emission spectrum of solids is often continuous and can be approximated as a constant fraction of the black body emission spectrum (gray) \cite{Howell2010ThermalTransfer}. 
-Gases, however, are restricted to the oscillation modes from the natural energy states of the molecules in the mixture. Quantum mechanics postulates that these energy states are discrete, and therefore the change in energy states and resulting emission frequencies must also be discrete.
+Most solid structures have a multitude of modes of oscillations, from the crystal-lattice structure down to the molecular energy states \cite{Viskanta1975HeatSolids}. As a result, the emission spectrum of solids is often continuous and can be approximated as a constant fraction of the black body emission spectrum (gray) \cite{Howell2010ThermalTransfer}. 
+Gases, however, are restricted to the oscillation modes from the natural energy states of the molecules in the mixture. Quantum mechanics postulates that these energy states are discrete, and therefore the change in energy states and resulting emission frequencies must also be discrete \cite{Hanson2016SpectroscopyGases}.
 
 
 \textbf{INSERT EMISSION SPECTRUM HERE}
 
 Figure above shows the emission spectrum from a flame. The largest contributors to emission in most hydrocarbon flames are included: $CO_2$, $CO$, $H_2O$, and soot.
-\textit{Ab initio} modeling and empirical evidence can be used to obtain approximations for the emission spectra of a molecule at a specified pressure and temperature. This information can be tabulated to provide a radiation solver the ability to determine the absorption coefficient at a location in the combustion mixture, for a given intersecting ray wavelength. Various methods to model non-gray effects are introduced in Ch. \ref{chapter:Modeling}.
+\textit{Ab initio} modeling and empirical evidence can be used to obtain approximations for the emission spectra of a molecule at a specified pressure and temperature. This information has been collected into a series of available online databases \cite{Rothman2010HITEMPDatabase}. Those databases can then be used to provide a radiation solver absorption coefficients at a location in the combustion mixture, for a given intersecting ray wavelength. Various methods to model non-gray effects are introduced in Ch. \ref{chapter:Modeling}.
 
 \section{Effect of radiation in combustion systems}
-Thermal radiation has a known influence on the fluid dynamics and chemistry of combustion systems \cite{Modest2013RadiativeTransfer}.
-
+Thermal radiation contributes significantly to the general fluid dynamics, turbulence, boundaries and chemistry in combustion.
 
 \subsection{Effect of radiation on fluid flow}
 Combustion sees a redistribution of thermal energy as a result of radiation. 
-Neglecting thermal radiation may lead to large over-predictions of flow temperature by upwards of 200K in some cases \cite{Modest2016RadiativeSystems,Wu2021LimitationsFires}, as well as underpredictions of flame temperature in others \cite{.
+Neglecting thermal radiation may lead to large over-predictions of flow temperature by upwards of 200K in some cases \cite{Modest2016RadiativeSystems,Wu2021LimitationsFires,Coelho2018RadiativeSystems}, as well as under-predictions of flame temperature in others.
 
-\textbf{Finish reading Modest, Haworth}
+\subsection{Effect of radiation on turbulence}
+Turbulence-radiation interactions (TRI) poses a significant modeling problem for computational scientists. 
 
 \subsection{Effect on walls}
 Increasingly stringent efficiency requirements for the reduction in green-house gas emissions have resulted in an increase in combustion temperatures. 
 The concomitant higher heat fluxes pose a significant problem for the materials enclosing these combustion systems, many of which are already existing in a state close to melting point. 
 As a result, an understanding of the influence of all modes of heat transfer along the boundaries have seen increasing importance in order to manage thermal loads through the various heat-transfer management techniques.
 
-Wall heat flux from thermal radiation is of the same order of magnitude as that of convection \cite{}
+\subsubsection{Thermal Barrier Coating}
 
 % =============================================================== %
 \section{Soot models}
