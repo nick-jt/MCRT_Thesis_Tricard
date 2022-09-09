@@ -7,6 +7,8 @@
 \usepackage[noend]{algpseudocode}
 % preamble contains title page, signature page, acknowledgement and abstract texts
 \usepackage{_preamble}
+\usepackage[english]{babel} % Add this and the line below to get best citation style
+\usepackage[square,numbers]{natbib} % also add bibliographystyle line below
 
 % Packages used
 \usepackage[utf8]{inputenc} % Remove warning on ascii conversion
@@ -94,7 +96,9 @@
 \begingroup
 %    \setlength\bibitemsep{10pt}
     \linespread{1}\selectfont
-    \bibliographystyle{unsrt} %unsrt
+
+    \bibliographystyle{abbrvnat}
+    
 \bibliography{references}
     \printbibliography
 \endgroup

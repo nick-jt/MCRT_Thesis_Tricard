@@ -22,18 +22,56 @@ More information for those can be found in texts such as that of Modest \cite{Mo
 The Monte-Carlo method has long been fast and accurate method to numerically integrate many equations \cite{Howell2021TheTransfer}.
 
 \section{Acceleration methods for MCRT}
-Many improvements to the MCRT procedure have been introduced
 
-\textbf{GPUs and mesh coarsening:}
-Silvestri: \cite{Silvestri2019ASimulation}
-Uintah radiation code: \cite{Humphrey2012RadiationSystem,Humphrey2015ATracingb,Humphrey2016RadiativeRefinement,Holmen2017ImprovingTasks,Peterson2018DemonstratingComputations}
-Heymann: \cite{Heymann2012GPU-basedAGN}
+
+
+
+
+
+
+
+\subsection{Inspirations from the field of Computer Graphics}
+Many improvements to ray tracing have been introduced in recent years capitalizating on advancements in computational hardware and algorithms.
+These improvements have largely been focused in the field of computer graphics, owing in large part to the dramatic increase in the need for fast and detailed visualization software \cite{Gupta2020CUDAComputing}. 
+The vast knowledge obtained through extensive work to accelerate ray-tracing in computer graphics would be of significant value to many heat transfer researchers, but has historically been ignored \cite{Howell2021TheTransfer}. In particular, the increased involvement of the Graphics Processing Unit (GPU) has resulted in dramatic boosts in computational efficiency. Additionally, the bounding volume hierarchy (BVH) provides a optimal data structure to accelerate the geometric search procedure of the ray-tracing process.
+
+\subsubsection{Graphics Processing Units (GPUs)}
+GPUs offer high throughput for highly parallelizable, compute-bound problems.
+GPUs differ from Central Processing Units (CPUs) because of the increased attention to hiding latency through raw data parallelism as opposed to minimizing cache access time. 
+This Single Instruction Multiple Data (SIMD) approach is optimized because the GPU structure has more area dedicated to the data processing as opposed to the cache and control unit on the CPU \cite{Gupta2020CUDAComputing}.
+At its origin, the GPU was used for the acceleration of graphical visualization of games and animation rendering. Today, GPUs are applied in vast number of fields for more general purposes (GPGPUs).
+
+Computational scientists in particular have begun to take advantage of GPUs in their fields of study. In the hybrid computing model, a central processing unit (CPU) offloads compute-intensive and time consuming parts of the code to the GPUs.
+By applying this model, users can selectively offload the necessary parts of the code to the GPU, while maintaining others on the CPU.
+
+While many fields have seem considerable improvements with GPUs, thermal radiation modeling has seen them applied relatively few times. This comes as a surprise seeing that MCRT in particular carries many similarities to the ray-tracing in computer graphics.
+\citet{Heymann2012GPU-basedAGN} applied GPUs to their thermal radiation simulations for radiation in active galactic nuclei.
+\citet{Humphrey2012RadiationSystem} applied GPUs to the field of combustion, for their massively scalable code Uintah, where they have coupled their CPU-solved CFD with GPU-solved gray-model radiation \cite{Humphrey2015ATracingb,Humphrey2016RadiativeRefinement,Holmen2017ImprovingTasks,Peterson2018DemonstratingComputations}. 
+\citet{Silvestri2019ASimulation}, finally, applied GPUs to combustion simulations with non-gray modeling, and were able to show 1000x speedups using the GPU with reverse monte-carlo and mesh-coarsening compared to CPU-run forward MC.
+
+\subsubsection{Bounding Volume hierarchy}
+At its simplest form, the bounding volume hierarchy (BVH) is a tree-based data structure which can be used to represent a series of objects in space \cite{Shirley2020RayWeek,Meister2021ATracing}. The usage in computer graphics is to detect intersections between a ray and a far-away object in logarithmic time (traversal through a tree), rather than linear time (test each object once at a time).
+
+BVHs are constructed by first wrapping the objects in Axis Aligned Bounding Boxes (AABBs). In a cartesian coordinate system, the cornerpoints of this box can be determined by the maximum and minimum X, Y, and Z coordinates of the object.
+This ensures that an intersection of the ray with the object cannot occur without an intersection of the ray with the bounding box. 
+In practice, the ray-face intersection calculation needs to be fast, and the calculation between an axis-aligned face with a ray is the fastest \cite{Kay1986RayScenes}.
+
+The object-level AABBs represent the leaf nodes of the binary tree. These boxes are then wrapped in further bounding-boxes, and the procedure repeats until there is one bounding box which wraps around the whole domain, which represents the root node of the BVH. 
+For a binary tree, each node must have only two child nodes. The ray-tracing procedure can then proceed iteratively down the tree (rejecting nodes and their children which the ray does not intersect) until a final list of underlying boxes are left.
+Additionally, recent approaches with BVHs have introduced GPU acceleration with optimized memory-management to BVHs.
+
+Graphics processing sees massive speedup with the use of the BVH data structure, especially with recent approaches using GPUs \cite{Nery2013ParallelGPGPUs,Meister2021ATracing,Karras2012MaximizingTrees}.
+However BVHs see almost no usage in thermal radiation modeling \cite{Liu2020TheFlames}.
+\citet{Kuczynskia2014RadiationBoundaries} for one, were able to accelerate computation of thermal radiation between faces with non-participating media. 
+Also, \citet{Mazumder2006MethodsTransport} compared the BVH approach with a spatial-partitioning approach known as volume-by-volume advancement and found the BVH to be slower for surface-to-surface calculations. 
+There apparently exist no applications of the BVH to participating media in thermal radiation modeling.
 
 \textbf{Backwards/reciprocal:}
 Backwards MC: \cite{Modest2003BackwardTransfer,Walters1992RigorousMedia}
 Reciprocity methods (direct exchange): \cite{Tesse2002RadiativeApproach}
 
-\textbf{Bounding Volume hierarchy: }
-Nery BVH implementations: \cite{Nery2011MassivelyTracing,Nery2013ParallelGPGPUs}
-Zeeb: \cite{Zeeb2001AnGeometries}
-Mazumder: \cite{Mazumder2006MethodsTransport}
+
+
+\textbf{Mesh Coarsening and Optimized Traversal}
+and \citet{Kelm2021TheTransport}
+Nery2011MassivelyTracing
