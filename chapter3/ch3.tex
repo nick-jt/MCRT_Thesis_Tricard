@@ -23,17 +23,29 @@ The Monte-Carlo method has long been fast and accurate method to numerically int
 
 \section{Acceleration methods for MCRT}
 
+\subsection{Reverse Monte-Carlo}
+
+\textbf{Backwards/reciprocal:}
+Backwards MC: \cite{Modest2003BackwardTransfer,Walters1992RigorousMedia}
+Reciprocity methods (direct exchange): \cite{Tesse2002RadiativeApproach}
 
 
 
+\subsection{Advanced mesh approaches}
+The all-to-all nature of MCRT results in poor scaling with increasing mesh size. 
 
 
+\textbf{Mesh Coarsening and Optimized Traversal}
+and \citet{Kelm2021TheTransport}
+Nery2011MassivelyTracing
 
 
 \subsection{Inspirations from the field of Computer Graphics}
 Many improvements to ray tracing have been introduced in recent years capitalizating on advancements in computational hardware and algorithms.
 These improvements have largely been focused in the field of computer graphics, owing in large part to the dramatic increase in the need for fast and detailed visualization software \cite{Gupta2020CUDAComputing}. 
-The vast knowledge obtained through extensive work to accelerate ray-tracing in computer graphics would be of significant value to many heat transfer researchers, but has historically been ignored \cite{Howell2021TheTransfer}. In particular, the increased involvement of the Graphics Processing Unit (GPU) has resulted in dramatic boosts in computational efficiency. Additionally, the bounding volume hierarchy (BVH) provides a optimal data structure to accelerate the geometric search procedure of the ray-tracing process.
+The vast knowledge obtained through extensive work to accelerate ray-tracing in computer graphics would be of significant value to many heat transfer researchers, but has historically been ignored \cite{Howell2021TheTransfer}. 
+In particular, the increased involvement of the Graphics Processing Unit (GPU) has resulted in dramatic boosts in computational efficiency, but has been used relatively few times in radiation modeling.
+Additionally, the bounding volume hierarchy (BVH) provides a optimal data structure to accelerate the geometric search procedure of the ray-tracing process.
 
 \subsubsection{Graphics Processing Units (GPUs)}
 GPUs offer high throughput for highly parallelizable, compute-bound problems.
@@ -57,21 +69,54 @@ This ensures that an intersection of the ray with the object cannot occur withou
 In practice, the ray-face intersection calculation needs to be fast, and the calculation between an axis-aligned face with a ray is the fastest \cite{Kay1986RayScenes}.
 
 The object-level AABBs represent the leaf nodes of the binary tree. These boxes are then wrapped in further bounding-boxes, and the procedure repeats until there is one bounding box which wraps around the whole domain, which represents the root node of the BVH. 
-For a binary tree, each node must have only two child nodes. The ray-tracing procedure can then proceed iteratively down the tree (rejecting nodes and their children which the ray does not intersect) until a final list of underlying boxes are left.
-Additionally, recent approaches with BVHs have introduced GPU acceleration with optimized memory-management to BVHs.
+For a binary tree, each node must have only two child nodes. The ray-tracing procedure can then proceed iteratively down the tree (rejecting nodes and their children which the ray does not intersect) until a final list of leaf nodes are left.
 
 Graphics processing sees massive speedup with the use of the BVH data structure, especially with recent approaches using GPUs \cite{Nery2013ParallelGPGPUs,Meister2021ATracing,Karras2012MaximizingTrees}.
 However BVHs see almost no usage in thermal radiation modeling \cite{Liu2020TheFlames}.
 \citet{Kuczynskia2014RadiationBoundaries} for one, were able to accelerate computation of thermal radiation between faces with non-participating media. 
 Also, \citet{Mazumder2006MethodsTransport} compared the BVH approach with a spatial-partitioning approach known as volume-by-volume advancement and found the BVH to be slower for surface-to-surface calculations. 
-There apparently exist no applications of the BVH to participating media in thermal radiation modeling.
+There apparently exist no applications of the BVH to participating media in thermal radiation modeling. Alternative approaches, such as the oct-tree approach, where a mesh is refined in regions of increased opacity, however, have been introduced and shown to provide significant speedups over linear ray tracing \cite{Saftly2013UsingNote}.
 
-\textbf{Backwards/reciprocal:}
-Backwards MC: \cite{Modest2003BackwardTransfer,Walters1992RigorousMedia}
-Reciprocity methods (direct exchange): \cite{Tesse2002RadiativeApproach}
+\section{Implementation for this study}
+In this research we capitalize on the proven speedup of GPUs to accelerate thermal radiation modeling, and attempt to additionally use the BVH data structure to provide speedup as well.
+
+\subsection{Description of the code}
+Following the implementations discussed by \citet{Silvestri2019ASimulation} and \citet{Humphrey2015ATracing}, we implement an MCRT model on GPUs. 
+This code connects to the OpenFOAM open-sourced CFD platform \cite{Weller1998ATechniques}, can run on distributed memory systems for scalable computation, and optionally uses a BVH to accelerate the geometric search process of the ray-box and ray-node intersections.
+Our code consists of more than 2,000 lines of C++ code, and relies on the Kokkos programming model for a performance-portable parallelization framework \cite{Trott2021KokkosEra}, and the ArborX geometric search library for optimal BVH tree management and traversal functions (which itself relies on Kokkos) \cite{Lebrun-Grandie2019ArborX:Library}.
 
 
+\subsubsection{OpenFOAM}
+With OpenFOAM\footnote{https://github.com/OpenFOAM/OpenFOAM-5.x}, this code can be applied to any CFD solver of interest enabling its use in applications from aeronautical combustor engineering to fire suppression and management. OpenFOAM provides an extensive list of supplemental libraries, allowing the user to model RANS, LES, or DNS simulations with multi-phase flow and detailed chemistry. 
+Time-accurate simulations can be implemented with MCRT-GPU with or without Adaptive Mesh Refinement (AMR) on polyhedral, unstructured mesh.
+Users can adapt their own OpenFOAM solvers to use MCRT-GPU, or use the default examples for reactingFoam and fireFoam. Instructions are available in the public repository (or private?).
 
-\textbf{Mesh Coarsening and Optimized Traversal}
-and \citet{Kelm2021TheTransport}
-Nery2011MassivelyTracing
+\subsubsection{Kokkos}
+Kokkos~\footnote{https://github.com/kokkos} is a performance-portable programming model from the Department of Energy \cite{Trott_Kokkos3_2022,TrottKokkosOGPaper2014}. 
+Targeted for HPCs, Kokkos provides abstractions over the parallel execution process and memory management in your solver. By programming in Kokkos, the user can neglect many worries about the underlying parallel execution process and instead focus on their code.
+Kokkos supports CUDA, HIP, SYCL, HPX, OpenMP and C++ threads as parallel backends, which the user can easily switch between at compile time.
+Additionally, the Kokkos ecosystem streamlines the debugging and profiling process \cite{Trott_KokkosEcosystem2021}.
+
+\subsubsection{ArborX}
+Following the Bounding Volume Hierarchy (BVH) description from \citet{Karras2012MaximizingTrees}, ArborX~\footnote{https://github.com/arborx/ArborX} provides a parallel implementation for both spatial-search and nearest-neighbor calculations using a BVH \cite{Lebrun-Grandie2019ArborX:Library}.
+
+The ArborX API enables usage of the BVH through a two-step process: construction and traversal. The user can define \textit{primitives}, or underlying objects with labeled bounding-boxes, and ArborX will efficiently construct a balanced BVH for usage with any parallel backend (using Kokkos). Then, the user can define \textit{predicates} which define the operation the traversal process will be conducting (i.e. spatial search criteria) while traversing the tree.
+MCRT-GPU enables the user to optionally use the BVH through ArborX to optimize the ray-tracing procedure. The \textit{primitives} are the computational cells in the CFD process (convex polyhedrons), and the \textit{predicates} are the rays traveling through space.
+
+ArborX uses Kokkos as a backend for on-node parallelism, and implements additional MPI functionality to extend the BVH query process across multi-node runs. Distributed memory executions proceed through an upper-tree and lower-tree approach.
+Each node contains knowledge of an upper-tree, which defines defines a BVH for each of the nodes in domain-decomposed space. Then, the lower tree represents the BVH for the computational cells that exist from the CFD solver. 
+MCRT-GPU applies ray-tracing procedure across the distributed memory system using this method, which provides enhancement over the traditional MPI iteration approach as discussed in section \ref{DistMemAccel}.
+
+\subsubsection{Non-gray model}
+MCRT-GPU has been built to enable use with one of three nongray models: line-by-line, gray modeling with a user-defined absorption coefficient, or gray modeling with planck-mean absorption coefficients. Non-gray databases can be derived from HITEMP or other means with CO$_2$, H$_2$O, and CO spectral lines \cite{Rothman2010HITEMPDatabase} following the approach from .
+
+
+\subsubsection{User functionality}
+MCRT-GPU is meant to be an adaptable radiation model that can be quickly linked to the user's OpenFOAM solver for fast and accurate radiation modeling during their time-accurate CFD simulation.
+
+While the BVH may enable faster computation, in absence of proper development there exist both a version with and without its use.
+The version without applies the tradiation Monte-Carlo algorithms with Kokkos acceleration. This enables fast, GPU-acceleration, with line-by-line non-gray modeling, ray-reflections, and 
+
+Users can access the code through a public repository on github \footnote{https://github.com/nick-jt/MCRT-GPU}.
+
+\subsection{Distributed Memory Acceleration}\label{DistMemAccel}
