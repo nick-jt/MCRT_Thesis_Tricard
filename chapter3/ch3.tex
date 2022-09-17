@@ -4,7 +4,7 @@ While radiation is essential to model, doing so comes at a large computational e
 The RTE equation (eq. \ref{eq:RTE2}) is an integro-differential equation. This is representative of the \textit{all-to-all} nature of the process. In combustion CFD, there exist a large number of physical processes occuring simultaneously, from chemistry to compressible fluid dynamics. 
 These require extensive computational resources as it is. Imposing the additional requirement of modeling radiation, which can be up to 50\% of the overall CPU time, is often-times infeasible.
 
-Several radiation exist which promise to mitigate this problem. This chapter will first review the most common models and their assumptions, advantages, and drawbacks. 
+Several radiation models exist which promise to mitigate this problem. This chapter will first review the most common models and their assumptions, advantages, and drawbacks. 
 This includes a thorough explanation as to why the Monte-Carlo Ray Tracing (MCRT) method was the method of choice in this paper.
 Next, a description of a traditional implementation of MCRT will be presented, including a brief overview of the various non-gray models.
 Then, some methods of accelerating MCRT will be shown.
@@ -77,7 +77,7 @@ However BVHs see almost no usage in thermal radiation modeling \cite{Liu2020TheF
 Also, \citet{Mazumder2006MethodsTransport} compared the BVH approach with a spatial-partitioning approach known as volume-by-volume advancement and found the BVH to be slower for surface-to-surface calculations. 
 There apparently exist no applications of the BVH to participating media in thermal radiation modeling. Alternative approaches, such as the oct-tree approach, where a mesh is refined in regions of increased opacity, however, have been introduced and shown to provide significant speedups over linear ray tracing \cite{Saftly2013UsingNote}.
 
-\section{Implementation for this study}
+\section{Implementation for this study} \label{section:ModelForThisStudy}
 In this research we capitalize on the proven speedup of GPUs to accelerate thermal radiation modeling, and attempt to additionally use the BVH data structure to provide speedup as well.
 
 \subsection{Description of the code}

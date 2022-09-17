@@ -20,7 +20,7 @@ In attempt to maximize accuracy at the limitations of present resources, a numbe
 Of those, many rely on complex mathematical assumptions and simplifications which can be difficult to learn, implement, and may lead to inaccurate results for many circumstances. 
 
 The Monte-Carlo Ray Tracing (MCRT) method stands out as the most accurate \cite{Tesse2002RadiativeApproach,Modest2013RadiativeTransfer,Coelho2018RadiativeSystems}. 
-MCRT can be thought of as a direct physical interpretation of physical process by which the rays are transported through space.
+MCRT can be thought of as a rough physical interpretation of physical process by which electromagnetic rays are transported through space.
 Within MCRT, random rays are initiated within the computational cells of the combustion simulation, and are tasked with redistributing the energy originating from it's source cell throughout the medium. The resulting stochastic process intuitively resembles the redistribution of thermal energy through 'photon packets' traveling through the domain.
 As a result of this approach, MCRT can account for many of the same effects that electromagnetic rays undergo during their travel.
 
@@ -47,16 +47,16 @@ Within combustion in particular, radiation becomes important for pollutant forma
 
 Many turbulent flows are modeled using Reynolds-Averaged Navier-Stokes (RANS) and Large Eddy Simulations (LES), both of which rely on the averaging of the governing equations of combustion. This results in the need for models describing the unresolved fluctuations of radiative properties. The influence of unresolved scales on radiation is known as turbulence-radiation interaction (TRI). Emission-TRI and absorption-TRI are two radiative phenomena which can complicate radiation modeling, and have been extensively studied.
 
-Regarding modeling radiation in reacting flows, several trends may be universally declared, as discussed in reviews from Modest and Haworth \cite{Modest2016RadiativeSystems}, Coehlo \cite{Coelho2018RadiativeSystems}, and Liu et. al. \cite{Liu2020TheFlames}.
+Regarding modeling radiation in reacting flows, several trends are (almost) universally observed, as discussed in reviews from Modest and Haworth \cite{Modest2016RadiativeSystems}, Coehlo \cite{Coelho2018RadiativeSystems}, and Liu et. al. \cite{Liu2020TheFlames}.
 
 \begin{enumerate}
     \item Neglecting radiative emission results in temperature overprediction \cite{Gamil2020AssessmentChamber}
     \item Neglecting radiative absorption (optically thin assumption) results in temperature underestimation
-    \item Radiation contributes thermal energy at the same order of magnitude as convection in many combustion systems \cite{Gamil2020AssessmentChamber,Johnson2021AnalysisMethod}
+    \item Radiation contributes thermal energy at the same order of magnitude as convection to the boundaries of many enclosed combustion systems \cite{Gamil2020AssessmentChamber,Johnson2021AnalysisMethod}
     \item Radiation has importance in pollutant formations (NO${}_x$, soot, CO) \cite{Ihme2008ModelingFormulation,Habibi2007TurbulenceFlames}
-    \item TRI increases radiative emission and reduces temperatures
-    \item Soot dominates the emission and absorption spectrum
-    \item Nongray modeling increases radiation re-absorption \cite{Wu2021LimitationsFires}
+    \item Accounting for turbulence-radiation interaction (TRI) increases radiative emission and reduces temperatures
+    \item Soot dominates the emission and absorption spectra
+    \item Nongray modeling increases radiation re-absorption in the medium\cite{Wu2021LimitationsFires}
     \item The type of radiation model yields less importance than accurate non-gray modeling
 \end{enumerate}
 
