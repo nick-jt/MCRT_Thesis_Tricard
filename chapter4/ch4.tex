@@ -1,62 +1,39 @@
 \addchapheadtotoc
 \chapter{Applied Radiation Model}\label{chapter:Example}
+The complexity of the radiation solver resulting from both its theoretical foundation as well as its computational implementation calls for an extensive series of validation and performance studies.
 
-\section{Introduction}
+Following the methods discussed in chapter \ref{chapter:Modeling}, three test geometries are presented in this chapter for verification and profiling using the two methods discussed in section \ref{section:ModelForThisStudy}. The configurations include the canonical one-dimensional plane-parallel medium, a three-dimensional backwards-facing step combustor, and a three-dimensional representation of the Pratt \& Whitney NEO combustor. 
+These three test cases provide an excellent basis to verify the solution method and test their performances. 
 
-\subsection{Kalman filters} 
-\subsubsection{Kalman filter}
+The example simulations discussed in this chapter will be conducted using a \textit{frozen-field} analysis. In frozen-field analysis it is assumed that the time required for a given ray to propagate across the domain is extremely small relative to even the smallest time-scales of the other physics in the system. 
+As a result, the temporal evolution of parameters in the system can be assumed negligible during a ray's travel.
+This greatly simplifies the solution to the radiative transfer equation (eq. \ref{eq:RTE2}, which is already presented with temporal-evolution neglected), as it can now be modeled at any given time-step of the CFD solution, without accounting for the change of parameters across timesteps.
 
-\subsubsection{Ensemble Kalman filter}
+\section{One dimensional plane-parallel medium}
+The plane-parallel medium provides a useful, one dimensional case to test the MCRT code. The geometry is shown in figure \ref{fig:PlaneParallelGeometry}.
 
-\subsubsection{Other filters}
+The geometry consists of two parallel plates surrounding a radiatively-participating medium. The system is one-dimensional (implemented into OpenFOAM using either ray-reflections along the off-axis boundaries, or through a long stretch in both the Y and Z directions). The simulation is steady, and the walls are black-bodies (perfect absorbers and emitters).
+Using this configuration, the user can artificially select an absorption coefficient, $\kappa{}$, medium temperature, $T$, and wall temperatures $T_w$.
 
-\subsubsection{Previous studies}
+Additionally, the relative simplicity of the configuration allows for reduced-complexity numerical solution described in appendix (IN APPENDIX OR PUT HERE?). 
+This "analytical" solution can be used for verification of the solver under variable absorption coefficient, temperatures, and scattering coefficient (not included in this model).
 
-\subsection{Organization}
+The one-dimensional nature of the system also results in the least-ideal scaling for multi-node simulations. \textit{Provides useful understanding of how the runtime and memory usage scale for each solver under worst-case situations.}
 
-% =============================================================== %
-\section{Toy problem and parametric study} \label{sec:toy_1DProblemDescription}
+\subsection{Results}
+Figure \ref{fig:PP_kappatest} presents a comparison of the MCRT solutions alongside the analytical solutions. The configuration is tested under a variety of absorption coefficients, temperatures, and Monte-Carlo ray counts. The various case conditions are presented in table \ref{table:PP_kappatest}.
 
+Results show excellent comparison between the MCRT and analytical implementations. 
+The lower ray counts show a higher degree of variability resulting from the stochastic nature of the MCRT method. 
+Increasing absorption coefficient leads in an increase of radiative emission and re-absorption, with re-absorption increasing at a higher rate resulting in a net increase of radiative source.
 
-\subsection{Baseline solution verification} \label{sec:1Dtoy_verifySolnOpenFOAM}
+These expected results demonstrate the requirement for RTE modeling in optically thick media. Not only does radiative emission result in heat loss from computational cells, but also the re-absorption can be high enough to require modeling of the self-absorption process of radiation.
 
-\subsection{Parametric study}\label{sec:enkf_1dParametricStudy}
-
-\subsubsection{Ensemble size} \label{sec:enkf_testEnsembleSize}
-
-\subsubsection{Model and measurement noise} \label{sec:enkf_testNoises}
-
-\subsubsection{Assimilation frequency} \label{sec:enkf_testAssimFreq}
-
-
-% =============================================================== %
-\section{Formulation for a coupled flame simulation}\label{sec:EnKF_coupledFlameSimulation}
-
+\subsection{Profiling}
 
 
-
-
-\subsection{Localization} \label{localization}
-
-
-\subsection{EnKF algorithm} \label{enkf_algorithm}
-
-
-
-
-
-% =============================================================== %
-\section{Soot model tuning}\label{soot_model_tuning}
-
-\subsection{Coupling with the EnKF}
-
-
-
-% =============================================================== %
-\section{Results}\label{sec:enkf_results}
-
-
-\subsection{Temperature}
-
-
-\subsection{Soot volume fractions}
+\section{Backwards-Facing Step Combustor}
+\subsection{Background}
+\subsection{Results}
+\subsection{Model Performance}
+\section{Pratt \& Whitney NEO Combustor or Pool Flame}
