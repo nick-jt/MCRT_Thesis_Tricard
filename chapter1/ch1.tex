@@ -10,7 +10,9 @@ So while the energy storage and release mechanisms that accompany combustion pro
 The need for improvement management of thermal loads, greater interconnected transport systems, development of heat-resistant materials, and an ongoing push to reduce global emissions must be met with an enhanced understanding of these physical systems.
 This enhanced understanding requires thorough understanding of the complex fluid dynamics, heat transfer, and chemistry that accompany combustion.
 
-Thermal radiation is the most dominant form of heat transfer that accompanies most combustion systems \cite{Coelho2018RadiativeSystems}. 
+Thermal radiation is often the most dominant form of heat transfer that accompanies most combustion systems \cite{Coelho2018RadiativeSystems}.
+The high temperatures resulting from the energy release, as well as accompanying mixture chemicals may emit high amounts of radiation. 
+High radiative loads can lead to high temperatures in the encasing system, flame extinction and accompanying effects, and thermodynamically, a net energy loss from the system which can no longer contribute to any desired work output.
 
 
 \section{Motivation}
@@ -18,6 +20,7 @@ The immense computational expense required for integration of the multitude of c
 
 In attempt to maximize accuracy at the limitations of present resources, a number of models have been introduced to model thermal radiation while minimizing computational burden.
 Of those, many rely on complex mathematical assumptions and simplifications which can be difficult to learn, implement, and may lead to inaccurate results for many circumstances. 
+
 
 The Monte-Carlo Ray Tracing (MCRT) method stands out as the most accurate \cite{Tesse2002RadiativeApproach,Modest2013RadiativeTransfer,Coelho2018RadiativeSystems}. 
 MCRT can be thought of as a rough physical interpretation of physical process by which electromagnetic rays are transported through space.
@@ -28,6 +31,10 @@ Although MCRT is the most accurate, it has also been viewed traditionally as the
 This additional cost results from the stochastic nature of MCRT. A large sample size of rays must be emitted and traced to obtain a statistically meaningful solution. 
 Too few rays may result in a noisy solution, while too many will require a longer runtime.
 Much effort has been put into making the computation more manageable while maintaining the benefits MCRT has to offer over other methods \cite{Liu2020TheFlames,Tesse2002RadiativeApproach,Zeeb2001AnGeometries,Modest2003BackwardTransfer,Howell2010ThermalTransfer}.
+
+Additionally many radiation solutions can be dramatically accelerated through a \textit{frozen-field analysis}. In frozen-field analysis it is assumed that the time required for a given ray to propagate across the domain is extremely small relative to even the shortest computational time-steps. 
+As a result, the temporal evolution of parameters in the system can be assumed negligible during a ray's travel.
+This greatly simplifies the solution to the radiative transfer equation (eq. \ref{eq:RTE2}, which is already presented with temporal-evolution neglected), as it can now be modeled at any given time-step of the CFD solution, while assuming the radiation solution can be calculated using a single timestep.
 
 In this paper, we implement an accelerated implementation of MCRT that is coupled with the OpenFOAM open-sourced CFD platform \cite{Weller1998ATechniques}. 
 This implementation relies on Kokkos programming model for performance-portable parallel computing with interchangeable parallel computing back-ends \cite{Trott2021KokkosEra}. This enables the use of Graphics Processing Units (GPUs) to dramatically accelerate the ray-tracing procedure. Integrating MCRT with GPUs has been done very few times, but has shown significant speedups \cite{Silvestri2019ASimulation,Humphrey2016RadiativeRefinement,Heymann2012GPU-basedAGN}. 
