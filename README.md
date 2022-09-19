@@ -30,3 +30,17 @@ graph TD
     D -->|Added ray intensity| F
     E -->|Added ray intensity| F
 ```
+
+## CFD-rad flow chart
+```mermaid
+graph TD
+    A[Init CFD] -->|Mesh information| B[Init Radiation]
+    B --> C[Begin time-step]
+    C --> |CPU| D[Solve CFD]
+    C --> |GPU| E[Solve radiation]
+    D --> F[Add radiation source to energy equation]
+    E --> F
+    F --> |Increment time| C
+    F --> G[Finalize Run]
+```
+
