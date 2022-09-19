@@ -2,12 +2,10 @@
 \chapter{Applied Radiation Model}\label{chapter:Example}
 The complexity of the radiation solver resulting from both its theoretical foundation as well as its computational implementation calls for an extensive series of validation and performance studies.
 
-Following the methods discussed in chapter \ref{chapter:Modeling}, three test geometries are presented in this chapter for verification and profiling using the two methods discussed in section \ref{section:ModelForThisStudy}. The configurations include the canonical one-dimensional plane-parallel medium, a three-dimensional backwards-facing step combustor, and a three-dimensional representation of the Pratt \& Whitney NEO combustor. 
-These three test cases provide an excellent basis to verify the solution method and test their performances. 
+Three test geometries are presented in this chapter for verification and profiling using the two methods discussed in section \ref{section:ModelForThisStudy}. The configurations include the canonical one-dimensional plane-parallel medium, a three-dimensional backwards-facing step combustor, and a three-dimensional Pratt \& Whitney NEO aeronautical combustor. 
+These three test cases provide an excellent basis to verify the solution methods and test their performances. 
 
-The example simulations discussed in this chapter will be conducted using a \textit{frozen-field} analysis. In frozen-field analysis it is assumed that the time required for a given ray to propagate across the domain is extremely small relative to even the smallest time-scales of the other physics in the system. 
-As a result, the temporal evolution of parameters in the system can be assumed negligible during a ray's travel.
-This greatly simplifies the solution to the radiative transfer equation (eq. \ref{eq:RTE2}, which is already presented with temporal-evolution neglected), as it can now be modeled at any given time-step of the CFD solution, without accounting for the change of parameters across timesteps.
+
 
 \section{One dimensional plane-parallel medium}
 The plane-parallel medium provides a useful, one dimensional case to test the MCRT code. The geometry is shown in figure \ref{fig:PlaneParallelGeometry}.
@@ -21,12 +19,25 @@ This "analytical" solution can be used for verification of the solver under vari
 The one-dimensional nature of the system also results in the least-ideal scaling for multi-node simulations. \textit{Provides useful understanding of how the runtime and memory usage scale for each solver under worst-case situations.}
 
 \subsection{Results}
-Figure \ref{fig:PP_kappatest} presents a comparison of the MCRT solutions alongside the analytical solutions. The configuration is tested under a variety of absorption coefficients, temperatures, and Monte-Carlo ray counts. The various case conditions are presented in table \ref{table:PP_kappatest}.
+Figure \ref{fig:PP_kappatest} presents a comparison of the MCRT solutions alongside the analytical solutions. The configuration is tested under a variety of absorption coefficients, temperatures, and Monte-Carlo ray counts. The various case conditions are presented in table \ref{table:PPcomp}.
 
 \begin{figure}
-  \includegraphics[width=\linewidth]{figures/ch4/PPcomparison.png}
-  \caption{A boat.}
-  \label{fig:boat1}
+  \begin{subfigure}{1\textwidth}
+  \includegraphics[width=\linewidth]{figures/ch4/PPcomparison1.png}
+  \caption{Variable absorption coefficient with T=$2000$K, N$_r$=$1000$, N$_{cells}$=1000.}
+  \label{fig:PPcomp_kappa}
+  \end{subfigure}
+  \begin{subfigure}{1\textwidth}
+  \includegraphics[width=\linewidth]{figures/ch4/PPcomparison2.png}
+  \caption{Variable temperature with $\kappa{}$=$10$ m$^{-1}$, N$_r$=$1000$, N$_{cells}$=1000.}
+  \label{fig:PPcomp_temp}
+  \end{subfigure}
+  \begin{subfigure}{1\textwidth}
+  \includegraphics[width=\linewidth]{figures/ch4/PPcomparison3.png}
+  \caption{Variable number of rays emitted per cell (N$_r$) with $\kappa{}$=$10$ m$^{-1}$, T=$2000$K, N$_{cells}$=1000.}
+  \label{fig:PPcom_nrays}
+  \end{subfigure}
+  \label{fig:PPcomp}
 \end{figure}
 
 Results show excellent comparison between the MCRT and analytical implementations. 
@@ -39,6 +50,15 @@ These expected results demonstrate the requirement for RTE modeling in optically
 
 
 \section{Backwards-Facing Step Combustor}
+The backwards-facing step (BFS) combustor is a convenient geometry often used in the field of fluid dynamics for a simple, repeatable geometry to analyze turbulence, heat transfer and combustion.
+
+\begin{figure}{1\textwidth}
+\includegraphics[width=\linewidth]{figures/ch4/PPcomparison1.png}
+\caption{Variable absorption coefficient with T=$2000$K, N$_r$=$1000$, N$_{cells}$=1000.}
+\label{fig:BFS_geometry}
+\end{figure}
+
+
 \subsection{Background}
 \subsection{Results}
 \subsection{Model Performance}
