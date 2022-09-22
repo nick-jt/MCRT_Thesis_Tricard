@@ -34,13 +34,31 @@ graph TD
 ## CFD-rad flow chart
 ```mermaid
 graph TD
-    A[Init CFD] -->|Mesh information| B[Init Radiation]
-    B --> C[Begin time-step]
+    A[Init CFD] -->B[Init Kokkos]
+    B --> H[Init Radiation]
+    H --> C[Begin time-step]
     C --> |CPU| D[Solve CFD]
-    C --> |GPU| E[Solve radiation]
+    C --> |"Kokkos::parallel_for (CPU or GPU)"| E[Solve radiation]
     D --> F[Add radiation source to energy equation]
     E --> F
     F --> |Increment time| C
     F --> G[Finalize Run]
+  
+```
+
+## Rad flow chart
+```mermaid
+graph TD
+    A[Load CFD parameters] --> B[Evaluate cell radiative emissions]
+    B --> H[Init rays]
+    H --> C["Kokkos::parallel_for (CPU or GPU)"]
+    C --> |Thread 1| D[Trace ray 1]
+    C --> |Thread 2| E[Trace ray 2]
+    C --> |Thread N| F[Trace ray N]
+    D --> G[Deposit ray energies]
+    E --> G
+    F --> G
+    G --> I[Evaluate net rad. source terms]
+    
 ```
 
