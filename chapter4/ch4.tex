@@ -2,7 +2,9 @@
 \chapter{Applied Radiation Model}\label{chapter:Example}
 The complexity of the radiation solver resulting from both its theoretical foundation as well as its computational implementation calls for an extensive series of validation and performance studies.
 
-Three test geometries are presented in this chapter for verification and profiling using the two methods discussed in section \ref{section:ModelForThisStudy}. The configurations include the canonical one-dimensional plane-parallel medium, a three-dimensional backwards-facing step combustor, and a three-dimensional Pratt \& Whitney NEO aeronautical combustor. 
+Three test geometries are presented in this chapter for verification and profiling using the two methods discussed in section \ref{section:ModelForThisStudy}. The new MCRT models using the bounding volume hierarchy approach will be refered to as MCRT-ArborX, and the model without will be referred to as MCRT-Kokkos. 
+A well-established Fortran implementation developed over the course of many years will be used for comparison, and will be refered to as MCRT-Fort.
+The configurations include the canonical one-dimensional plane-parallel medium, a three-dimensional backward-facing step combustor, and a three-dimensional Pratt \& Whitney NEO aeronautical combustor. 
 These three test cases provide an excellent basis to verify the solution methods and test their performances. 
 
 
@@ -49,18 +51,98 @@ These expected results demonstrate the requirement for RTE modeling in optically
 \subsection{Profiling}
 
 
-\section{Backwards-Facing Step Combustor}
-The backwards-facing step (BFS) combustor is a convenient geometry often used in the field of fluid dynamics for a simple, repeatable geometry to analyze turbulence, heat transfer and combustion.
+\section{Backward-Facing Step Combustor}
+The backward-facing step (BFS) combustor is a convenient configuration often used as a simple, repeatable geometry for a variety of studies in fluid dynamics.
+Numerous examples exist demonstrating its use for experimental and numerical investigations of turbulent flow \cite{Armaly1983ExperimentalFlow,Neto1993AStep,Jovic1994Backward-facing5000,Le1997DirectStep}. Combined turbulent and high temperature flow \cite{Niemann2016Buoyancy-affectedNumber,Xie2017GeometrySteps}, particularly with reactions \cite{Pouech2021PremixedStep}.
+In the relatively few studies that exist, the addition of volumetric heating and composition changes resulting from the exothermic chemical reactions have been shown to influence the thermodynamic state and turbulence intensity of the fluid. Recent interest has emerged regarding the relative influence of radiation and convection along the walls many configurations, and the backward-facing step geometry provides a convenient approach for doing so.
+
+\subsection{Case setup}
+\begin{figure}
+\includegraphics[width=\linewidth]{figures/ch4/BFS_geometry.png}
+\caption{Dimensions of backward-facing step configuration used in this study in addition to a representative line used to sample radiative properties. All units are in meters. }
+\label{fig:BFS_geometry}
+\end{figure}
+
+The BFS geometry used in this study is diagrammed in figure \ref{fig:BFS_geometry} based on an experimental configuration at the Pennsylvania State University.
+A three-dimensional CFD calculation was performed closely matching the conditions present in the experiment. For this case, no chemically reacting flow is included. 
+The flow is present in only vitiated form, where a chemical reaction is initiated in a portion of the flow upstream of the step, and the resulting "dirty" air with high CO$_2$ and H$_2$O content is mixed with unreacted air. 
+The mixture reaches the main section at an elevated temperature of up to 850K, appreciably lower than expected temperatures of above 2000K when full reactions are present. 
+The simulations account for the elevated temperature, but neglect any further chemical reactions beyond the step, resulting in a purely fluid-mechanical calculation.
+
+Figures \ref{fig:BFS_temperature}, \ref{fig:BFS_streamlines} show temperature and velocity magnitude contours in the BFS. The pressure is atmospheric, and the absorption coefficient is assumed uniform at a value of 0.5 m$^{-1}$ due to the absence of chemical properties in the CFD simulations.
+
+\begin{figure}
+
+\end{figure}
+\begin{figure}
+  \begin{subfigure}{1\textwidth}
+  \includegraphics[width=\linewidth]{figures/ch4/BFS_temperature.png}
+  \caption{BFS temperature contour along the mid-plane. }
+  \label{fig:BFS_temperature}
+  \end{subfigure}
+  \begin{subfigure}{1\textwidth}
+  \includegraphics[width=\linewidth]{figures/ch4/BFS_streamlines6.png}
+  \caption{Streamlines traced from the entrance of the BFS.}
+  \label{fig:BFS_streamlines}
+  \end{subfigure}
+  \label{fig:BFS_contours}
+\end{figure}
+
+\subsection{Results}
+A single time-step of the CFD simulation was extracted for a \textit{frozen field analysis} (see chapter \ref{chapter:Introduction}). 
+The resulting radiative emission and wall-heat flux iso-contours are shown in figure \ref{fig:BFS_radiationcontours}.
 
 
 \begin{figure}
 \includegraphics[width=\linewidth]{figures/ch4/BFS_volwallflux3.png}
 \caption{Contours of volumetric radiative emission alongside resulting radiative heat flux along the walls.}
-\label{fig:BFS_geometry}
+\label{fig:BFS_radiationcontours}
+\end{figure}
+
+The bulk of radiative emission originates from the re-circulation zone behind the step. Radiation is emitted from the flow and decreases the thermal energy contained in the passing fluid. 
+The fluid is then quickly replaced by the new gas at the entrance, which results in a continuous load of radiation incident on the bottom surface of the domain. 
+
+The turbulence present in the recirculation zone is apparent even in the emission contours as a result of the advection of elevated temperatures present. The secondary recirculation zone immediately present adjacent to the step displays lower levels of radiative emission resulting from its slower rate of fresh-gas replenishment.
+
+Figures \ref{fig:BFS_RadAbs}, \ref{fig:RadEmi}, and \ref{fig:RadSrc} show the radiative absorption, emission, and net energy source along the line shown in figure \ref{fig:BFS_geometry} using the different solvers for comparison. 
+
+
+\begin{figure}
+  \begin{subfigure}{1\textwidth}
+  \includegraphics[width=\linewidth]{figures/ch4/LineComparison_RadAbs.png}
+  \caption{}
+  \label{fig:BFS_RadAbs}
+  \end{subfigure}
+  \begin{subfigure}{1\textwidth}
+  \includegraphics[width=\linewidth]{figures/ch4/LineComparison_RadEmi.png}
+  \caption{}
+  \label{fig:BFS_RadEmi}
+  \end{subfigure}
+  \begin{subfigure}{1\textwidth}
+  \includegraphics[width=\linewidth]{figures/ch4/LineComparison_RadSrc.png}
+  \caption{}
+  \label{fig:BFS_RadSrc}
+  \end{subfigure}
+  \label{fig:PPcomp}
 \end{figure}
 
 
-\subsection{Background}
-\subsection{Results}
 \subsection{Model Performance}
+Radiation was calculated using both new MCRT models as well as a well-established Fortran-based radiation model for comparison. Simulations were performed at the single time-step using both 1 ray per cell and 10 rays per cell for all solvers, and serial, OpenMP and Cuda were tested as Kokkos backends for the new MCRT. 
+Simulations were performed using a 72-core WHAT core shared-memory workstation for OpenMP calculations, and Nvidia V100 GPUs were used from the high performance computer Narwhal operated by the defense supercomputing resource center \cite{something}.
+
+The performance of both the MCRT-Kokkos model and the MCRT-ArborX compare extremely well against the MCRT-Fort model for a serial calculation. A runtime improvement of 86\% is already observed before any parallel routines have even been applied.
+The dramatic speedup can be attributed to the improved mesh-transfer method implemented in the new MCRT methods. 
+Almost no mesh data is duplicated during the mesh transfer process, allowing for minimal delay before the raytracing procedure begins. VERIFY THIS AND COMPARE WITHOUT THE MESH TRANSFER.
+
+The introduction of a parallel backend to Kokkos for both the MCRT-ArborX and MCRT-Kokkos implementations allow for a further reduction in runtime.
+
 \section{Pratt \& Whitney NEO Combustor or Pool Flame}
+
+
+\section{Random profiling studies}
+- Weak scaling study across many nodes
+- Strong scaling within a node, across many nodes
+    - Cubic domain, square domain
+    - Parallel plates
+    

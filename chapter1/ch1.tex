@@ -10,9 +10,17 @@ So while the energy storage and release mechanisms that accompany combustion pro
 The need for improvement management of thermal loads, greater interconnected transport systems, development of heat-resistant materials, and an ongoing push to reduce global emissions must be met with an enhanced understanding of these physical systems.
 This enhanced understanding requires thorough understanding of the complex fluid dynamics, heat transfer, and chemistry that accompany combustion.
 
-Thermal radiation is often the most dominant form of heat transfer that accompanies most combustion systems \cite{Coelho2018RadiativeSystems}.
-The high temperatures resulting from the energy release, as well as accompanying mixture chemicals may emit high amounts of radiation. 
-High radiative loads can lead to high temperatures in the encasing system, flame extinction and accompanying effects, and thermodynamically, a net energy loss from the system which can no longer contribute to any desired work output.
+Thermal radiation is often the most dominant form of heat transfer that accompanies most combustion systems \cite{Coelho2018RadiativeSystems}. In many cases, radiation presents an undesirable redistribution of thermal energy to surrounding objects.
+
+In forest fires, for example, radiative energy can contribute extensively to the widespread propagation and expansiveness of a flame. 
+It may heat nearby combustible materials, dry them substantially, and make the flame considerably more likely to accelerate into that direction. 
+Nearby firemen, oftentimes only meters away from the flame, may be exposed to dangerous thermal radiative loads up to 12 kW/m$^2$, which can result in instantaneous burning to any unprotected skin.
+In total, the contribution of thermal radiation varies between 10\% and 90\% of the total energy flux from an open flame \cite{Valendik:2008vo}.
+
+
+
+In aeronautical engines, the high temperatures resulting from the energy release as well as the accompanying chemical mixture may emit heavily into the surroundings. Further, unburnt hydrocarbons may collect into soot particles which, at high temperatures, dominate the emission spectrum.
+Concomitant high radiative loads will result in higher temperatures in the encasing system, changes in chemistry dynamics such as flame extinction and changes on pollutant emissions, and, thermodynamically, a net energy loss from the system which can no longer contribute to any desired work output.
 
 
 \section{Motivation}
@@ -41,7 +49,7 @@ This implementation relies on Kokkos programming model for performance-portable 
 Additionally, the ArborX geometric search library is introduced to implement a bounding-volume hierarchy based structure for more efficiency parallel communications within the Message Passing Interface (MPI) for distributed memory computing \cite{Lebrun-Grandie2019ArborX:Library}. 
 The  reduces the need for $O(N)$ sequences of MPI communications down to a constant 1 or 2 pass approach. This dramatically improves the scalability for MCRT modeling on larger scale simulations. 
 
-\section{Importance of radiation}
+\section{Importance of radiation to model}
 In its most ideal form, radiative emission energy takes the form of eq. \ref{eq:RadEnergy}.
 \begin{equation}
     E_{rad}=\epsilon{}\sigma{}T^4
