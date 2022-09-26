@@ -77,21 +77,13 @@ There apparently exist no applications of the BVH to participating media in ther
 
 \section{Implementation for this study} \label{section:ModelForThisStudy}
 In this research we capitalize on the proven speedup of GPUs to accelerate thermal radiation modeling, and attempt to additionally use the BVH data structure to provide speedup as well.
-The flow charts in \ref{fig:joint_flow_chart} and \ref{fig:MCRT_flow_chart} describe the radiation code.
+The flow chart in fig. \ref{fig:joint_flow_chart} describes the procedure followed by the current implementation of the radiation code.
 
 \begin{figure}
   \includegraphics[width=\linewidth]{figures/ch3/joint_flow_chart.png}
-  \caption{Streamlines traced from the entrance of the BFS.}
+  \caption{Diagram of MCRT implementation. The solver in its current implementation can solve radiation on the GPU and CFD on the CPU. Future work will include maintaining a fully asynchronous calculation using both CPU/GPU at the same time.}
   \label{fig:joint_flow_chart}
 \end{figure}
-
-
-\begin{figure}
-  \includegraphics[width=\linewidth]{figures/ch3/radiation_flow_chart.png}
-  \caption{BFS temperature contour along the mid-plane. }
-  \label{fig:MCRT_flow_chart}
-\end{figure}
-
 
 \subsection{Description of the code}
 Following the implementations discussed by \citet{Silvestri2019ASimulation} and \citet{Humphrey2015ATracing}, we implement an MCRT model on GPUs. 
