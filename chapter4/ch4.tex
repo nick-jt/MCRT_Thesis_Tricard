@@ -131,29 +131,46 @@ Figures \ref{fig:BFS_RadAbs}, \ref{fig:RadEmi}, and \ref{fig:RadSrc} show the ra
 The radiation was calculated using both new MCRT models as well as a well-established Fortran-based radiation model for comparison. Simulations were performed at the single time-step using both 1 ray per cell and 10 rays per cell for all solvers, and serial, OpenMP and Cuda were tested as Kokkos backends for the new MCRT. 
 Simulations were performed using a 72-core Intel(R) Xeon(R) Gold 5220 CPU shared-memory workstation for OpenMP calculations, and Cuda calculations were performed using Nvidia V100 GPUs from the high performance computer Narwhal operated by the defense supercomputing resource center~\cite{something}.
 
-Results are listed in table \ref{table:BFS_runtime_table} The performance of both the MCRT-Kokkos model and the MCRT-ArborX compare extremely well against the MCRT-Fort model for a serial calculation. A runtime improvement of 86\% is already observed before any parallel routines have even been applied.
+Results are listed in tables \ref{table:BFS_runtime_table_1rpc} and \ref{table:BFS_runtime_table_10rpc} for 1 ray emitted per cell and 10 rays per cell, respectively. The performance of both the MCRT-Kokkos model and the MCRT-ArborX compare extremely well against the MCRT-Fort model for a serial calculation. A runtime improvement of 86\% is already observed before any parallel routines have even been applied.
 The dramatic speedup can be attributed to the improved mesh-transfer method implemented in the new MCRT methods. 
-Almost no mesh data is duplicated during the mesh transfer process, allowing for minimal delay before the raytracing procedure begins. VERIFY THIS AND COMPARE WITHOUT THE MESH TRANSFER.
+Almost no mesh data is duplicated during the mesh transfer process, allowing for minimal delay before the raytracing procedure begins. VERIFY THIS AND COMPARE WITHOUT THE MESH TRANSFER. WHY DOES SERIAL RUN OVER 50X FASTER THAN 30 PROCS?
 
 \begin{table}[h!]
 \centering
 \begin{tabular}{||c c c c||} 
  \hline
- Col1 & Col2 & Col2 & Col3 \\ [0.5ex] 
+ Parallel Variation & MCRT-Fort & MCRT-Kokkos & MCRT-ArborX \\ [0.5ex] 
  \hline\hline
- 1 & 6 & 87837 & 787 \\ 
- 2 & 7 & 78 & 5415 \\
- 3 & 545 & 778 & 7507 \\
- 4 & 545 & 18744 & 7560 \\
- 5 & 88 & 788 & 6344 \\ [1ex] 
+ Serial & 2687 s & 376 s & - \\ 
+ 30 CPU Processors & 52.26 s & 22.5 s & - \\
+ GPU & N/A & 6.91 s & - \\
  \hline
 \end{tabular}
-\caption{BFS runtime comparisons.}
-\label{table:BFS_runtime_table}
+\caption{BFS runtime comparisons with 1 ray emitted per CFD cell. The MCRT-Fort parallel procedure is conducted using separate MPI processes within a shared-memory system. The MCRT-Kokkos and MCRT-ArborX run using 30 OpenMP processes.}
+\label{table:BFS_runtime_table_1rpc}
+\end{table}
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{||c c c c||} 
+ \hline
+ Parallel Variation & MCRT-Fort & MCRT-Kokkos & MCRT-ArborX \\ [0.5ex] 
+ \hline\hline
+ 30 CPU Processors & 504.37 s & 197.6 s & - \\
+ GPU & N/A & 49.1 s & - \\
+ \hline
+\end{tabular}
+\caption{BFS runtime comparisons with 10 rays emitted per CFD cell.}
+\label{table:BFS_runtime_table_10rpc}
 \end{table}
 
 
-The introduction of a parallel backend to Kokkos for both the MCRT-ArborX and MCRT-Kokkos implementations allow for a further reduction in runtime.
+The introduction of a parallel CPU implementation also results in dramatic speedups for all three MCRT implementations. MCRT-Fort sees a large speedup not only due to its parallel ray-tracing procedure, but also the long time required to initialize the mesh is reduced resulting from the 30 MPI processes used\footnote{OpenFOAM will load different sections of the mesh on different processors simultaneously when MPI parallelism is used. In this case, the MCRT-Fort code has only been enabled to use MPI parallelism.}.
+Within MCRT-Kokkos and MCRT-ArborX, runtimes are decreased as well, but to a lower extent. This can be attributed to the longer mesh initialization time resulting from the usage of a single MPI process.
+
+The usage of a GPU enabled a significant reduction in runtime as well. 
+
+
 
 \section{Pratt \& Whitney NEO Combustor}
 The Pratt \& Whitney NEO combustor provides a very realistic case to sample our radiation model on.
@@ -171,12 +188,27 @@ The Pratt \& Whitney NEO combustor provides a very realistic case to sample our 
  5 & 88 & 788 & 6344 \\ [1ex] 
  \hline
 \end{tabular}
-\caption{Runtime comparisons for the Pratt & Whitney combustor geometry.}
+\caption{Runtime comparisons for the Pratt \& Whitney combustor geometry.}
 \label{table:PW_runtime_table}
 \end{table}
 
 
-\section{Random profiling studies}
+\section{Small Pool Flame}
+The emission of radiation from a buoyant pool flame is of considerable interest to those in the field of fire research. 
+The relatively slow fluid motion alongside buoyancy-driven turbulent fluctuations provides a relevant example of a real-world fire, and can be studied for the purpose of hazard mitigation for forest fires, house fires, and other hazards.
+
+The high temperatures from the chemical reaction alongside the larger length scales also provide conveniently high radiative emissions alongside high optical thicknesses. 
+This results in a high need to model the full RTE solution, and a convenient sample case to demonstrate the use of the present radiation model.
+
+\subsection{Case Setup}
+Figure \ref{fig:}
+
+\subsection{Results}
+Peak radiative emission reaches a value of $15723.3269$ Watts, where $2464.4313$ Watts are re-absorbed into the medium, and $13258.8957$ Watts escape to the walls. This results in roughly 15.6\% of radiative emission being re-absorbed within the flame. Re-absorption fractions reach values up to 0.163\% over all of the timesteps in the simulation.
+
+\section{Additional profiling studies}
+
+
 - Weak scaling study across many nodes
 - Strong scaling within a node, across many nodes
     - Cubic domain, square domain
