@@ -2,7 +2,7 @@
 \chapter{Radiation Modeling}\label{chapter:Modeling}
 While radiation is essential to model, doing so comes at a large computational expense. 
 The RTE equation (eq. \ref{eq:RTE2}) is an integro-differential equation. This is representative of the \textit{all-to-all} nature of the process. In combustion CFD, there exist a large number of physical processes occuring simultaneously, from chemistry to compressible fluid dynamics. 
-These require extensive computational resources as it is. Imposing the additional requirement of modeling radiation, which can be up to 50\% of the overall CPU time, is often-times infeasible.
+These require extensive computational resources to model as it is. Imposing the additional requirement of modeling radiation, which can be up to 50\% of the overall CPU time, is often-times infeasible.
 
 Several radiation models exist which promise to mitigate this problem. This chapter will first review the most common models and their assumptions, advantages, and drawbacks. 
 This includes a thorough explanation as to why the Monte-Carlo Ray Tracing (MCRT) method was the method of choice in this paper.
@@ -16,8 +16,6 @@ Gamil review of radiation models: \cite{Gamil2020AssessmentChamber}
 Three of the most common methods of modeling radiation are the method of spherical harmonics, the discrete ordinates method (FVM), and the MCRT. Alternative methods, such as the zonal method, assumptive methods (Milne-Eddington approximation, Schuster-Schwarzchild approximation, etc), and exact solutions to the RTE will not be discussed here.
 More information for those can be found in texts such as that of Modest \cite{Modest2013RadiativeTransfer} and Howell et. al. \cite{Howell2010ThermalTransfer}.
 
-\subsection{Method of spherical harmonics}
-\subsection{Method of discrete ordinates}
 \subsection{Monte-Carlo Ray Tracing}
 The Monte-Carlo method has long been fast and accurate method to numerically integrate many equations \cite{Howell2021TheTransfer}.
 
@@ -79,6 +77,21 @@ There apparently exist no applications of the BVH to participating media in ther
 
 \section{Implementation for this study} \label{section:ModelForThisStudy}
 In this research we capitalize on the proven speedup of GPUs to accelerate thermal radiation modeling, and attempt to additionally use the BVH data structure to provide speedup as well.
+The flow charts in \ref{fig:joint_flow_chart} and \ref{fig:MCRT_flow_chart} describe the radiation code.
+
+\begin{figure}
+  \includegraphics[width=\linewidth]{figures/ch3/joint_flow_chart.png}
+  \caption{Streamlines traced from the entrance of the BFS.}
+  \label{fig:joint_flow_chart}
+\end{figure}
+
+
+\begin{figure}
+  \includegraphics[width=\linewidth]{figures/ch3/MCRT_flow_chart.png}
+  \caption{BFS temperature contour along the mid-plane. }
+  \label{fig:MCRT_flow_chart}
+\end{figure}
+
 
 \subsection{Description of the code}
 Following the implementations discussed by \citet{Silvestri2019ASimulation} and \citet{Humphrey2015ATracing}, we implement an MCRT model on GPUs. 
@@ -105,7 +118,7 @@ MCRT-GPU enables the user to optionally use the BVH through ArborX to optimize t
 
 ArborX uses Kokkos as a backend for on-node parallelism, and implements additional MPI functionality to extend the BVH query process across multi-node runs. Distributed memory executions proceed through an upper-tree and lower-tree approach.
 Each node contains knowledge of an upper-tree, which defines defines a BVH for each of the nodes in domain-decomposed space. Then, the lower tree represents the BVH for the computational cells that exist from the CFD solver. 
-MCRT-GPU applies ray-tracing procedure across the distributed memory system using this method, which provides enhancement over the traditional MPI iteration approach as discussed in section \ref{DistMemAccel}.
+MCRT-GPU applies ray-tracing procedure across the distributed memory system using this method, which provides enhancement over the traditional MPI iteration approach as discussed in section \ref{sec:DistMemAccel}.
 
 \subsubsection{Non-gray model}
 MCRT-GPU has been built to enable use with one of three nongray models: line-by-line, gray modeling with a user-defined absorption coefficient, or gray modeling with planck-mean absorption coefficients. Non-gray databases can be derived from HITEMP or other means with CO$_2$, H$_2$O, and CO spectral lines \cite{Rothman2010HITEMPDatabase} following the approach from .
@@ -119,4 +132,4 @@ The version without applies the traditional Monte-Carlo algorithms with Kokkos a
 
 Users can access the code through a public repository on github \footnote{https://github.com/nick-jt/MCRT-GPU}.
 
-\subsection{Distributed Memory Acceleration}\label{DistMemAccel}
+\subsection{Distributed Memory Acceleration}\label{sec:DistMemAccel}

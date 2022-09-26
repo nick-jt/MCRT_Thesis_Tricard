@@ -1,35 +1,44 @@
 \addchapheadtotoc
-\chapter{Radiation and it's importance in combustion}\label{chapter:Importance}
+\chapter{Thermal radiation and it's importance in combustion}\label{chapter:Importance}
 
 \section{Fundamentals of radiation} \label{Sec:FundOfRad}
-Beer's law, Kirchoff's law, black body radiation, gray vs non-gray.
 
+Readers should review cited texts for more detailed descriptions \cite{Howell2010ThermalTransfer,Modest2013RadiativeTransfer}.
 
-A brief synopsis of thermal radiation will first be described. Readers should review cited texts for more detailed descriptions \cite{Howell2010ThermalTransfer,Modest2013RadiativeTransfer}.
+\subsection{Description of radiation}
+Thermal radiation is the transfer of thermal energy through through electromagnetic waves, according to electromagnetic wave theory, and by photons, according to quantum mechanics. 
+Either perspective may be more convenient for a given circumstance, but both perspectives are required for a complete definition \cite{Modest2013RadiativeTransfer}. Either way, the transfer of energy occurs at the speed of light, which is $2.998 \times 10^8$ in a vacuum.
+Much faster than most processes, and often believed to be a theoretical speed limit of the universe.
 
-\subsection{Basic laws of radiation}
-Thermal radiation is the transfer of thermal energy through electromagnetic waves. Common examples of radiative emitters include the sun and a campfire. Electromagnetic rays vary are commonly found at wavelengths from picometers ($10^{-12}$ m) for gamma rays to megameters ($10^6$ m) for ultra-low frequency radio waves. For combustion systems, where temperatures typically fall between 2000 and 2500K, relevant wavelengths generally fall between 1 and 15 $\mu{}$m ($10^{-6}$ m), in the infrared and visible light parts of the spectrum \cite{Liu2020TheFlames}.
+The effects of thermal radiation is can be seen in every day life. Common examples include the sun, a campfire, and a hot pavement. 
+Wavelengths are usually from picometers ($10^{-12}$ m) for gamma rays to megameters ($10^6$ m) for ultra-low frequency radio waves.
+For combustion systems, where temperatures typically fall between 2000 and 2500K, relevant wavelengths generally fall between 1 and 15 $\mu{}$m ($10^{-6}$ m), in the infrared and visible light parts of the spectrum \cite{Liu2020TheFlames}.
 
 Thermal radiation is known to have an \textit{all-to-all} nature. Radiation emitted at one point has the ability to reach another point very far away. 
-This is in contrast to conductive and convective modes of heat transfer where thermal energy is transferred through direct contact and fluid motion (local phenomena, dependent on direct contact). 
+This is in contrast to conductive and convective modes of heat transfer where thermal energy is transferred through direct contact and fluid motion (local phenomena). 
 It is for this reason that radiation plays a very important role in massive-scale studies such as in the vacuum of space.
+
+\subsection{The idealized 'Black body'}
+A body which absorbs perfectly cannot be seen and must therefore be black. Therefore, the term \textit{black body} refers to the an ideal absorber, upon which any incident light of any wavelength will be absorbed in its entirety. In addition, according to arguments posed in \ref{sec:KirchoffsLaw}, black-bodies are also ideal emitters.
+The ideal nature of black bodies provides a useful basis for radiation calculations, and therefore appears often in radiation-relevant literature.
 
 Assuming matter can only exist at discrete energy states, Max Planck derived blackbody emissive power spectrum (Planck's law), shown in eq. \ref{eq:PlancksLaw}.
 \begin{equation}
     E_{bv}(T,\nu{}) = \frac{2\pi{}h\nu{}^3n^2}{c_0^2\left[e^\frac{h\nu{}}{kT}-1\right]}
     \label{eq:PlancksLaw}
 \end{equation}
-
 Where $h$ is Planck's constant, $\nu{}$ is the wave frequency, $n$ is the refractive index of the medium, $c_0$ is the speed of light in a vacuum, $k$ is the Boltzmann constant, and $T$ is temperature. This equation can be integrated across the electromagnetic spectrum to produce an approximation for the net emissive power from a black body, as shown in eq. \ref{eq:PlancksLawIntegrated}.
 \begin{equation}
     E_b(T) = n^2\sigma{}T^4
     \label{eq:PlancksLawIntegrated}
 \end{equation}
 
-A body which absorbs perfectly cannot be seen and must therefore be black. Therefore, the term \textit{black body} refers to the an ideal absorber. 
-In a system of non-black bodies combined with a black body, the black body will absorb all incident radiation. If the black body re-emittings anything less than the ideal maximum, there will be a driven temperature difference in the system, which violates the second law of thermodynamics. 
+\subsection{Kirchoff's Law}
+In a system consisting of non-black bodies surrounding a black body, the black body will absorb all incident radiation.
+If the surrounding surfaces emit at a higher rate than the black body, then there will be a net energy exchange between the enclosure and the object.
+As a result, there will be a driven temperature difference in the system, which violates the second law of thermodynamics.
 Therefore, according to \textit{Kirchoff's law}, this surface must also be an ideal emitter.
-The ideal nature of black bodies provides a useful basis for radiation calculations, and therefore appears often in radiation-relevant literature.
+
 
 \subsection{Thermal radiation in participating media}
 For combustion systems, thermal radiation interacts with the media as well as the walls. The fundamental equation to describe radiation in an absorbing-emitting medium is the radiative transfer equation (RTE), eq. \ref{eq:RTE2}.
@@ -41,7 +50,7 @@ For combustion systems, thermal radiation interacts with the media as well as th
 
 Where $I$ is ray intensity, $\textbf{s}$ is a path length (with both a direction and a location), $\kappa{}$ is the absorption coefficient, $I_b$ is the black-body intensity, $\sigma{}$ is the scattering coefficient, and $\Phi{}$ is the scattering phase-function (representing the probability a ray from direction $\hat{s}_i$ is scattered into direction $\hat{s}$). Subscript $\eta{}$ represents wavenumber (the inverse of wavelength) and $i$ marks an incident direction. This equation describes how the intensity of a pencil of rays changes along a path length $\hat{\textbf{s}}$. A ray intensity will decrease due to absorption ($\kappa{}_\eta{}I_\eta{}$, also known as Beer's law) and out-scattering ($\sigma{}_{s\eta{}}I_\eta{}$). And the ray intensity will increase due to further emission along the path-length ($\kappa{}_\eta{}I_{b\eta{}}$) and scattering of rays from other directions into the path length of interest ($\frac{\sigma{}_s}{4\pi}\int_{4\pi{}}{I_\eta{}(\hat{s})\Phi_\eta{}(\hat{s}_i,\hat{s})}\,d\Omega{}_i$). 
 
-The existence of both an integral and a differential in \ref{eq:RTE2} poses a complexity problem as the equation being modeled is now an integro-differential equation. 
+The existence of both an integral and a differential in eq. \ref{eq:RTE2} poses a complexity problem as the equation being modeled is now an integro-differential equation. 
 This requires both modeling of local phenomena and the influence of global phenomena on local conditions. 
 This all-to-all nature is the reason for the immense computational difficulty of modeling the RTE. 
 In addition, as is explained in section \ref{Sec:Nongray}, the highly intermittent nature of the emission spectrum of gas imposes an additional modeling difficulty.
@@ -52,11 +61,22 @@ Absorption coefficient, $\kappa_{\eta{}}$ and scattering coefficient $\sigma{}_\
     \label{eq:RTErewritten}
 \end{equation}
 \begin{equation}
-    S(s',\hat{s}) = (1-\omega{}_\eta{})I_{b\eta{}}-\frac{\omega{}_\eta{}}{4\pi}\int_{4\pi{}}{I_\eta{}(\hat{s})\Phi_\eta{}(\hat{s}_i,\hat{s})}\,d\Omega{}_i
+    S(s',\hat{s}) = (1-\omega{}_\eta{})I_{b\eta{}}+\frac{\omega{}_\eta{}}{4\pi}\int_{4\pi{}}{I_\eta{}(\hat{s})\Phi_\eta{}(\hat{s}_i,\hat{s})}\,d\Omega{}_i
     \label{eq:RTE_S}
 \end{equation}
 
-Where $S_\eta{}(s',\hat{s})$ is the ray-intensity source term eq. \ref{eq:RTE_S}, and $\omega{}_\eta{}=\sigma{}_{s\eta{}}/\beta_{\eta{}}$ is the single-scattering albedo. Eq. \ref{eq:RTErewritten} shows that the ray intensity increases due to a source term, and decreases proportional to it's current intensity.
+Where $S_\eta{}(s',\hat{s})$ is the ray-intensity source term eq. \ref{eq:RTE_S}, and $\omega{}_\eta{}=\sigma{}_{s\eta{}}/\beta_{\eta{}}$ is the single-scattering albedo. Eq. \ref{eq:RTErewritten} shows that the intensity of the pencil of rays increases due to a source term, and decreases proportional to it's current intensity.
+The extinction coefficient $\beta{}$, is often divided from both sides of eq. \ref{eq:RTE2}, and the resulting $\beta{}d\hat{s}$ term is called the optical distance, $d\tau{}_\eta{}$.
+
+The RTE can finally be integrated along an optical path length resulting in eq. \ref{eq:RTE_Solution}.
+\begin{equation}
+    I_\eta{}(\tau{}_\eta{}) = I_\eta{}(0)e^{-\tau{}_\eta{}}+\int_{0}^{\tau{}_\eta{}}{S_\eta{}(\tau{}'_\eta{},\hat{s})e^{-(\tau{}_\eta{}-\tau{}'_\eta{})}}d\tau{}'_\eta{}
+    \label{eq:RTE_Solution}
+\end{equation}
+Where one assumes a solution to eq. \ref{eq:RTE_S}. Equations \ref{eq:RTE2} and \ref{eq:RTE_Solution} display an important trait in thermal radiation that is conceptually obvious, but has significant consequences on the modeling procedure:
+the change in intensity is a function of the current intensity. In other words, the intensity of a pencil of rays at one location cannot be known without knowledge of the ray's intensity directly before.
+As a result, one cannot accurately predict the variation of intensity in space without tracing a ray sequentially through every point between where it is emitted, and the point of interest.
+This ordered nature is consequential to the tracing of rays on distributed-memory systems, and will be discussed more in section \ref{sec:DistMemAccel}.
 
 \subsection{Non-gray effects}\label{Sec:Nongray}
 Like all substances, gases emit radiation along the electromagnetic spectrum. Under most conditions for combustion phenomena, radiative emission is isolated to the infrared part of the spectrum, between wavelengths of 1 to 15 $\mu{}$m \cite{Liu2020TheFlames}.
@@ -65,18 +85,89 @@ The black body spectrum in section \ref{Sec:FundOfRad} can approximate the emiss
 Most solid structures have a multitude of modes of oscillations, from the crystal-lattice structure down to the molecular energy states \cite{Viskanta1975HeatSolids}. As a result, the emission spectrum of solids is often continuous and can be approximated as a constant fraction of the black body emission spectrum (gray) \cite{Howell2010ThermalTransfer}. 
 Gases, however, are restricted to the oscillation modes from the natural energy states of the molecules in the mixture. Quantum mechanics postulates that these energy states are discrete, and therefore the change in energy states and resulting emission frequencies must also be discrete \cite{Hanson2016SpectroscopyGases}.
 
+\subsubsection{Definition of absorption coefficient}
+Einsteins coefficients: \cite{Modest2013RadiativeTransfer,Pai1966RadiationDynamics,Hanson2016SpectroscopyGases}
 
+\subsubsection{Spectrum of emission in combustion}
 \textbf{INSERT EMISSION SPECTRUM HERE}
 
 Figure above shows the emission spectrum from a flame. The largest contributors to emission in most hydrocarbon flames are included: $CO_2$, $CO$, $H_2O$, and soot.
-\textit{Ab initio} modeling and empirical evidence can be used to obtain approximations for the emission spectra of a molecule at a specified pressure and temperature. This information has been collected into a series of available online databases \cite{Rothman2010HITEMPDatabase}. Those databases can then be used to provide a radiation solver absorption coefficients at a location in the combustion mixture, for a given intersecting ray wavelength. Various methods to model non-gray effects are introduced in Ch. \ref{chapter:Modeling}.
+\textit{Ab initio} modeling and empirical evidence can be used to obtain approximations for the emission spectra of a molecule at a specified pressure and temperature. This information has been collected into a series of available online databases \cite{Rothman2010HITEMPDatabase}. 
+Those databases can then be used to provide a radiation solver absorption coefficients as a function of chemical mixture composition and thermodynamic state.
+
+\subsection{Characterizing the contribution of radiation}
+Understanding relative influence of radiation compared against other forms of energy transfer is a necessary task for many scientists and engineers, however a complete solution to the RTE alongside within their simulated domain (eq. \ref{eq:RTE2}) is often unnecessary to accomplish this. 
+There exist several parameters and non-dimensional relationships which can adequately characterize its magnitude in relation to other relevant parameters.
+
+An obvious approach would be to determine the tendency for a medium to absorb any emitted radiation. The diminishment of intensity of a pencil of rays can be evaluated as in eq. \ref{eq:DiminishmentOfRayIntensity}.
+\begin{equation}
+    I_\lambda{}(s)=I_\lambda{}(0)\exp{\left(-\int^\infty_0{\kappa{}_\lambda{}~ds}\right)}
+    \label{eq:DiminishmentOfRayIntensity}
+\end{equation}
+
+The quantity in the exponential is known as the optical thickness. The optical thickness for absorption is essentially a description of the opacity of a medium. This is a function of not only the tendency for a fluid element to absorb the energy of passing radiation, defined by the absorption coefficient, but also the overall distance over which the ray can be absorbed, eq. \ref{eq:Tau}.
+\begin{equation}
+    \tau{}_\lambda = \int^\infty_0{\kappa{}_\lambda{}~ds}
+    \label{eq:Tau}
+\end{equation}
+If one assumes the absorption coefficient remains constant along the path length, $s$, eq. \ref{eq:Tau} can be reduced to eq. \ref{eq:Tau_simple}.
+\begin{equation}
+    \tau{}_\lambda = \kappa{}_\lambda{}\Delta{s}
+    \label{eq:Tau_simple}
+\end{equation}
+The dimension of absorption coefficient is $m^{-1}$. Therefore, the optical thickness is a non-dimensional parameter that defines the propensity for a medium to absorb any emitted radiation, and can be a useful term to predict the necessity of solving the RTE. 
+For example, values of $2.303$, $4.605$, and $6.908$ define the optical distances necessary to diminish intensities by $90$\%, $99$\%, and $99.9$\%, respectively.
+Media which tend to absorb very little are known as \textit{optically thin}, and can be modeled using the \textit{optically thin assumption (OTA)}, where radiation contributes a simple volumetric energy loss to the local fluid differential volume, and any radiative absorption is ignored.
+Media with high absorption coefficients and/or long length scales are known as \textit{optically thick}. Under these circumstances the absorption component of the RTE becomes more significant and must be modeled.
+Very optically thick media that find radiative re-absorption to occur on very small length scales relative to the geometry can model radiation using the \textit{diffusion approximation}, where radiative heat transfer is assumed to act similar to conductive diffusion with a radiative conductivity coefficient acting in place of the coefficient of thermal conductivity. 
+Under moderate absorption coefficients, the full RTE must be modeled for both emission and absorption throughout the volume \cite{Modest2013RadiativeTransfer}.
+
+Many instances of radiative gases call for an averaged quantity of absorption coefficient across the spectrum. The Planck-mean absorption coefficient, eq. \ref{eq:PlanckMean}, is often used in this context.
+\begin{equation}
+    \kappa{}_p = \frac{\int^\infty_0{\kappa{}_\lambda{}I_{b,\lambda}~d\lambda}}{\int^\infty_0{I_{b,\lambda}~d\lambda}}=\frac{\pi}{\sigma{}T^4}\int^\infty_0{\kappa{}_\lambda{}I_{b,\lambda}~d\lambda}
+    \label{eq:PlanckMean}
+\end{equation}
+Separate Planck-mean absorption coefficients can be defined for each of the more significant radiatively participating components of the mixture (often CO$_2$, H$_2$O, CO, CH$_4$, and soot). The net Planck-mean absorption coefficient can then be evaluated as a summation of each, weighted by their respective mole fractions.
+A simplified optical thickness, finally, can be defined as $\tau{}=\kappa{}_p\Delta{s}$.
+
+To analyze the relative contribution of radiation and convection, the radiative flux number, eq. \ref{eq:RadFluxNumber}, can be used \cite{Pai1966RadiationDynamics}.
+\begin{equation}
+    R_{F,conv}=\frac{\text{radiative flux}}{\text{convective flux}}=\frac{c\sigma{}T^4L^2}{L_RC_p\rho{}UTL}
+    \label{eq:RadFluxNumber}
+\end{equation}
+Where $c$ is the speed of light, $L$ is a characteristic length scale, and $L_R$ is the mean-free path of radiation, eq. \ref{eq:MFP_Radiation}.
+\begin{equation}
+    R_{F,conv}=\frac{\text{radiative flux}}{\text{convective flux}}=\frac{c\sigma{}T^4L^2}{L_RC_p\rho{}UTL}
+    \label{eq:RadFluxNumber}
+\end{equation}
+
+The net radiative emission from a medium can be evaluated as eq. \ref{eq:RadiantFraction}.
+
+It should be noted that additional parameters may be used to estimate the importances of other effects, such as radiative pressure and radiative energy density.
+Mean free path of radiation \cite{Pai1966RadiationDynamics}, average distance between photon-molecule collision.
+
+
 
 \section{Effect of radiation in combustion systems}
+
 Thermal radiation contributes significantly to the general fluid dynamics, turbulence, boundaries and chemistry in combustion.
 
 \subsection{Effect of radiation on fluid flow}
+The strong influence of the radiative redistribution of energy does not exclude itself to reacting flows. Many fluid dynamical systems see a relevant contribution of radiation. These physics that are present with non-chemically reacting flows can present themselves equally or in greater magnitude in reacting flows, and therefore provide a useful initial basis to define the influence of radiation in combustion. 
+
+In general, any systems with high temperatures fluid dynamics can see a powerful influence of radiation, and its resulting effects. 
+Additionally, radiation is more pronounced in systems which have high residence times, where the relatively slow timescales of radiative heating have more time to influence the system \cite{Wu2021LimitationsFires}. 
+Therefore, many systems outside of combustion have significant radiative heating characteristics. In fact, any gas-dynamical system with high temperatures and relatively low densities will exhibit high degrees of radiative emission compared to conduction and convection \cite{Pai1966RadiationDynamics}. This includes the fields of hypersonics, fission and fusion nuclear energy, and space exploration.
+
+For non-chemically reacting systems, the gasdynamical influences of radiation take effect often in regimes of science well-beyond those seen in every day life. Under atmospheric conditions, for example, the influence of radiation is largely negligible compared to that of conduction and convection \cite{Pai1966RadiationDynamics}.
+Even under hypersonic conditions, such as Inter-continental ballistic missiles (ICBMS), radiation is often still an order of magnitude lower than aerodynamic heating. Only at temperatures seen by re-entry vehicles (10$^4$ K) does radiation have a strong, non-negligible effect.
+In nuclear systems, such as nuclear fusion reactors, where temperatures reach 10$^6$K, the influence of the radiation becomes extremely significant. This follows from not only its redistribution of energy, but also its influence on pressure (through momentum imparted via photon collisions) and the radiative energy density become non-negligible as well. 
+
+
 Combustion sees a redistribution of thermal energy as a result of radiation. 
 Neglecting thermal radiation may lead to large over-predictions of flow temperature by upwards of 200K in some cases \cite{Modest2016RadiativeSystems,Wu2021LimitationsFires,Coelho2018RadiativeSystems}, as well as under-predictions of flame temperature in others.
+
+
 
 \subsection{Effect of radiation on turbulence}
 Turbulence-radiation interactions (TRI) poses a significant modeling problem for computational scientists. 
