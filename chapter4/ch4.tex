@@ -201,16 +201,18 @@ The high temperatures from the chemical reaction alongside the larger length sca
 This results in a high need to model the full RTE solution, and a convenient sample case to demonstrate the use of the present radiation model.
 
 \subsection{Case Setup}
-Figure \ref{fig:PoolFire_diagram} displays the timestep used for frozen field analysis of the pool flame. The mesh 
+Figure \ref{fig:PoolFire_diagram} displays the timestep used for frozen field analysis of the pool flame. The domain is a size a cubic 1$\times$1$\times$1m domain with a mesh of 1,728,000 hexahedral cells with 120 divisions per side.
+The 
 
 \begin{figure}
 \includegraphics[width=\linewidth]{figures/ch4/contour_early.png}
-\caption{Contours of an early timestep of the pool fire simulation. Axes dimensions are in meters.}
+\caption{An early timestep of the pool fire flame simulation. Isosurface is 0.03 CO$_2$ mass fraction colored by temperature. Axes dimensions are in meters.}
 \label{fig:PoolFire_diagram}
 \end{figure}
 
 \subsection{Results}
-Peak radiative emission reaches a value of $15723.3269$ Watts, where $2464.4313$ Watts are re-absorbed into the medium, and $13258.8957$ Watts escape to the walls. This results in roughly 15.6\% of radiative emission being re-absorbed within the flame. Re-absorption fractions reach values up to 0.163\% over all of the timesteps in the simulation.
+Peak radiative emission reaches a value of $10541.5044$ Watts, where $1469.4406$ Watts are re-absorbed into the medium, and $9072.0639$ Watts escape to the walls. This results in approximately 14\% of radiative emission being re-absorbed within the flame. 
+
 
 \section{Additional profiling studies}
 
