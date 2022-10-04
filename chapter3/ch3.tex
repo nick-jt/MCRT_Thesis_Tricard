@@ -32,7 +32,7 @@ The energy deposition process can either occur gradually (each cell a ray inters
 
 Applying the MCRT is useful as it extensively robust. The raytracing process can be completed in arbitrary domains with an arbitrary mesh construction. Additionally, the selection of a ray wavenumber enables the use of a non-gray method in the modeling process.
 
-\subsection{Random number selection process}
+\subsection{Random number selection process}  \label{section:randomnumberrelations}
 The ray attributes must be selected in a particular manner to ensure a physical solution. A naive implementation may randomly select ray emission directions uniformly across the polar and azimuthal angle (see fig. \ref{fig:Unit_Sphere}), for example. This, however, violates trigonometric rules and induces higher emission around the lower-polar angles. 
 An accurate depiction of the random number relations would require a weighting over the range of possible values to ensure the resulting spectrum of intensity retains the expected profile. 
 By assigning each ray an equal amount of energy, the attribute selection process can proceed with the assumption that each ray carries an equal weight to the overall energy distributed from a cell.
@@ -226,7 +226,7 @@ The RTE, eq. \ref{eq:RTE_Solution}, can be inverted for an incident ray travelin
     \end{aligned}
 \end{equation}
 Equation \ref{eq:Inverted_RTE} provides a method to now evaluate the radiative emission throughout the domain in reverse manner.
-Assuming piecewise homogeneity, eq. \ref{eq:Inverted_RTE} can be reformulated into eq. \ref{eq:discrete_Inverted_RTE} to be solved stochastic form using the Monte-Carlo method.
+Assuming piecewise homogeneity, eq. \ref{eq:Inverted_RTE} can be reformulated into eq. \ref{eq:discrete_Inverted_RTE} to be solved in stochastic form using the Monte-Carlo method.
 \begin{equation}
     \begin{aligned}
     I_\eta{}(\textbf{r}_i,-\hat{s}_i)& = \epsilon{}_\eta{}(r_w)I_{b\eta{}}(r_w)\exp{\left[-\sum_{m=1}^M\kappa{}_{\eta{},m}(l_{m_{out}}-l_{m_{in}})~dl'\right]}\\
@@ -239,19 +239,86 @@ Which leaves an equation which provides a physical description of the backtracki
 As the ray travels in the reverse direction, it will pass through a series of computational cells. 
 As the ray is being traced, each computational cell intersected will contribute a portion of the net energy deposited to the cell of tracing origin. The energetic contribution of each of the passing cells is accounted for, alongside a transmissivity term to determine their contribution's decay before arriving at the destination cell (tracing origin).
 In the end, there will be a ray whose accumulated intensity will be that which is deposited into the cell of tracing origin.
-Provided a statistically significant number of ray samples, the net radiative absorption into the cell of tracing origin can be evaluated from the average.
-
-INSERT AVERAGE EQUATION
+Provided a statistically significant number of ray samples, the average radiative absorption can be deposited into the original cell.
 
 
 \subsubsection{Reciprocal Monte-Carlo}
-Several alterative methods were proposed by \cite{Tesse2002RadiativeApproach} and 
+Reciprocal Monte-Carlo\footnote{Also referred to as direct-exchange MC in the text by \citet{Modest2013RadiativeTransfer}.} is a variance reduction technique that relies on evaluations of the net exchange of power between two computational cells or surfaces.
+The discussed Monte-Carlo methods forcefully impose the requirement defined by the first law of thermodynamics by ensuring energy emitted and deposited will sum to equal values. The second law, however, is only imposed stochastically.
+The enforcement of the second law would provide additional information into the model, and theoretically reduce variance in the solution. One contribution of the second law is to say that there can be no spontaneous energy exchange between two objects of equal temperature. 
+The approach in the reciprocal Monte-Carlo implementation is to embed the requirement of first and second law satisfaction in the model \cite{Howell2020ThermalTransfer}.
+
+Several alternative methods have been proposed by \citet{Tesse2002RadiativeApproach} and \citet{Dupoirieux2006AnThicknesses}. These include the Emission reciprocity method (ERM), absorption reciprocity method (ARM), and a hybrid of the two, optimized reciprocity method (ORM).
+
+A complete solution to the RTE would require the evaluation of all power exchanges, $P_{i,j}^{exch}$, between every pair of surfaces and cells $(i,j)$ in the domain.
+The net power exchange with one particular object can thereafter be evaluated as the sum of net power exchange with every other object.
+\begin{equation}
+    P_q=\sum_{j=1}^{N_v+N_S}P_{qj}^{exch}=-\sum_{j=1}^{N_v+N_S}P_{jq}^{exch}
+    \label{eq:power_exchange}
+\end{equation}
+Where $N_V$ and $N_S$ are all of the volumes and surfaces within the geometry, and
+$P_{ab}$ defines the net power exchange from object $b$ into object $a$.
+ERM and ARM differ in which term they attempt to estimate: ERM estimates the first summational term, and ARM estimates the second summational term.
+In ERM, estimated value for a spectral power exchange from a volume $j$ into a volume $q$ can be evaluated as
+\begin{equation}
+    P_{qj\eta}^{ERM}=4\pi{}\kappa_{q\eta}V_q(I_{bj\eta}-I^0_{bq\eta})A_{qj\eta}.
+    \label{eq:fraction_spectralpower_ERM}
+\end{equation}
+Where the spectral power exchange can be related to the net power exchange as $P_{qj}^{exch}=\int_0^\infty{}P_{qj\eta}^{exch}~d\eta$.
+Meanwhile, for ARM, the exchange is evaluated as,
+\begin{equation}
+    P_{jq\eta}^{ARM}=4\pi{}\kappa_{j\eta}V_j(I_{bq\eta}-I^0_{bj\eta})A_{jq\eta}.
+    \label{eq:power_exchange_ARM}
+\end{equation}
+$A$ represents the fraction of spectral power emitted by cell $j$ that is absorbed by cell $q$, and requires a stochastic solution using the Monte-Carlo method. Additional formulations for $A$ between surfaces, and surfaces and volumes can be found in \citet{Dupoirieux2006AnThicknesses}.
+
+\citet{Dupoirieux2006AnThicknesses} also presented a mathematical description of variance given the two procedures ERM and ARM, and determined that the standard deviation of ERM is lower than that of ARM when the temperature $T_q$ is larger than $T_j$, and conversely ARM is more precise under the opposite condition.
+Therefore, the procedure conducted in ORM is to select which to evaluate at runtime for every pair exchange by comparing on the relative temperatures between the two objects.
+
+With the net power exchange being evaluated instead of the one-sided contribution of one cell to other cells (forward MC), and from other cells into one cell (backward MC), the total number of ray histories being tracked through one tracing procedure is increased.
+Therefore, the information obtained through one tracing of reciprocal MC is generally greater than that of the other presented approaches.
 
 \subsubsection{Shift method}
 
+
 \subsubsection{Null-collision Monte-Carlo}
+Implicit in the descriptions of Monte-Carlo methods thus far is the requirement of tracing a ray through the CFD mesh.
+This requirement exists for determination of either ray energy depositions (forward MC), emission contributions (backward MC), or power exchange (reciprocal MC). 
+The reason for tracing originates from the expected variability of extinction coefficient, $\beta{}_\eta{}$, along a ray's path length. 
+This variability is nearly guaranteed; the spatial in-homogeneity of the system's temperature, pressure, chemical composition will result in spatial in-homogeneity of the ray's extinction coefficient. 
+The ray must be traced through each computational cell to explicitly evaluate the interaction of the ray with that cell.
+If one could assume homogeneity in $\beta{}_\eta{}$, however, no mesh tracing procedure would be required. The interaction of the ray with the surrounding medium could be assumed uniform along the ray's travel.
+This is the intention behind the null-collision algorithm \cite{Galtier2013IntegralAlgorithms,Eymet2013Null-collisionSimulators}.
 
+The principle of null collision is to redefine the extinction coefficient as,
+\begin{equation}
+    \beta{}_\eta{} = \kappa{}_\eta{}+\sigma{}_\eta+\kappa{}_{\eta{},null}.
+    \label{eq:null_coll_absco}
+\end{equation}
+Where an additional null-collision coefficient $\kappa{}_{\eta,null}$ has been introduced in addition to the absorption coefficient $\kappa{}_\eta$ and scattering coefficient $\sigma{}_\eta{}$. 
+The value of this coefficient is defined as the exact value which allows for $\beta{}_\eta{}$ to remain constant throughout the ray's travel.
+This therefore allows for a predictable procedure for ray propagation. The resulting random number relation for extinction is, similar to eq. \ref{eq:discreteabsorption_cells},
+\begin{equation}
+    \tau_{extinct} = \ln{\frac{1}{R_\beta{}}}.
+    \label{eq:discreteabsorption_cells_repeated}
+\end{equation}
+and the length propagated before ray extinction, $s_{ext}$ is evaluated through inversion of
+\begin{equation}
+    \tau_{ext,\eta{}} = \int_0^{s_{ext}}{\beta{}_\eta{}~ds}.
+    \label{eq:randomextinctionlength}
+\end{equation}
+Usually, the inversion of eq. \ref{eq:randomextinctionlength} requires tracing through the mesh, as mentioned previously. With the introduction of the null-collision coefficient, however, $\beta{}_\eta{}$ can be removed from the integral, and eq. \ref{eq:randomextinctionlength} can be simplified to $\tau{}_{ext,\eta}=\beta{}_\eta{}s_{ext}$ and therefore inversion may be completed analytically as $s_{ext}=\tau{}_{ext,\eta}/\beta{}_\eta{}$.
 
+The question remains of how to determine energy contributions from radiation. 
+The tracing procedure may proceed as follows. Upon the commencement of ray travel, the optical distance before extinction is randomly determined using eq. \ref{eq:discreteabsorption_cells_repeated}, and the resulting extinction distance, $s_{ext}$, is evaluated analytically.
+The ray is allowed to travel this distance. Upon entry to the intersected cell, the absorption coefficient and scattering coefficient are determined, and a random number, $R$ is drawn.
+The procedure the ray undergoes next is then determined using a Russian-roulette approach.
+The ray is terminated if $R<\kappa{}_\eta{}/\beta{}_\eta{}$, scattered if $\kappa{}_\eta{}/\beta{}_\eta{}<R<(\kappa{}_\eta{}+\sigma{}_\eta{})/\beta{}_\eta{}$ and continues propagation if $R>(\kappa{}_\eta{}+\sigma{}_\eta{})/\beta{}_\eta{}$. 
+The null collision event can therefore be thought of as a scattering event, but with continued travel in the same direction.
+
+Since its recent introduction into radiative heat transfer by \citet{Galtier2013IntegralAlgorithms}, null-collision has see a promising growth in usage as an alternative to the traditional approach of tracing through a grid.
+
+An alternate form of the null-collision algorithm has been applied to combustion simulations by \citet{Eymet2013Null-collisionSimulators}...
 
 
 \subsection{Adaptive mesh approaches}
