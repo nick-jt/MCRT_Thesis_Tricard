@@ -1,5 +1,5 @@
 \addchapheadtotoc
-\chapter{Applied Radiation Model}\label{chapter:Example}
+\chapter{Solver Performance}\label{chapter:Example}
 The complexity of the radiation solver resulting from both its theoretical foundation as well as its computational implementation calls for an extensive series of validation and performance studies.
 
 Three test geometries are presented in this chapter for verification and profiling using the two methods discussed in section \ref{section:ModelForThisStudy}. The new MCRT models using the bounding volume hierarchy approach will be refered to as MCRT-ArborX, and the model without will be referred to as MCRT-Kokkos. 
@@ -62,6 +62,8 @@ In the relatively few studies that exist, the addition of volumetric heating and
 \caption{Dimensions of backward-facing step configuration used in this study in addition to a representative line used to sample radiative properties. All units are in meters. }
 \label{fig:BFS_geometry}
 \end{figure}
+
+CITE JULIANS THESIS
 
 The BFS geometry used in this study is diagrammed in figure \ref{fig:BFS_geometry} based on an experimental configuration at the Pennsylvania State University.
 A three-dimensional CFD calculation was performed closely matching the conditions present in the experiment. For this case, no chemically reacting flow is included. 
@@ -216,7 +218,7 @@ This configuration is studied for both planck-mean gray and line-by-line spectra
 
 \subsection{Results}
 Figure \ref{fig:PoolFire_radiationcontours} displays the radiative emission and wall absorption patterns for the flame. Wall heat flux is maximized near the inlet section, directly adjacent to the location of ignition. 
-The radiative emission contours drop towards the outer edges and top section of the mushroom-like shape. The turbulent mixing of the reacting flow with surrounding quiescent fluid results in a reduction in temperature, a lower volumetric emission.  
+The radiative emission contours drop towards the outer edges and top section of the mushroom-like shape. The turbulent mixing of the reacting flow with surrounding quiescent fluid results in a reduction in temperature, and lower volumetric emission.  
 
 \begin{figure}
 \includegraphics[width=\linewidth]{figures/ch4/radiation_contours.png}
@@ -224,8 +226,22 @@ The radiative emission contours drop towards the outer edges and top section of 
 \label{fig:PoolFire_radiationcontours}
 \end{figure}
 
-Net radiative emission equals $10541.5044$ Watts, where $1469.4406$ Watts are re-absorbed into the medium, and $9072.0639$ Watts escape to the walls. This results in approximately 14\% of radiative emission being re-absorbed within the gases in the system. 
+In order to better understand the influence of radiation within the flame, figure \ref{fig:PoolFire_quadcomparison} displays four relevant parameters for the radiation calculation. 
+The contours of temperature show the two streams of reacting flow billowing upwards as a result of the buoyant force induce on the lower-density regions.
+The top-section of the mushroom contains an  flame-front which, towards the outer regions, slowly decreases in temperature and intensity as a result of momentum and molecular exchange with the surrounding quiescent region through viscous and diffusive effects.
+High temperature regions correlate strongly with the points of high emission, and the wings of the mushroom show a much stronger decay in emission as a result of the fourth power dependence of radiative emission with temperature.
+
+Absorption visually appears to correlate much more closely with the Planck-mean absorption coefficient than temperature. Absorption is maximized near the entrance region of the flame, and maintains its strength throughout the tight upwards-moving stream of fluid.
+The significant drop in Planck-mean absorption coefficient with radiative absorption in the non-reacting regions of the flow suggests that the flame is responsible for the bulk of radiative re-absorption. 
+
+In total, net radiative emission equals $10541.5044$ Watts, where $1469.4406$ Watts are re-absorbed into the medium, and $9072.0639$ Watts escape to the walls. This results in approximately 14\% of radiative emission being re-absorbed primarily in the flame-region, as suggested previously. 
 The maximum volumetric radiative energy loss for any computational cell is -$1.081$ W. In comparison, the maximum volumetric source through chemical reaction was $14.08$ Watts.
+
+\begin{figure}
+\includegraphics[width=\linewidth]{figures/ch4/PoolFire_quadcomparison.png}
+\caption{Mid-plane contours of four relevant parameters to the radiation calculation in the pool fire.}
+\label{fig:PoolFire_quadcomparison}
+\end{figure}
 
 Figure \ref{fig:PoolFire_lineplot} shows various normalized parameters along the center-line of the flame. 
 Normalized temperature and product species mass fractions rise with increasing distance from the bottom surface, indicating reaction progression. 

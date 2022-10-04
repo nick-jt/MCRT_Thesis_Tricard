@@ -1,13 +1,10 @@
 \addchapheadtotoc
-\chapter{Thermal radiation and it's importance in combustion}\label{chapter:Importance}
+\chapter{Background on Radiation in Combustion}\label{chapter:Importance}
+Brief introduction
 
 \section{Fundamentals of radiation} \label{Sec:FundOfRad}
-
-Readers should review cited texts for more detailed descriptions \cite{Howell2010ThermalTransfer,Modest2013RadiativeTransfer}.
-
-\subsection{Description of radiation}
-Thermal radiation is the transfer of thermal energy through through electromagnetic waves, according to electromagnetic wave theory, and by photons, according to quantum mechanics. 
-Either perspective may be more convenient for a given circumstance, but both perspectives are required for a complete definition \cite{Modest2013RadiativeTransfer}. Either way, the transfer of energy occurs at the speed of light, which is $2.998 \times 10^8$ in a vacuum.
+Thermal radiation is the transfer of thermal energy through through electromagnetic waves, according to electromagnetic wave theory, and by particulate photons, according to quantum mechanics. 
+Either perspective may be more convenient for a given circumstance, but both perspectives are required for a complete definition \cite{Modest2013RadiativeTransfer}. The transfer of energy occurs at the speed of light, which is $2.998 \times 10^8$ meters per second in a vacuum.
 Much faster than most processes, and often believed to be a theoretical speed limit of the universe.
 
 The effects of thermal radiation is can be seen in every day life. Common examples include the sun, a campfire, and a hot pavement. 
@@ -18,11 +15,17 @@ Thermal radiation is known to have an \textit{all-to-all} nature. Radiation emit
 This is in contrast to conductive and convective modes of heat transfer where thermal energy is transferred through direct contact and fluid motion (local phenomena). 
 It is for this reason that radiation plays a very important role in massive-scale studies such as in the vacuum of space.
 
-\subsection{The idealized 'Black body'}
+A brief description of radiation and its importance in combustion is presented,
+readers should review referenced texts for more thorough descriptions \cite{Howell2010ThermalTransfer,Modest2013RadiativeTransfer}.
+
+\subsection{Basic Laws of radiation}
+Brief introduction
+
+\subsubsection{The idealized 'Black body'}
 A body which absorbs perfectly cannot be seen and must therefore be black. Therefore, the term \textit{black body} refers to the an ideal absorber, upon which any incident light of any wavelength will be absorbed in its entirety. In addition, according to arguments posed in \ref{sec:KirchoffsLaw}, black-bodies are also ideal emitters.
 The ideal nature of black bodies provides a useful basis for radiation calculations, and therefore appears often in radiation-relevant literature.
 
-Assuming matter can only exist at discrete energy states, Max Planck derived blackbody emissive power spectrum (Planck's law), shown in eq. \ref{eq:PlancksLaw}.
+Assuming matter can only exist at discrete energy states, Max Planck derived the black body emissive power spectrum (Planck's law), shown in eq. \ref{eq:PlancksLaw}.
 \begin{equation}
     E_{bv}(T,\nu{}) = \frac{2\pi{}h\nu{}^3n^2}{c_0^2\left[e^\frac{h\nu{}}{kT}-1\right]}
     \label{eq:PlancksLaw}
@@ -33,14 +36,21 @@ Where $h$ is Planck's constant, $\nu{}$ is the wave frequency, $n$ is the refrac
     \label{eq:PlancksLawIntegrated}
 \end{equation}
 
-\subsection{Kirchoff's Law}
+While emissive power is an important quantity for radiation modeling, the radiative intensity, $I$, or emissive power per unit solid angle on the unit sphere, is a more convenient quantity for many radiation problems. A "solid angle" is a three dimensional description of angle, similar to a two-dimensional angle on the unit circle. The definition for intensity from a diffuse emitter is eq. \ref{eq:Intensity}.
+\begin{equation}
+    I_b(T) = \frac{E_b(T)}{\pi}
+    \label{eq:Intensity}
+\end{equation}
+
+
+\subsubsection{Kirchoff's Law} \label{sec:KirchoffsLaw}
 In a system consisting of non-black bodies surrounding a black body, the black body will absorb all incident radiation.
 If the surrounding surfaces emit at a higher rate than the black body, then there will be a net energy exchange between the enclosure and the object.
 As a result, there will be a driven temperature difference in the system, which violates the second law of thermodynamics.
 Therefore, according to \textit{Kirchoff's law}, this surface must also be an ideal emitter.
 
 
-\subsection{Thermal radiation in participating media}
+\subsection{Thermal radiation in participating media} \label{section:RTE}
 For combustion systems, thermal radiation interacts with the media as well as the walls. The fundamental equation to describe radiation in an absorbing-emitting medium is the radiative transfer equation (RTE), eq. \ref{eq:RTE2}.
 
 \begin{equation}
@@ -78,22 +88,53 @@ the change in intensity is a function of the current intensity. In other words, 
 As a result, one cannot accurately predict the variation of intensity in space without tracing a ray sequentially through every point between where it is emitted, and the point of interest.
 This ordered nature is consequential to the tracing of rays on distributed-memory systems, and will be discussed more in section \ref{sec:DistMemAccel}.
 
-\subsection{Non-gray effects}\label{Sec:Nongray}
+A very simple example of radiative heat transfer can be applied to an isothermal sphere with no scattering and surrounded by cold, black walls. 
+The resulting emanating intensity can be described by eq. \ref{eq:emitting_sphere}.
+\begin{equation}
+    I_\eta{}(\tau{}_R,\theta{}) = I_{b\eta{}}\left(1-e^{-2\tau{}_R\cos{\theta}}\right)
+    \label{eq:emitting_sphere}
+\end{equation}
+Where $\tau{}_R$ is the optical radius of the sphere and $\theta{}$ is the exit angle (angle between the exit direction and the norm of the internal face of the sphere).
+Then, the radiative heat flux can be evaluated by integration over all exit angles, azimuthal angles, and wavenumbers.
+\begin{equation}
+    \textbf{q}=\int_0^\infty{}\int_0^{2\pi}\int_0^{\pi{}}I_\eta{}(\tau{}_R,\theta)\cos{\theta}\sin{\theta}~d\theta{}~d\psi{}~d\eta{}
+    \label{eq:heatflux}
+\end{equation}
+\begin{equation}
+    \textbf{q}=\int_0^\infty{}\int_0^{2\pi}\int_0^{\pi{}}I_{b\eta{}}\left(1-e^{-2\tau{}_R\cos{\theta}}\right)\cos{\theta}\sin{\theta}~d\theta{}~d\psi{}~d\eta{}
+    \label{eq:heatflux}
+\end{equation}
+\begin{equation}
+    \textbf{q}=n^2\sigma{}T^4\left\{1-\frac{1}{2\tau{}_R^2}\left[1-(1+2\tau{}_R)e^{-2\tau{}_R}\right]\right\}
+    \label{eq:heatflux}
+\end{equation}
+Under the conditions of an optically thin sphere, radiative re-absorption can be ignored, and the equation can be simplified to
+\begin{equation}
+    \textbf{q}=n^2\sigma{}T^4\frac{4}{3}\tau{}_R.
+    \label{eq:heatflux}
+\end{equation}
+Where the heat flux can be integrated across the surface area of the sphere to produce the net energy emitted.
+\begin{equation}
+    Q_{emi}=4\kappa{}n^2\sigma{}T^4V
+    \label{eq:heatflux}
+\end{equation}
+This equation can be generalized to define the emission from any isothermal volume without self absorption.
+This equation is often used to define the net energy emitted from a computational cell using the Monte-Carlo Ray Tracing method.
+
+\subsection{Spectral effects}\label{Sec:Nongray}
 Like all substances, gases emit radiation along the electromagnetic spectrum. Under most conditions for combustion phenomena, radiative emission is isolated to the infrared part of the spectrum, between wavelengths of 1 to 15 $\mu{}$m \cite{Liu2020TheFlames}.
 
 The black body spectrum in section \ref{Sec:FundOfRad} can approximate the emission spectrum of many solid materials, but is inadvisable to be used for gas emission. 
 Most solid structures have a multitude of modes of oscillations, from the crystal-lattice structure down to the molecular energy states \cite{Viskanta1975HeatSolids}. As a result, the emission spectrum of solids is often continuous and can be approximated as a constant fraction of the black body emission spectrum (gray) \cite{Howell2010ThermalTransfer}. 
 Gases, however, are restricted to the oscillation modes from the natural energy states of the molecules in the mixture. Quantum mechanics postulates that these energy states are discrete, and therefore the change in energy states and resulting emission frequencies must also be discrete \cite{Hanson2016SpectroscopyGases}.
 
-\subsubsection{Definition of absorption coefficient}
-Einsteins coefficients: \cite{Modest2013RadiativeTransfer,Pai1966RadiationDynamics,Hanson2016SpectroscopyGases}
-
-\subsubsection{Spectrum of emission in combustion}
-\textbf{INSERT EMISSION SPECTRUM HERE}
-
-Figure above shows the emission spectrum from a flame. The largest contributors to emission in most hydrocarbon flames are included: $CO_2$, $CO$, $H_2O$, and soot.
+Figure above shows the emission spectrum from a flame. The largest molecular contributors to emission in most hydrocarbon flames are included: $CO_2$, $CO$, $H_2O$.
 \textit{Ab initio} modeling and empirical evidence can be used to obtain approximations for the emission spectra of a molecule at a specified pressure and temperature. This information has been collected into a series of available online databases \cite{Rothman2010HITEMPDatabase}. 
 Those databases can then be used to provide a radiation solver absorption coefficients as a function of chemical mixture composition and thermodynamic state.
+
+While the emission spectrum of gases is discrete, the radiation from many flames have been observed to be much more continuous \cite{Modest2013RadiativeTransfer}. This is a direct result of the emission of soot.
+Soot particles are generated through the agglomeration of unburnt hydrocarbons. The resulting particulates contribute much to the visual glow seen in flames. 
+Soot particles have sizes of only tens of $\mu{}$m, and volume fractions of only $10^{-4}$\% to $10^{-6}$\%, but often contributes of majority of radiation from a flame \cite{Modest2013RadiativeTransfer}.
 
 \subsection{Characterizing the contribution of radiation}
 Understanding relative influence of radiation compared against other forms of energy transfer is a necessary task for many scientists and engineers, however a complete solution to the RTE alongside within their simulated domain (eq. \ref{eq:RTE2}) is often unnecessary to accomplish this. 
@@ -140,41 +181,163 @@ Where $c$ is the speed of light, $L$ is a characteristic length scale, and $L_R$
     R_{F,conv}=\frac{\text{radiative flux}}{\text{convective flux}}=\frac{c\sigma{}T^4L^2}{L_RC_p\rho{}UTL}
     \label{eq:RadFluxNumber}
 \end{equation}
-
-The net radiative emission from a medium can be evaluated as eq. \ref{eq:RadiantFraction}.
-
-It should be noted that additional parameters may be used to estimate the importances of other effects, such as radiative pressure and radiative energy density.
 Mean free path of radiation \cite{Pai1966RadiationDynamics}, average distance between photon-molecule collision.
 
+The comparison of radiative and chemical heat generation terms can also provide perspective as to its relevance. As discussed by \citet{Liu2020TheFlames}, the radiant fraction can be used for this, eq. \ref{eq:RadiantFraction}.
+\begin{equation}
+    \chi{}_R=\frac{\dot{Q}_{emi}-\dot{Q}_{abs}}{\dot{Q}_{chem}}=\frac{\int_V{4\pi{}\kappa{}_p\sigma{}T^4~dV}-\int_V\left[\int_0^\infty{\left(\kappa{}_\eta{}\int_{4\pi}I_\eta{}~d\Omega\right)~d\eta{}}\right]~dV}{\rho{}_Fu_F\Delta{h}_c\pi{}d_F^2/4}
+    \label{eq:RadiantFraction}
+\end{equation}
+Where the numerator defines the radiative divergence of heat flux, and the denominator quantifies the contribution of heat through chemistry within the flame. $d_F$ and $u_F$ are a length scale and representative velocity for the system.
+The definition can be reformulated into eq. \ref{eq:RadiantFraction_reformulated}.
+\begin{equation}
+    \chi{}_R=\left(\frac{4V_fl}{\pi{}u_Fd_F^2}\right)\left(\frac{4\kappa{}\sigma{}T_p^4}{\rho{}_F\Delta{h}_c}\right)\left(1-\frac{\dot{Q}_{abs}}{\dot{Q}_{emi}}\right)
+    \label{eq:RadiantFraction_reformulated}
+\end{equation}
+In this format, the three terms included can be separately considered. The first term considers the flow residence time. Larger volumes and slower velocities result in a longer period for radiation to have its effect.
+The second term is inverse of the characteristic radiation cooling time. 
+The third term is the flame transparency. This term quantifies degree of re-absorption in the fame. A high degree of re-absorption will have a lower flame transparency. 
+
+It should be noted that additional parameters may be used to estimate the importance of other effects, such as radiative pressure and radiative energy density.
+While the contribution of these effects are generally small under most conditions studied in combustion, they should be considered under extreme circumstances, and the reader should consult representative texts for further information in this context \cite{Pai1966RadiationDynamics}.
 
 
 \section{Effect of radiation in combustion systems}
+The discussed physics of radiation culminate into a highly contributive heat transfer process in combustion.
+Its effects are present in a 
 
-Thermal radiation contributes significantly to the general fluid dynamics, turbulence, boundaries and chemistry in combustion.
+While radiation influences most directly the thermal energy within a system. In-directly, however, radiation can introduce 
 
-\subsection{Effect of radiation on fluid flow}
+
+Neglecting the influence of radiation may result in inaccurate deductions of combustion processes and can be the direct cause of inaccuracies revealed during validation studies.
+
+
+
+\subsection{On fluid motion}
 The strong influence of the radiative redistribution of energy does not exclude itself to reacting flows. Many fluid dynamical systems see a relevant contribution of radiation. These physics that are present with non-chemically reacting flows can present themselves equally or in greater magnitude in reacting flows, and therefore provide a useful initial basis to define the influence of radiation in combustion. 
 
-In general, any systems with high temperatures fluid dynamics can see a powerful influence of radiation, and its resulting effects. 
-Additionally, radiation is more pronounced in systems which have high residence times, where the relatively slow timescales of radiative heating have more time to influence the system \cite{Wu2021LimitationsFires}. 
-Therefore, many systems outside of combustion have significant radiative heating characteristics. In fact, any gas-dynamical system with high temperatures and relatively low densities will exhibit high degrees of radiative emission compared to conduction and convection \cite{Pai1966RadiationDynamics}. This includes the fields of hypersonics, fission and fusion nuclear energy, and space exploration.
+In general, any systems with high temperature fluid dynamics can see a powerful influence of radiation, and its resulting effects. 
+Radiation is more pronounced in systems which have high residence times, where the relatively slow timescales of radiative heating have more time to influence the system \cite{Wu2021LimitationsFires}. 
+To a degree, any gas-dynamical system with high temperatures and relatively low densities will exhibit high degrees of radiative emission compared to conduction and convection \cite{Pai1966RadiationDynamics}. This includes the fields of hypersonics, fission and fusion nuclear energy, and space exploration.
 
 For non-chemically reacting systems, the gasdynamical influences of radiation take effect often in regimes of science well-beyond those seen in every day life. Under atmospheric conditions, for example, the influence of radiation is largely negligible compared to that of conduction and convection \cite{Pai1966RadiationDynamics}.
-Even under hypersonic conditions, such as Inter-continental ballistic missiles (ICBMS), radiation is often still an order of magnitude lower than aerodynamic heating. Only at temperatures seen by re-entry vehicles (10$^4$ K) does radiation have a strong, non-negligible effect.
+Even under hypersonic conditions, such as inter-continental ballistic missiles (ICBMS), radiation is often still an order of magnitude lower than aerodynamic heating. Only at temperatures seen by re-entry vehicles (10$^4$ K) does radiation have a strong, non-negligible effect.
 In nuclear systems, such as nuclear fusion reactors, where temperatures reach 10$^6$K, the influence of the radiation becomes extremely significant. This follows from not only its redistribution of energy, but also its influence on pressure (through momentum imparted via photon collisions) and the radiative energy density become non-negligible as well. 
 
 
+
 Combustion sees a redistribution of thermal energy as a result of radiation. 
-Neglecting thermal radiation may lead to large over-predictions of flow temperature by upwards of 200K in some cases \cite{Modest2016RadiativeSystems,Wu2021LimitationsFires,Coelho2018RadiativeSystems}, as well as under-predictions of flame temperature in others.
+Neglecting thermal radiation may lead to large over-predictions of flow temperature by upwards of 200K in some cases \cite{Modest2016RadiativeSystems,Wu2021LimitationsFires,Coelho2018RadiativeSystems}, as well as under-predictions of flame temperature in others. The resulting influence on the thermodynamics and fluid dynamics of the system may be considerable.
+
+Buoyancy effects
+Microgravity effects
+Dr. Zhaos paper
 
 
 
-\subsection{Effect of radiation on turbulence}
-Turbulence-radiation interactions (TRI) poses a significant modeling problem for computational scientists. 
+\subsection{On turbulence}
 
-\subsection{Effect on walls}
-Increasingly stringent efficiency requirements for the reduction in green-house gas emissions have resulted in an increase in combustion temperatures. 
+The disparate time and length scales involved with turbulent fluctuations in many fluid dynamic systems presents a problem for many computational scientists.
+Resolving all of these scales would require extremely well resolved grid, often to an infeasible degree computationally. 
+Instead, a coarser grid is often used, with properties defined by an average over that of the contained fluid structures. This is the approach used in Reynold's Averaged Navier Stokes (RANS) modeling and Large Eddy Simulations (LES).
+The averaging of the governing equations of fluid dynamics, however, presents another difficulty, as many non-linear terms cannot be well represented by a linear average over thermodynamic parameters.
+This problem emerges in turbulent modeling of radiation, and is often called Turbulence-Radiation Interaction (TRI).
+
+The transport of radiation can be divided into processes of emission and absorption. 
+Within a semi-transparent medium, or any surface-surface exchange of radiation, the emission and absorption are defined by a non-linear functions of the thermodynamic conditions in the medium.
+Equation \ref{eq:DivHeatFlux} is the divergence of heat flux due to radiation. It defines the contribution of radiation to a differential volume, and its negative represents the volumetric energetic source term in the energy equation for fluid dynamics.
+\begin{equation}
+    -S_{rad}=\nabla\cdot{}q_{rad} = \int_0^\infty{\left(4\pi{}\kappa_\lambda{}I_{b\lambda{}}-\int_{4\pi}{\kappa{}_\lambda{}I_\lambda{}~d\Omega{}}\right)~d\lambda{}}
+    \label{eq:DivHeatFlux}
+\end{equation}
+The averaging process will reformulate the equation into the following, eq. \ref{eq:AvgDivHeatFlux}.
+\begin{equation}
+    -S_{rad}=\langle\nabla\cdot{}q_{rad}\rangle = \int_0^\infty{\left(4\pi{}\langle\kappa_\lambda{}I_{b\lambda{}}\rangle-\int_{4\pi}{\langle\kappa{}_\lambda{}I_\lambda{}\rangle~d\Omega{}}\right)~d\lambda{}}
+    \label{eq:AvgDivHeatFlux}
+\end{equation}
+The simple change introduces a significant complexity into the system. The distinction can be described in eq. \ref{eq:AbsTRI} and \ref{eq:EmiTRI}.
+\begin{equation}
+    \text{Absorption TRI:~~}\langle\kappa_\lambda{}I_{\lambda}\rangle \neq \kappa_\lambda{}(\langle\phi{}\rangle) I_{\lambda}(\langle{}T\rangle{})
+    \label{eq:AbsTRI}
+\end{equation}
+\begin{equation}
+    \text{Emission TRI:~~}\langle\kappa_\lambda{}I_{b\lambda}\rangle \neq \kappa_\lambda{}(\langle\phi{}\rangle) I_{b\lambda}(\langle{}T\rangle{})
+    \label{eq:EmiTRI}
+\end{equation}
+The absorption and emission TRI thus represent the non-linear functions of mixture properties for absorption coefficient $\kappa_\lambda$, emitted intensity $I_{b\lambda}$, and incident intensity $I_\lambda$.
+
+
+As a simple demonstration, the total intensity emitted from a black-body is defined by eq. \ref{eq:PlancksLawIntegrated} and \ref{eq:Intensity}.
+An apparent relationship between the emission and $T^4$ captures the first problem, as $\langle{T}\rangle^4 \neq \langle{}T^4\rangle$. 
+The consequences of which may be conceptualized easily. Many turbulent combustion systems exhibit a high degree of fluctuations in temperature. Even within the length-scale of a computational cell, a flame-thickness may be small enough that there may exist a pocket of rapid chemical reaction alongside an cooler, unburnt gas.
+Therefore, one can expect a higher degree of emission than predicted after an evaluation of $\langle{T}\rangle^4$. And this is often observation made when comparing radiation from a fully resolved DNS and averaged simulations with no TRI.
+
+The importance of TRI modeling has been recognized for many years, and numerous models have been proposed to account for its contribution. Extensive reviews have been created such as that of \citet{Modest2016RadiativeSystems} and \citet{Coelho2018RadiativeSystems}. 
+In large part, the expected contribution of TRI is to increase radiative emission.
+However, the contribution to the absorption coefficient, $\kappa{}$ and incident intensity, also present themselves during the averaging process.
+Absorption coefficient is 
+
+
+
+This effect in a number of investigations.
+
+
+
+Turbulence-radiation interactions (TRI) poses an additional challenge for computational scientists. 
+At its current state, its inclusion in combustion simulations is even less common than the largely adequately modeling radiation at all, despite the commonality of LES and RANS modeling in combustion.
+Thankfully, the complexity involved with it come with various simplifications. 
+
+\subsection{On walls}
+One product of increasingly stringent efficiency requirements for the reduction in green-house gas emissions have is an increase in combustion temperatures of energy conversion systems. 
 The concomitant higher heat fluxes pose a significant problem for the materials enclosing these combustion systems, many of which are already existing in a state close to melting point. 
+Additionally, energy escape from the boundaries of the system can represent a thermodynamic loss to the system, and reduces the overall work contribution from the energy process.
 As a result, an understanding of the influence of all modes of heat transfer along the boundaries have seen increasing importance in order to manage thermal loads through the various heat-transfer management techniques.
 
-\subsubsection{Thermal Barrier Coating}
+Various studies have been conducted regarding the influence of radiative heat transfer along the walls of combustion systems. \citet{Gamil2020AssessmentChamber} compared the contribution of radiation in a Rolls-Royce RB-183 turbofan engine combustor using the discrete ordinates method (DOM) and the P-1 approximation.
+The combustor geometry follows Rich-burn Quick-mix Lean-burn (RQL) design, where a high temperature, non-premixed flame is followed by a high degree of mixing with dilution gases from the secondary-flowpath, which is followed by a premixed fuel-lean reaction to the back-end of the combustor.
+Apparently, radiation resulted in a 10\% higher temperature in the liner near the fuel-rich zone, and a 15\% reduction of temperature after the dilution zone.
+In total, radiation was shown to reduce peak flame temperatures by 200K compared to with no radiation.
+The P-1 model was shown to over-exaggerate the effect of radiation compared to the more accurate DOM.
+
+Automotive combustion systems, such as heavy-duty diesel piston engines, have shown to have drastically different thermal profiles with and without radiation modeling. 
+
+High speed reacting flows in rocket engine combustors have also 
+
+
+While incident intensity is more often considered, wall emission can also influence flame characteristics. In large part, the emission from any solid has a less intermittent emission spectrum than gases \cite{Liu2020TheFlames,Howell2010ThermalTransfer}, and therefore can often be modeled as a gray emitter.
+
+
+
+\subsubsection{Thermal Barrier Coatings}
+Often-times the high temperatures associated with combustion may be well beyond the melting points of the materials of the outer casing. This can potentially be a limiting factor to consider during the design of these systems.
+A Thermal Barrier Coating (TBC) is a protective layer of coating often applied to the interior walls of combustion systems to manage the heat loads to the outer surfaces. 
+TBCs are usually constructed from a specialized Zirconia ceramic, which has the capability to resist heat
+better than most materials \cite{Miller1997ThermalDirections}. Specifically, Yttria-stabilized zirconia (YSZ) provides adequate performance for modern TBCs \cite{Padture2002ThermalApplications}. At high temperatures, these materials become transparent to most thermal radiation, and the resulting heat transfer analysis becomes more complex \cite{Howell2010ThermalTransfer, Siegel1998AnalysisCoatings}. The
+introduction of gas-filled pores also reduces thermal conductivity and increases ray scattering, which has been shown to reduce metal temperatures \cite{Boissonnet2019EvolutionTemperature,Spuckler1996Two-FluxLayers}.
+
+Analysis between the flame, TBC, metal, and cooling impingement flow includes all three forms of heat
+transfer: conduction, convection and radiation. Conjugate modeling of the three forms can be computationally intensive, especially when using exact methods \cite{Viskanta1975HeatSolids}. 
+The inclusion of radiative heat transfer within the conjugate heat transfer model will make a solution analytically intractable when complex material properties and boundary conditions are involved.
+
+As a result, appropriate modeling of TBCs is rare in high temperature systems. A fully comprehensive, one dimensional, analytical method was presented by \citet{Siegel1996InternalCoatings}. Through the use of the Milne-Eddington approximation for radiation, the method can solve conduction and radiation simultaneously
+within the semitransparent TBC \cite{Milne1930ThermodynamicsStars,Eddington1920TheStars}. The combined heat transfer solution for the TBC was established to be very accurate in most circumstances and not very computationally intensive according to \citet{Siegel1996InternalCoatings}. 
+However, assumptions such as gray gases, one-dimensionality, and two flux can limit the applicability of Siegel’s method. \citet{Johnson2021AnalysisMethod} coupled the Siegel’s method with a Monte Carlo ray tracing analysis of a gas turbine combustor, where non-gray radiation from the flame is accounted for. Differences in temperature as large as 150 K were observed within the TBC between non-gray and gray analyses.
+
+\subsection{On chemistry}
+Combustion processes are highly coupled to the accompanying complex chemical reaction network.
+The network of reactions that proceed during the conversion from a large hydrocarbon molecule to the smaller product species produces inherit complexities during the modeling procedure, especially in relation to the existing macroscopic thermodynamic properties used to define these mixtures.
+Radiation has been previously shown to influence the temperature of a system. Temperature has a high degree of influence on the rapid chemical processes undergone in the reaction.
+This presents an additional, indirect, influence of radiation on the combustion process . One that requires modeling of full modeling of thermal, fluidic, and chemical processes within the combustion simulation for an adequate analysis.
+
+The obvious influence on temperature influences the product species concentrations at the exit of many combustion systems. In particular, the production of pollutant species NO$_x$ (nitrous oxides) and soot can be significantly affected \cite{Viskanta2010RadiativeSystems}.
+
+\citet{Ihme2008ModelingFormulation} demonstrated the influence of radiation on NO$_x$ production by including an additional dimension to their flamelet progress variable approach for chemistry tabulation.
+They applied the optically thin assumption (OTA), where only radiative emission is considered, to simulations of the Sandia D. flame, and the Pratt \& Whitney PW6000 combustor without accounting for turbulence-radiation interaction.
+For both cases, production of nitric oxide was reduced as a result of the lower temperatures.
+
+\citet{Wu2021LimitationsFires} later highlighted the importance of including radiative absorption in these simulations using a budget analysis of relative contributions of various physics on temperature. 
+They used mixture fraction ($Z$), a quantity to quantify the mixing between fuel ($Z=1$) and oxidizer ($Z=0$), to demonstrate the range of contributions of emission and absorption.
+It was shown that radiative emission is very high near the stoichiometric mixture fraction, but decreases quickly around the fuel-rich and fuel-lean sides of the flame. Radiative absorption, in contrast, retains its magnitude across the mixture fraction range.
+Additionally, to reduce the computational intensity of joint combustion-radiation calculations, they developed a cylindrical flamelet model to pre-tabulate the contribution of radiation to the pool-fire simulation with promising results.
+This provides a useful route of future research as spectral absorption coefficient and black body emission can be obtained using mixture fraction and temperature alone \cite{Viskanta2010RadiativeSystems}.
+

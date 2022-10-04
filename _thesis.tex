@@ -1,10 +1,13 @@
 
 \documentclass[oneside,masters,etd]{UoBclass}
 
+\usepackage{setspace}
 \usepackage{import}
 \usepackage[section]{placeins}
-\usepackage{algorithm}
+\usepackage{algorithm2e}
 \usepackage[noend]{algpseudocode}
+\RestyleAlgo{ruled}
+\SetKwComment{Comment}{/* }{ */}
 % preamble contains title page, signature page, acknowledgement and abstract texts
 \usepackage{_preamble}
 \usepackage[english]{babel} % Add this and the line below to get best citation style
@@ -18,13 +21,14 @@
 \usepackage{hyperref}
 \usepackage{fancyhdr}
 
+
 % My added packages [JNS]
 \usepackage{longtable}
 \usepackage{lipsum}
-\usepackage{setspace} 
 \usepackage{floatrow}
 \usepackage{caption}
 \usepackage{subcaption}
+\usepackage{amsmath}
 
 
 % Make chapter numbers into string words 1 -> ONE
