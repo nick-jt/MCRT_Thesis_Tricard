@@ -228,17 +228,27 @@ The Planck Mean absorption coefficient increases, then decreases despite the mon
 The influence of temperature on absorption coefficient is complex, but for these conditions the rotation partition function of molecular energy states of the participating species is responsible for the decrease of absorption coefficient at this temperature range~\cite{Modest2013RadiativeTransfer}.
 Absorption follows the trend of planck-mean absorption coefficient, as expected for an gray model.
 
-\subsubsection{Time-accurate simulation}
-The same pool-fire is simulated from initial conditions until 4 seconds of physical time.
-The simulation is run with line-by-line accurate non-gray emission and radiation source terms are updated each simulation time-step. Chemistry is infinitely-fast, and the case setup is identical to that of the frozen-field analysis.
-
-Several timesteps of the time-accurate simulation are presented in 
+Figure \ref{fig:PoolFire_lineplot_nongray} displays the same normalized parameters in a LBL-accurate Pool-fire simulation. The contributions of CO$_2$ and H$_2$O are considered, but not soot.
 
 \begin{figure}
 \includegraphics[width=\linewidth]{figures/ch4/line_plot.png}
 \caption{Various parameters along the centerline of the flame. Values normalized by maximum values along the sampled line.}
 \label{fig:PoolFire_lineplot}
 \end{figure}
+
+
+\begin{figure}
+\includegraphics[width=\linewidth]{figures/ch4/line_plot_nongray.png}
+\caption{Various parameters along the centerline of a non-gray flame. Values normalized by maximum values along the sampled line.}
+\label{fig:PoolFire_lineplot_nongray}
+\end{figure}
+
+\subsubsection{Time-accurate simulation}
+The same pool-fire is simulated from initial conditions until 4 seconds of physical time.
+The simulation is run with line-by-line accurate non-gray emission and radiation source terms are updated each simulation time-step. Chemistry is infinitely-fast, and the case setup is identical to that of the frozen-field analysis.
+
+Several time-steps of the time-accurate simulation are presented in 
+
 
 \subsection{Profiling}
 In effort to demonstrate the scaling trend of the solution, the mesh density is varied. 
