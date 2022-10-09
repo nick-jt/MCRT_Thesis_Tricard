@@ -177,7 +177,7 @@ A black surface is one that absorbs all incident radiation, and emits according 
 This could define a boundary to an open environment of surrounding, cold gas, a combustor boundary, or the high temperature boundaries of a rocket engine. 
 Under these conditions, a ray which intersects this boundary will be absorbed in its entirety, and an absorption profile can be determined by accumulating energy depositions along the exit faces along the boundary. The emission from a black surface is diffuse, and therefore defined by the random number relations for a diffuse emitter, eqs. \ref{eq:diffuse_emission_psi} and \ref{eq:diffuse_emission_theta}.
 \begin{equation}
-    \psi{}=2\pi{}\R{}_\psi
+    \psi{}=2\pi{}R_\psi
     \label{eq:diffuse_emission_psi}
 \end{equation}
 \begin{equation}
@@ -199,6 +199,13 @@ An example would be a mirror, or the smooth surface of water. Under these condit
     \Vec{\textbf{d}_e}=2(\Vec{\textbf{n}}\cdot\Vec{\textbf{d}_i})\Vec{\textbf{n}} -\Vec{\textbf{d}_i}
     \label{eq:specular_reflection}
 \end{equation}
+
+\subsubsection{Distributed memory implementation}
+Large scale simulations require large scale computers call High Performance Computers (HPCs). These systems are often comprised of a series of nodes, which can be thought of as separate computers with separate hardware and resources.
+Applying simulations to a large scale computing system requires the use of a Message Passing Interface (MPI) to facilitate communications between the nodes.
+Due to the separate memory allocations within the nodes, special attention must be paid towards implementing a solver which can be scaled to large node counts without introducing too much overhead due to MPI communication cost.
+ 
+
 
 \section{Accelerated approaches to MCRT}
 

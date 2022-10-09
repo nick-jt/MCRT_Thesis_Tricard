@@ -1,46 +1,47 @@
 \addchapheadtotoc
 \chapter{Solver Performance}\label{chapter:Example}
 The complexity of the radiation solver resulting from both its theoretical foundation as well as its computational implementation calls for an extensive series of validation and performance studies.
-
-Three test geometries are presented in this chapter for verification and profiling using the two methods discussed in section \ref{section:ModelForThisStudy}. The new MCRT models using the bounding volume hierarchy approach will be refered to as MCRT-ArborX, and the model without will be referred to as MCRT-Kokkos. 
+Three test geometries are presented in this chapter for verification and profiling using the two methods discussed in section \ref{section:ModelForThisStudy}. The new MCRT models using the bounding volume hierarchy approach will be refered to as MCRT-ArborX, and the model without will be referred to as MCRT-Standard. 
 A well-established Fortran implementation developed over the course of many years will be used for comparison, and will be refered to as MCRT-Fort.
-The configurations include the canonical one-dimensional plane-parallel medium, a three-dimensional backward-facing step combustor, and a three-dimensional Pratt \& Whitney NEO aeronautical combustor. 
+The configurations include the canonical one-dimensional plane-parallel medium, a three-dimensional backward-facing step in high temperature flow, a time-accurate sooting turbulent pool fire, and a three-dimensional Pratt \& Whitney aeronautical combustor. 
 These three test cases provide an excellent basis to verify the solution methods and test their performances. 
 
 
 
 \section{One dimensional plane-parallel medium}
-The plane-parallel medium provides a useful, one dimensional case to test the MCRT code. The geometry is shown in figure \ref{fig:PlaneParallelGeometry}.
-
-The geometry consists of two parallel plates surrounding a radiatively-participating medium. The system is one-dimensional (implemented into OpenFOAM using either ray-reflections along the off-axis boundaries, or through a long stretch in both the Y and Z directions). The simulation is steady, and the walls are black-bodies (perfect absorbers and emitters).
+The plane-parallel medium provides a useful, one dimensional case to test the MCRT code. The geometry, shown in figure \ref{fig:PlaneParallelGeometry}, consists of two parallel plates surrounding a radiatively-participating medium. 
+The system is one-dimensional (implemented into OpenFOAM using either ray-reflections along the off-axis boundaries, or through a long stretch in both the Y and Z directions). The simulation is steady, and the walls are black-bodies (perfect absorbers and emitters).
 Using this configuration, the user can artificially select an absorption coefficient, $\kappa{}$, medium temperature, $T$, and wall temperatures $T_w$.
-
-Additionally, the relative simplicity of the configuration allows for reduced-complexity numerical solution described in appendix (IN APPENDIX OR PUT HERE?). 
-This "analytical" solution can be used for verification of the solver under variable absorption coefficient, temperatures, and scattering coefficient (not included in this model).
-
-The one-dimensional nature of the system also results in the least-ideal scaling for multi-node simulations. \textit{Provides useful understanding of how the runtime and memory usage scale for each solver under worst-case situations.}
+Additionally, the relative simplicity of the configuration allows for reduced-complexity numerical solution described in appendix CITE. 
+This "analytical" solution can be used for verification of the solver under variable absorption coefficients and temperatures.
 
 \subsection{Results}
-Figure \ref{fig:PP_kappatest} presents a comparison of the MCRT solutions alongside the analytical solutions. The configuration is tested under a variety of absorption coefficients, temperatures, and Monte-Carlo ray counts. The various case conditions are presented in table \ref{table:PPcomp}.
+Figures \ref{fig:PPcomp_kappa} to \ref{fig:PPcom_nrays} display comparisons of the MCRT solutions alongside the described analytical solutions. The configuration is tested under a variety of absorption coefficients, temperatures, and Monte-Carlo ray counts. The various case conditions are presented in table \ref{table:PPcomp}.
 
 \begin{figure}
-  \begin{subfigure}{1\textwidth}
-  \includegraphics[width=\linewidth]{figures/ch4/PPcomparison1.png}
-  \caption{Variable absorption coefficient with T=$2000$K, N$_r$=$1000$, N$_{cells}$=1000.}
-  \label{fig:PPcomp_kappa}
-  \end{subfigure}
-  \begin{subfigure}{1\textwidth}
-  \includegraphics[width=\linewidth]{figures/ch4/PPcomparison2.png}
-  \caption{Variable temperature with $\kappa{}$=$10$ m$^{-1}$, N$_r$=$1000$, N$_{cells}$=1000.}
-  \label{fig:PPcomp_temp}
-  \end{subfigure}
-  \begin{subfigure}{1\textwidth}
-  \includegraphics[width=\linewidth]{figures/ch4/PPcomparison3.png}
-  \caption{Variable number of rays emitted per cell (N$_r$) with $\kappa{}$=$10$ m$^{-1}$, T=$2000$K, N$_{cells}$=1000.}
-  \label{fig:PPcom_nrays}
-  \end{subfigure}
-  \label{fig:PPcomp}
+\includegraphics[width=\linewidth]{figures/ch4/PPcomparison1.png}
+\caption{Variable absorption coefficient with T=$2000$K, N$_r$=$1000$, N$_{cells}$=1000.}
+\label{fig:PPcomp_kappa}
 \end{figure}
+
+\begin{figure}
+\includegraphics[width=\linewidth]{figures/ch4/PPcomparison2.png}
+\caption{Variable temperature with $\kappa{}$=$10$ m$^{-1}$, N$_r$=$1000$, N$_{cells}$=1000.}
+\label{fig:PPcomp_temp}
+\end{figure}
+
+\begin{figure}
+\includegraphics[width=\linewidth]{figures/ch4/PPcomparison3.png}
+\caption{Variable number of rays emitted per cell (N$_r$) with $\kappa{}$=$10$ m$^{-1}$, T=$2000$K, N$_{cells}$=1000.}
+\label{fig:PPcom_nrays}
+\end{figure}
+
+% \begin{figure}
+
+
+
+%   \label{fig:PPcomp}
+% \end{figure}
 
 Results show excellent comparison between the MCRT and analytical implementations. 
 The lower ray counts show a higher degree of variability resulting from the stochastic nature of the MCRT method. 
@@ -48,13 +49,11 @@ Increasing absorption coefficient leads in an increase of radiative emission and
 
 These expected results demonstrate the requirement for RTE modeling in optically thick media. Not only does radiative emission result in heat loss from computational cells, but also the re-absorption can be high enough to require modeling of the self-absorption process of radiation.
 
-\subsection{Profiling}
-
-
 \section{Backward-Facing Step Combustor}
 The backward-facing step (BFS) combustor is a convenient configuration often used as a simple, repeatable geometry for a variety of studies in fluid dynamics.
-Numerous examples exist demonstrating its use for experimental and numerical investigations of turbulent flow~\cite{Armaly1983ExperimentalFlow,Neto1993AStep,Jovic1994Backward-facing5000,Le1997DirectStep}. Combined turbulent and high temperature flow~\cite{Niemann2016Buoyancy-affectedNumber,Xie2017GeometrySteps}, particularly with reactions~\cite{Pouech2021PremixedStep}.
-In the relatively few studies that exist, the addition of volumetric heating and composition changes resulting from the exothermic chemical reactions have been shown to influence the thermodynamic state and turbulence intensity of the fluid. Recent interest has emerged regarding the relative influence of radiation and convection along the walls many configurations, and the backward-facing step geometry provides a convenient approach for doing so.
+Numerous examples exist demonstrating its use for experimental and numerical investigations of turbulent flow~\cite{Armaly1983ExperimentalFlow,Neto1993AStep,Jovic1994Backward-facing5000,Le1997DirectStep}. In contrast, studies of combined turbulent and high temperature flow~\cite{Niemann2016Buoyancy-affectedNumber,Xie2017GeometrySteps}, and reacting flows~\cite{Pouech2021PremixedStep} over backward-facing steps have been modeled significantly less frequently.
+In the relatively few studies that exist, the addition of volumetric heating and composition changes resulting from the exothermic chemical reactions have been shown to influence the flow patterns and turbulence intensity of the fluid. 
+Recent interest has emerged regarding the relative influence of radiation and convection along the walls many configurations, and the backward-facing step geometry provides a convenient approach for doing so.
 
 \subsection{Case setup}
 \begin{figure}
@@ -106,32 +105,30 @@ The fluid is then quickly replaced by the new gas at the entrance, which results
 
 The turbulence present in the recirculation zone is apparent even in the emission contours as a result of the advection of elevated temperatures present. The secondary recirculation zone immediately present adjacent to the step displays lower levels of radiative emission resulting from its slower rate of fresh-gas replenishment.
 
-Figures \ref{fig:BFS_RadAbs}, \ref{fig:RadEmi}, and \ref{fig:RadSrc} show the radiative absorption, emission, and net energy source along the line shown in figure \ref{fig:BFS_geometry} using the different solvers for comparison. 
+Figures \ref{fig:BFS_RadAbs}, \ref{fig:BFS_RadEmi}, and \ref{fig:BFS_RadSrc} show the radiative absorption, emission, and net energy source along the line shown in figure \ref{fig:BFS_geometry} using the different solvers for comparison. 
 
+\begin{figure}[!ht]
+\includegraphics[width=\linewidth]{figures/ch4/LineComparison_RadAbs.png}
+\caption{}
+\label{fig:BFS_RadAbs}
+\end{figure}
 
-\begin{figure}
-  \begin{subfigure}{1\textwidth}
-  \includegraphics[width=\linewidth]{figures/ch4/LineComparison_RadAbs.png}
-  \caption{}
-  \label{fig:BFS_RadAbs}
-  \end{subfigure}
-  \begin{subfigure}{1\textwidth}
-  \includegraphics[width=\linewidth]{figures/ch4/LineComparison_RadEmi.png}
-  \caption{}
-  \label{fig:BFS_RadEmi}
-  \end{subfigure}
-  \begin{subfigure}{1\textwidth}
-  \includegraphics[width=\linewidth]{figures/ch4/LineComparison_RadSrc.png}
-  \caption{}
-  \label{fig:BFS_RadSrc}
-  \end{subfigure}
-  \label{fig:PPcomp}
+\begin{figure}[!ht]
+\includegraphics[width=\linewidth]{figures/ch4/LineComparison_RadEmi.png}
+\caption{Note: Same legend as in fig. \ref{fig:BFS_RadAbs}. All results overlap exactly.}
+\label{fig:BFS_RadEmi}
+\end{figure}
+
+\begin{figure}[!ht]
+\includegraphics[width=\linewidth]{figures/ch4/LineComparison_RadSrc.png}
+\caption{Note: Same legend as in fig. \ref{fig:BFS_RadAbs}. All results overlap exactly.}
+\label{fig:BFS_RadSrc}
 \end{figure}
 
 
 \subsection{Model Performance}
 The radiation was calculated using both new MCRT models as well as a well-established Fortran-based radiation model for comparison. Simulations were performed at the single time-step using both 1 ray per cell and 10 rays per cell for all solvers, and serial, OpenMP and Cuda were tested as Kokkos backends for the new MCRT. 
-Simulations were performed using a 72-core Intel(R) Xeon(R) Gold 5220 CPU shared-memory workstation for OpenMP calculations, and Cuda calculations were performed using Nvidia V100 GPUs from the high performance computer Narwhal operated by the defense supercomputing resource center~\cite{something}.
+Simulations were performed using a 72-core Intel(R) Xeon(R) Gold 5220 CPU shared-memory workstation for OpenMP calculations, and Cuda calculations were performed using NVIDIA V100 GPUs from the high performance computer Narwhal operated by the defense super-computing resource center~\cite{something}.
 
 Results are listed in tables \ref{table:BFS_runtime_table_1rpc} and \ref{table:BFS_runtime_table_10rpc} for 1 ray emitted per cell and 10 rays per cell, respectively. The performance of both the MCRT-Kokkos model and the MCRT-ArborX compare extremely well against the MCRT-Fort model for a serial calculation. A runtime improvement of 86\% is already observed before any parallel routines have even been applied.
 The dramatic speedup can be attributed to the improved mesh-transfer method implemented in the new MCRT methods. 
@@ -173,46 +170,25 @@ Within MCRT-Kokkos and MCRT-ArborX, runtimes are decreased as well, but to a low
 The usage of a GPU enabled a significant reduction in runtime as well. 
 
 
-
-\section{Pratt \& Whitney NEO Combustor}
-The Pratt \& Whitney NEO combustor provides a very realistic case to sample our radiation model on.
-
-\begin{table}[h!]
-\centering
-\begin{tabular}{||c c c c||} 
- \hline
- Col1 & Col2 & Col2 & Col3 \\ [0.5ex] 
- \hline\hline
- 1 & 6 & 87837 & 787 \\ 
- 2 & 7 & 78 & 5415 \\
- 3 & 545 & 778 & 7507 \\
- 4 & 545 & 18744 & 7560 \\
- 5 & 88 & 788 & 6344 \\ [1ex] 
- \hline
-\end{tabular}
-\caption{Runtime comparisons for the Pratt \& Whitney combustor geometry.}
-\label{table:PW_runtime_table}
-\end{table}
-
-
 \section{Small Pool Flame}
 The emission of radiation from a buoyant pool flame is of considerable interest to those in the field of fire research. 
-The relatively slow fluid motion alongside buoyancy-driven turbulent fluctuations provides a relevant surrogate to a real-world fire, and can be studied for the purpose of modeling for forest fires, house fires, and other hazardous combustion processes.
-
+The relatively slow fluid motion alongside buoyancy-driven turbulent fluctuations provides a realistic surrogate for many hazardous combustion scenarios such as forest fires and house fires.
 The high temperatures from the chemical reaction alongside the larger length scales also provide conveniently high radiative emissions alongside high optical thicknesses. 
-This results in a relevant example where a full RTE solution is a requirement, and a convenient sample case to demonstrate the use of the present radiation model.
+This results in a system with a high degree of radiation, and is therefore a convenient sample case to demonstrate the use of the present radiation model.
 
 \subsection{Case Setup}
-The simulation is based on the fireFoam tutorial case, smallPoolFlame3D in OpenFOAM, with a slight increase in mesh refinement. 
-A mass-source is provided through the inlet at the bottom of the domain, where a reaction is initiated. A turbulent premixed flame is then simulated with detailed chemistry for four seconds of physical time.
+The simulation is based on the fireFoam tutorial case, smallPoolFlame3D in \verb|OpenFOAM|, where mesh refinement has been doubled. 
+In the tutorial case, a mass-source is provided through the inlet at the bottom of the domain, where a reaction is initiated. A turbulent premixed flame is then simulated with infinitely-fast chemistry for four seconds of physical time.
+The simulation is run with radiation enabled, where the net radiation source terms are added to the CFD energy equation solution every timestep.
+Both a frozen-field analysis and a full time-accurate simulation are conducted. Figure \ref{fig:PoolFire_diagram} displays the timestep for the former.
 
-Figure \ref{fig:PoolFire_diagram} displays the timestep used for frozen field analysis of the pool flame. The domain is a cubic 1$\times$1$\times$1m domain with a grid consisting of 1,728,000 hexahedral cells with 120 divisions per side.
+The geometry is a cubic 1$\times$1$\times$1m domain with a grid consisting of 1,728,000 hexahedral cells with 120 divisions per side.
 10 rays are emitted and traced from each cell, irrespective of cell emission energy.
 This configuration is studied for both planck-mean gray and line-by-line spectral models, and no Turbulence-Radiation Interaction (TRI) is accounted for in this study.
 
 \begin{figure}
 \includegraphics[width=\linewidth]{figures/ch4/contour_early.png}
-\caption{An early timestep of the pool fire flame simulation. Isosurface is 0.03 CO$_2$ mass fraction colored by velocity magnitude. Axes dimensions are in meters.}
+\caption{An early timestep of the pool fire flame simulation. Isosurface is 0.03 CO$_2$ mass fraction colored by velocity magnitude in meters per second. Axes dimensions are in meters.}
 \label{fig:PoolFire_diagram}
 \end{figure}
 
@@ -226,8 +202,10 @@ The radiative emission contours drop towards the outer edges and top section of 
 \label{fig:PoolFire_radiationcontours}
 \end{figure}
 
-In order to better understand the influence of radiation within the flame, figure \ref{fig:PoolFire_quadcomparison} displays four relevant parameters for the radiation calculation. 
-The contours of temperature show the two streams of reacting flow billowing upwards as a result of the buoyant force induce on the lower-density regions.
+\subsubsection{Frozen field analysis}
+
+In order to better understand the influence of radiation within the flame, figure \ref{fig:PoolFire_quadcomparison} displays four relevant parameters for the radiation calculation within the frozen field analysis. 
+The contours of temperature show two sides of a hollow cylinder of reacting flow billowing upwards as a result of the buoyant force induce on the lower-density regions.
 The top-section of the mushroom contains an  flame-front which, towards the outer regions, slowly decreases in temperature and intensity as a result of momentum and molecular exchange with the surrounding quiescent region through viscous and diffusive effects.
 High temperature regions correlate strongly with the points of high emission, and the wings of the mushroom show a much stronger decay in emission as a result of the fourth power dependence of radiative emission with temperature.
 
@@ -247,9 +225,14 @@ Figure \ref{fig:PoolFire_lineplot} shows various normalized parameters along the
 Normalized temperature and product species mass fractions rise with increasing distance from the bottom surface, indicating reaction progression. 
 The volumetric emission and negative of radiative volume source (emission – absorption) appear to match as a result of the relatively weak influence of absorption.
 The Planck Mean absorption coefficient increases, then decreases despite the monotonically increasing mass fractions of the radiatively participating species (CO$_2$ and H$_2$O). This happens as a direct result of the increase in temperature. 
-The influence of temperature on absorption coefficient is complex and requires more detailed knowledge of spectroscopy, but generally speaking, the rotation partition function of molecular energy states of the participating species is responsible for the decrease of absorption coefficient at this temperature range \cite{Modest2013RadiativeTransfer}.
+The influence of temperature on absorption coefficient is complex, but for these conditions the rotation partition function of molecular energy states of the participating species is responsible for the decrease of absorption coefficient at this temperature range~\cite{Modest2013RadiativeTransfer}.
 Absorption follows the trend of planck-mean absorption coefficient, as expected for an gray model.
 
+\subsubsection{Time-accurate simulation}
+The same pool-fire is simulated from initial conditions until 4 seconds of physical time.
+The simulation is run with line-by-line accurate non-gray emission and radiation source terms are updated each simulation time-step. Chemistry is infinitely-fast, and the case setup is identical to that of the frozen-field analysis.
+
+Several timesteps of the time-accurate simulation are presented in 
 
 \begin{figure}
 \includegraphics[width=\linewidth]{figures/ch4/line_plot.png}
@@ -261,11 +244,44 @@ Absorption follows the trend of planck-mean absorption coefficient, as expected 
 In effort to demonstrate the scaling trend of the solution, the mesh density is varied. 
 Should we only be doing this for if we have the MPI thing implemented?
 
-\section{Additional profiling studies}
+\section{Pratt \& Whitney aircraft engine Combustor}
+A three dimensional Pratt \& Whitney combustor  \textbf{(Block C)}? geometry was next tested for verification and profiling of the present radiation model. Solver profiling is presented alongside general observations regarding the effects of radiation within the system.
+The combustor geometry follows a Rich-Quench-Lean (RQL) configuration, an optimal design for both emissions and stability.
+A single time-step from an LES of the combustor was taken for a frozen-field analysis. The effects of soot, spectral emission patterns, and wall-incident radiation were all captured within the model, and detailed account of these effects alongside profiling of the various parallel implementations of the model are presented as demonstration.
+The effects of liquid fuel spray on ray-scattering and absorption are neglected.
+
+The combustor geometry is constructed to for highly turbulent flow with a high degree of separation to allow for a sufficiently stabilized flame.
+A re-circulation zone immediately behind the inlet section induces a swirl which facilitates mixing of the reactants, and a downstream dilution hole results in a complex chemical mixing process for the remaining reactions to occur in a fuel-lean condition. 
 
 
-- Weak scaling study across many nodes
-- Strong scaling within a node, across many nodes
-    - Cubic domain, square domain
-    - Parallel plates
-    
+
+\subsection{Case setup}
+The combustor geometry is meshed into a grid of 16,373,876 hexahedral cells of varying shapes and sizes. The simulation is completed with adaptive emission.
+
+
+
+\textbf{Unknowns:}
+\begin{enumerate}
+    \item Was the LES conducted with an alternative radiation model previously?
+    \item Were spray droplets included in the study?
+\end{enumerate}
+
+Figure ref{} displays normalized temperature profiles throughout the combustor geometry.
+
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{||c c c c||} 
+ \hline
+ Col1 & Col2 & Col2 & Col3 \\ [0.5ex] 
+ \hline\hline
+ 1 & 6 & 87837 & 787 \\ 
+ 2 & 7 & 78 & 5415 \\
+ 3 & 545 & 778 & 7507 \\
+ 4 & 545 & 18744 & 7560 \\
+ 5 & 88 & 788 & 6344 \\ [1ex] 
+ \hline
+\end{tabular}
+\caption{Runtime comparisons for the Pratt \& Whitney combustor geometry.}
+\label{table:PW_runtime_table}
+\end{table}
