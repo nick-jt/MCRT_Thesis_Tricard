@@ -216,7 +216,7 @@ In total, net radiative emission equals $10541.5044$ Watts, where $1469.4406$ Wa
 The maximum volumetric radiative energy loss for any computational cell is -$1.081$ W. In comparison, the maximum volumetric source through chemical reaction was $14.08$ Watts.
 
 \begin{figure}
-\includegraphics[width=\linewidth]{figures/ch4/PoolFire_quadcomparison.png}
+\includegraphics[width=0.9\linewidth]{figures/ch4/PoolFire_quadcomparison.png}
 \caption{Mid-plane contours of four relevant parameters to the radiation calculation in the pool fire.}
 \label{fig:PoolFire_quadcomparison}
 \end{figure}
@@ -255,13 +255,22 @@ The pool fire periodically fluctuates according to a \textit{puffing period}. Th
 
 \subsection{Profiling}
 \subsubsection{Single time-step}
-The runtimes of various sections of the radiation solver are presented in fig. \ref{fig:PoolFire_profiling} for both CPU and GPU simulations.
-The runtime for a single timestep is dominated by the loading of the non-gray database. Numerical timestep comparisons are present in table \ref{table:PoolFire_profiling}.
+The run-times of various sections of the radiation solver are presented in fig. \ref{fig:PoolFire_profiling} and \ref{fig:PoolFire_profiling_CPU} for both CPU and GPU simulations. Simulations are conducted with adaptive emission using a total of 3,429,003 rays.
+CPU ray-tracing is completed using 30 CPU processes. A noticeable decrease in runtime of 
+
+For both CPU and GPU simulations, the runtime is dominated by the loading of the non-gray database. This comes at no surprise considering the complete database is over a gigabyte in size. 
+The loading process consists of first loading the data into memory, initializing the representative data structures, conducting various sanity checks on the database to ensure proper loading, and deep copying the data onto the GPU, if present.
+Numerical time-step comparisons are present in table \ref{table:PoolFire_profiling}.
 
 \begin{figure}
-\includegraphics[width=0.75\linewidth]{figures/ch4/PoolFire_profiling_OnetimestepGPU.png}
+\includegraphics[width=0.6\linewidth]{figures/ch4/PoolFire_profiling_OnetimestepGPU.png}
 \caption{Profiling results for the GPU}
 \label{fig:PoolFire_profiling}
+\end{figure}
+\begin{figure}
+\includegraphics[width=0.6\linewidth]{figures/ch4/PoolFire_profiling_OnetimestepCPU.png}
+\caption{Profiling results for the CPU}
+\label{fig:PoolFire_profiling_CPU}
 \end{figure}
 
 \begin{table}[h!]
@@ -270,7 +279,7 @@ The runtime for a single timestep is dominated by the loading of the non-gray da
  \hline
  Parallel Variation & Init non-gray & Tracing rays & Init cell parameters & post-processing \\ [0.5ex] 
  \hline\hline
- 30 CPU processors & N/A & 6.91 s & - & - \\
+ 30 CPU processors & 0.980s & 8.36s &  & - \\
  GPU & 2.25s & 1.44s & 0.218s & 0.218s\\ 
  \hline
 \end{tabular}
