@@ -255,13 +255,28 @@ The pool fire periodically fluctuates according to a \textit{puffing period}. Th
 
 \subsection{Profiling}
 \subsubsection{Single time-step}
-The runtimes of various sections of the radiation solver are presented in fig. \ref{} for both CPU and GPU simulations.
+The runtimes of various sections of the radiation solver are presented in fig. \ref{fig:PoolFire_profiling} for both CPU and GPU simulations.
+The runtime for a single timestep is dominated by the loading of the non-gray database. Numerical timestep comparisons are present in table \ref{table:PoolFire_profiling}.
 
 \begin{figure}
-\includegraphics[width=\linewidth]{figures/ch4/PoolFire_profiling_OnetimestepGPU.png}
+\includegraphics[width=0.75\linewidth]{figures/ch4/PoolFire_profiling_OnetimestepGPU.png}
 \caption{Profiling results for the GPU}
-\label{fig:PoolFire_quadcomparison}
+\label{fig:PoolFire_profiling}
 \end{figure}
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{||c c c c c||} 
+ \hline
+ Parallel Variation & Init non-gray & Tracing rays & Init cell parameters & post-processing \\ [0.5ex] 
+ \hline\hline
+ 30 CPU processors & N/A & 6.91 s & - & - \\
+ GPU & 2.25s & 1.44s & 0.218s & 0.218s\\ 
+ \hline
+\end{tabular}
+\caption{Single time-step runtime profiling.}
+\label{table:PoolFireTransient_runtime_table_1rpc}
+\end{table}
 
 \subsubsection{Time-accurate simulation}
 Mean and standard deviations of runtimes for the time-accurate simulation are presented in table \ref{table:PoolFireTransient_runtime_table_1rpc}. This simulation is conducted with adaptive emission, totalling approximately 3,400,000 rays emitted and traced per time-step.
