@@ -19,19 +19,19 @@ This "analytical" solution can be used for verification of the solver under vari
 Figures \ref{fig:PPcomp_kappa} to \ref{fig:PPcom_nrays} display comparisons of the MCRT solutions alongside the described analytical solutions. The configuration is tested under a variety of absorption coefficients, temperatures, and Monte-Carlo ray counts. The various case conditions are presented in table \ref{table:PPcomp}.
 
 \begin{figure}
-\includegraphics[width=\linewidth]{figures/ch4/PPcomparison1.png}
+\includegraphics[width=0.85\linewidth]{figures/ch4/PPcomparison1.png}
 \caption{Variable absorption coefficient with T=$2000$K, N$_r$=$1000$, N$_{cells}$=1000.}
 \label{fig:PPcomp_kappa}
 \end{figure}
 
 \begin{figure}
-\includegraphics[width=\linewidth]{figures/ch4/PPcomparison2.png}
+\includegraphics[width=0.85\linewidth]{figures/ch4/PPcomparison2.png}
 \caption{Variable temperature with $\kappa{}$=$10$ m$^{-1}$, N$_r$=$1000$, N$_{cells}$=1000.}
 \label{fig:PPcomp_temp}
 \end{figure}
 
 \begin{figure}
-\includegraphics[width=\linewidth]{figures/ch4/PPcomparison3.png}
+\includegraphics[width=0.85\linewidth]{figures/ch4/PPcomparison3.png}
 \caption{Variable number of rays emitted per cell (N$_r$) with $\kappa{}$=$10$ m$^{-1}$, T=$2000$K, N$_{cells}$=1000.}
 \label{fig:PPcom_nrays}
 \end{figure}
@@ -177,13 +177,28 @@ The high temperatures from the chemical reaction alongside the larger length sca
 This results in a system with a high degree of radiation, and is therefore a convenient sample case to demonstrate the use of the present radiation model.
 
 \subsection{Case Setup}
-The simulation is based on the fireFoam tutorial case, smallPoolFlame3D in \verb|OpenFOAM|, where mesh refinement has been doubled. 
-In the tutorial case, a mass-source is provided through the inlet at the bottom of the domain, where a reaction is initiated. A turbulent premixed flame is then simulated with infinitely-fast chemistry for four seconds of physical time.
+The simulation is based on the \verb|OpenFOAM| tutorial case, smallPoolFlame3D, where mesh refinement has been doubled and the default discrete-ordinates radiation model has been deactivated. 
+In the tutorial case, a mass-source is provided through the inlet at the bottom of the domain, where a reaction is also initiated. A turbulent \textbf{premixed?} flame is then simulated with infinitely-fast chemistry for four seconds of physical time.
 The simulation is run with radiation enabled, where the net radiation source terms are added to the CFD energy equation solution every timestep.
-Both a frozen-field analysis and a full time-accurate simulation are conducted. Figure \ref{fig:PoolFire_diagram} displays the timestep for the former.
+Both a frozen-field analysis on a single-timestep, and a full transient simulation are conducted and analysed. The single-timestep analysis is conducted using the original smallPoolFlame3D OpenFOAM tutorial case with radiation turned off after 0.8s of physical time; the timestep is shown in fig. \ref{fig:PoolFire_diagram}.
+
+Rays are emitted according to the \textit{adaptive emission} model. In this approach, the number of rays emitted from each computational cell is decided by the emissive power of that cell. Equations \ref{eq:TargetRayEnergy} to \ref{eq:RayEnergies} describe this process, where $E_i$ is the emissive power from cell $i$. 
+$N_{rays,tot,target}$ is a user-defined parameter describing the total targeted number of rays to emit throughout the domain.
+\begin{equation}
+    E_{ray,target}=\frac{\sum^{N_{cells}}_{i}E_{i}}{N_{rays,tot,target}}
+    \label{eq:TargetRayEnergy}
+\end{equation}
+\begin{equation}
+    N_{rays,cell,actual}=\frac{E_{i}}{E_{ray,target}}
+    \label{eq:NumberOfRays}
+\end{equation}
+\begin{equation}
+    E_{ray,actual}=\frac{E_{i}}{N_{rays,cell,actual}}
+    \label{eq:RayEnergies}
+\end{equation}
+
 
 The geometry is a cubic 1$\times$1$\times$1m domain with a grid consisting of 1,728,000 hexahedral cells with 120 divisions per side.
-10 rays are emitted and traced from each cell, irrespective of cell emission energy.
 This configuration is studied for both planck-mean gray and line-by-line spectral models, and no Turbulence-Radiation Interaction (TRI) is accounted for in this study.
 
 \begin{figure}
@@ -202,8 +217,8 @@ The radiative emission contours drop towards the outer edges and top section of 
 \label{fig:PoolFire_radiationcontours}
 \end{figure}
 
-\subsubsection{Frozen field analysis}
-
+\subsubsection{Single Timestep}
+A single timestep from the original smallPoolFire3D simulation is extracted, and radiation is simulated.
 In order to better understand the influence of radiation within the flame, figure \ref{fig:PoolFire_quadcomparison} displays four relevant parameters for the radiation calculation within the frozen field analysis. 
 The contours of temperature show two sides of a hollow cylinder of reacting flow billowing upwards as a result of the buoyant force induce on the lower-density regions.
 The top-section of the mushroom contains an  flame-front which, towards the outer regions, slowly decreases in temperature and intensity as a result of momentum and molecular exchange with the surrounding quiescent region through viscous and diffusive effects.
@@ -248,19 +263,30 @@ The resulting negative radiation source contour shown in fig. \ref{fig:PoolFire_
 
 \subsubsection{Time-accurate simulation}
 The same pool-fire is simulated from initial conditions until 4 seconds of physical time.
-The simulation is run with line-by-line accurate non-gray emission and radiation source terms are updated each simulation time-step. Chemistry is infinitely-fast, and the case setup is identical to that of the frozen-field analysis.
+The simulation is run with line-by-line accurate non-gray emission, and radiation source terms are updated each simulation time-step. Chemistry is infinitely-fast, and the case setup is identical to that of the frozen-field analysis.
 Several time-steps of the simulation are present in fig. REF. The pool fire is shown to first appear as a mushroom up from the inlet, the reacting, billowing cloud rises upwards, and finally exits through the top boundary of the domain.
-The pool fire periodically fluctuates according to a \textit{puffing period}. These oscillations are buoyancy driven and result in 
+The pool fire periodically fluctuates according to a \textit{puffing period}. These oscillations are buoyancy driven and result in turbulent eddies and substantial cooling of the flame as it mixes with the oxidizer.
 
+Radiation contributes significantly to the reduction of flame temperature, and therefore has a significant effect on the density-driven buoyant forces fluctuating the flame profile. 
+Figure \ref{fig:PoolFire_withandwithoutrad} compares the center-line temperature of the pool fire for a simulation without radiation, with the gray OpenFOAM DOM radiation solver, and the gray MCRT model. Significant variations in temperature are apparent, up to $600$K at locations far from the inlet.
+
+
+\begin{figure}
+\includegraphics[width=1\linewidth]{figures/ch4/PoolFire_WithandWithoutRadiation.png}
+\caption{Comparison of center-line temperature profiles of various simulations of the pool fire.}
+\label{fig:PoolFire_withandwithoutrad}
+\end{figure}
 
 \subsection{Profiling}
 \subsubsection{Single time-step}
 The run-times of various sections of the radiation solver are presented in fig. \ref{fig:PoolFire_profiling} and \ref{fig:PoolFire_profiling_CPU} for both CPU and GPU simulations. Simulations are conducted with adaptive emission using a total of 3,429,003 rays.
-CPU ray-tracing is completed using 30 CPU processes. A noticeable decrease in runtime of 
+CPU ray-tracing is completed using 30 CPU processes. 
 
 For both CPU and GPU simulations, the runtime is dominated by the loading of the non-gray database. This comes at no surprise considering the complete database is over a gigabyte in size. 
+The tracing region is proportionally smaller on the GPU as a result of the significant speedup when conducting raytracing in a SIMD-favorable architecture.
 The loading process consists of first loading the data into memory, initializing the representative data structures, conducting various sanity checks on the database to ensure proper loading, and deep copying the data onto the GPU, if present.
-Numerical time-step comparisons are present in table \ref{table:PoolFire_profiling}.
+
+Numerical time-step comparisons are present in table \ref{table:PoolFireTimestep_runtime_table_1rpc}.
 
 \begin{figure}
 \includegraphics[width=0.6\linewidth]{figures/ch4/PoolFire_profiling_OnetimestepGPU.png}
@@ -277,19 +303,24 @@ Numerical time-step comparisons are present in table \ref{table:PoolFire_profili
 \centering
 \begin{tabular}{||c c c c c||} 
  \hline
- Parallel Variation & Init non-gray & Tracing rays & Init cell parameters & post-processing \\ [0.5ex] 
+ Parallel Variation & Init non-gray & Tracing rays & Init cell parameters & Total \\ [0.5ex] 
  \hline\hline
- 30 CPU processors & 0.980s & 8.36s &  & - \\
- GPU & 2.25s & 1.44s & 0.218s & 0.218s\\ 
+ 30 CPU processors & 0.997s & 4.38s & 0.0119s & 5.81s \\
+ GPU & 2.25s & 1.44s & 0.218s & 4.34s \\ 
  \hline
 \end{tabular}
 \caption{Single time-step runtime profiling.}
-\label{table:PoolFireTransient_runtime_table_1rpc}
+\label{table:PoolFireTimestep_runtime_table_1rpc}
 \end{table}
 
 \subsubsection{Time-accurate simulation}
-Mean and standard deviations of runtimes for the time-accurate simulation are presented in table \ref{table:PoolFireTransient_runtime_table_1rpc}. This simulation is conducted with adaptive emission, totalling approximately 3,400,000 rays emitted and traced per time-step.
+Time accurate simulations are  conducted with adaptive emission, totalling approximately 3,400,000 rays emitted and traced per time-step.
+Both CPU and GPU versions were run for four seconds of simulation time. Mean and standard deviations of run-times are presented in table \ref{table:PoolFireTransient_runtime_table_1rpc}. 
 
+For the CPU-run case, radiation encompassed approximately 37\% of the runtime for each timestep, on average. The detailed profiling results featured in figure \ref{fig:PoolFire_profiling_CPU} can be considered roughly consistent across the various time-steps of the time-accurate simulation.
+It should be noted that both the non-gray database and CFD mesh are re-initialized every time-step, resulting in significantly increased run-time. Future work will include initializing these components at the beginning of the simulation to prevent the unnecessary additional runtime.
+After these changes, the overall radiation runtime will target $6.723$s, or $33$\% of the total runtime.
+Identically, the GPU runtime can be expected to decrease from 
 
 \begin{table}[h!]
 \centering
@@ -297,16 +328,13 @@ Mean and standard deviations of runtimes for the time-accurate simulation are pr
  \hline
  Parallel Variation & Radiation Execution & Total Execution & Percent contribution \\ [0.5ex] 
  \hline\hline
- 30 CPU processors & 8100s($\pm{}$578s) & 21657s($\pm{}$844.8s) & 37.4\%($\pm{}$2.1\%) \\ 
+ 30 CPU processors & 8.1s($\pm{}$0.578s) & 21.66s($\pm{}$0.845s) & 37.4\%($\pm{}$2.1\%) \\ 
  GPU & N/A & 6.91 s & - \\
  \hline
 \end{tabular}
-\caption{Mean runtime contribution of radiation per timestep compared to total runtime. Standard deviations are present in parenthesis. List CPU runtimes consist of radiation parallelized on 30 CPU processors, and CFD calculation occuring on 1 processor. GPU runtimes consist of radiation running on the GPU and CFD calculated using 1 CPU processor.}
+\caption{Mean runtime contribution of radiation per timestep compared to total runtime. Standard deviations are presented in parenthesis. List CPU runtimes consist of radiation parallelized on 30 CPU processors, and CFD calculation occuring on 1 processor. GPU runtimes consist of radiation running on the GPU and CFD calculated using 1 CPU processor.}
 \label{table:PoolFireTransient_runtime_table_1rpc}
 \end{table}
-
-It should be noted that the runtimes present in table \ref{table:PoolFireTransient_runtime_table_1rpc} include the loading of both the mesh and the line-by-line database for each timestep. Future work will include pre-loading the database once at the beginning of the simulation to reduce the overhead associated with the file I/O.
-Following the profiling results present in the previous section, loading of the LBL database requires up to 
 
 
 \section{Pratt \& Whitney aircraft engine Combustor}
