@@ -221,7 +221,7 @@ The maximum volumetric radiative energy loss for any computational cell is -$1.0
 \label{fig:PoolFire_quadcomparison}
 \end{figure}
 
-Figure \ref{fig:PoolFire_lineplot} shows various normalized parameters along the center-line of the flame. 
+Figure \ref{fig:PoolFire_lineplot} shows various normalized parameters along the center-line of a gray-simulated flame. 
 Normalized temperature and product species mass fractions rise with increasing distance from the bottom surface, indicating reaction progression. 
 The volumetric emission and negative of radiative volume source (emission – absorption) appear to match as a result of the relatively weak influence of absorption.
 The Planck Mean absorption coefficient increases, then decreases despite the monotonically increasing mass fractions of the radiatively participating species (CO$_2$ and H$_2$O). This happens as a direct result of the increase in temperature. 
@@ -229,30 +229,56 @@ The influence of temperature on absorption coefficient is complex, but for these
 Absorption follows the trend of planck-mean absorption coefficient, as expected for an gray model.
 
 Figure \ref{fig:PoolFire_lineplot_nongray} displays the same normalized parameters in a LBL-accurate Pool-fire simulation. The contributions of CO$_2$ and H$_2$O are considered, but not soot.
+The most notable changes are the inversion of the radiative absorption profile. Absorption now increases with height in the flame. Line-by-line accuracy means that the rate of absorption is decided by the wavelength of the ray.
+This results in an increase of re-absorption as the rays with wavelengths of high rates of absorption are also preferentially selected for during the random wavenumber selection process. Thus results in a net increase of radiative re-absorption from $14$\% for the gray flame to $58$\% for the non-gray flame. Net radiative emission is equal between the two as the Planck-mean absorption coefficient was used to evaluate this term for both.
+The resulting negative radiation source contour shown in fig. \ref{fig:PoolFire_lineplot_nongray} also reflects this change by showing a slight degree of absorption towards the lower-sections of the flame.
 
 \begin{figure}[!ht]
 \includegraphics[width=\linewidth]{figures/ch4/line_plot.png}
-\caption{Various parameters along the centerline of the flame. Values normalized by maximum values along the sampled line.}
+\caption{Various parameters along the center-line of a gray flame. Values normalized by maximum values along the sampled line.}
 \label{fig:PoolFire_lineplot}
 \end{figure}
 
 
 \begin{figure}[!ht]
 \includegraphics[width=\linewidth]{figures/ch4/line_plot_nongray.png}
-\caption{Various parameters along the centerline of a non-gray flame. Values normalized by maximum values along the sampled line.}
+\caption{Various parameters along the center-line of a non-gray flame. Values normalized by maximum values along the sampled line.}
 \label{fig:PoolFire_lineplot_nongray}
 \end{figure}
 
 \subsubsection{Time-accurate simulation}
 The same pool-fire is simulated from initial conditions until 4 seconds of physical time.
 The simulation is run with line-by-line accurate non-gray emission and radiation source terms are updated each simulation time-step. Chemistry is infinitely-fast, and the case setup is identical to that of the frozen-field analysis.
-
-Several time-steps of the time-accurate simulation are presented in 
+Several time-steps of the simulation are present in fig. REF. The pool fire is shown to first appear as a mushroom up from the inlet, the reacting, billowing cloud rises upwards, and finally exits through the top boundary of the domain.
+The pool fire periodically fluctuates according to a \textit{puffing period}. These oscillations are buoyancy driven and result in 
 
 
 \subsection{Profiling}
-In effort to demonstrate the scaling trend of the solution, the mesh density is varied. 
-Should we only be doing this for if we have the MPI thing implemented?
+\subsubsection{Single time-step}
+The runtimes of various sections of the radiation solver are presented in table \ref{table:RadProfiling} for both CPU and GPU simulations.
+
+
+\subsubsection{Time-accurate simulation}
+Mean and standard deviations of runtimes for the time-accurate simulation are presented in table \ref{table:PoolFireTransient_runtime_table_1rpc}. This simulation is conducted with adaptive emission, totalling approximately 3,400,000 rays emitted and traced per time-step.
+
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{||c c c c||} 
+ \hline
+ Parallel Variation & Radiation Execution & Total Execution & Percent contribution \\ [0.5ex] 
+ \hline\hline
+ 30 CPU processors & 8100s($\pm{}$578s) & 21657s($\pm{}$844.8s) & 37.4\%($\pm{}$2.1\%) \\ 
+ GPU & N/A & 6.91 s & - \\
+ \hline
+\end{tabular}
+\caption{Mean runtime contribution of radiation per timestep compared to total runtime. Standard deviations are present in parenthesis. List CPU runtimes consist of radiation parallelized on 30 CPU processors, and CFD calculation occuring on 1 processor. GPU runtimes consist of radiation running on the GPU and CFD calculated using 1 CPU processor.}
+\label{table:PoolFireTransient_runtime_table_1rpc}
+\end{table}
+
+It should be noted that the runtimes present in table \ref{table:PoolFireTransient_runtime_table_1rpc} include the loading of both the mesh and the line-by-line database for each timestep. Future work will include pre-loading the database once at the beginning of the simulation to reduce the overhead associated with the file I/O.
+Following the profiling results present in the previous section, loading of the LBL database requires up to 
+
 
 \section{Pratt \& Whitney aircraft engine Combustor}
 A three dimensional Pratt \& Whitney combustor  \textbf{(Block C)}? geometry was next tested for verification and profiling of the present radiation model. Solver profiling is presented alongside general observations regarding the effects of radiation within the system.
