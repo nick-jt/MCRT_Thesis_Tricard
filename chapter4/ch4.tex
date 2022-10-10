@@ -170,10 +170,10 @@ Within MCRT-Kokkos and MCRT-ArborX, runtimes are decreased as well, but to a low
 The usage of a GPU enabled a significant reduction in runtime as well. 
 
 
-\section{Small Pool Flame}
+\section{Small Pool Flame}\label{section:SmallPoolFlame}
 The emission of radiation from a buoyant pool flame is of considerable interest to those in the field of fire research. 
 The relatively slow fluid motion alongside buoyancy-driven turbulent fluctuations provides a realistic surrogate for many hazardous combustion scenarios such as forest fires and house fires.
-The high temperatures from the chemical reaction alongside the larger length scales also provide conveniently high radiative emissions alongside high optical thicknesses. 
+The high temperatures from the chemical reaction alongside the larger length scales also provide high radiative emissions alongside high optical thicknesses. 
 This results in a system with a high degree of radiation, and is therefore a convenient sample case to demonstrate the use of the present radiation model.
 
 \subsection{Case Setup}
@@ -230,9 +230,9 @@ The significant drop in Planck-mean absorption coefficient with radiative absorp
 In total, net radiative emission equals $10541.5044$ Watts, where $1469.4406$ Watts are re-absorbed into the medium, and $9072.0639$ Watts escape to the walls. This results in approximately 14\% of radiative emission being re-absorbed primarily in the flame-region, as suggested previously. 
 The maximum volumetric radiative energy loss for any computational cell is -$1.081$ W. In comparison, the maximum volumetric source through chemical reaction was $14.08$ Watts.
 
-\begin{figure}
+\begin{figure}[!ht]
 \includegraphics[width=0.9\linewidth]{figures/ch4/PoolFire_quadcomparison.png}
-\caption{Mid-plane contours of four relevant parameters to the radiation calculation in the pool fire.}
+\caption{Mid-plane contours of four relevant parameters to the radiation calculation in the pool fire. Temperature is in Kelvin, Planck Mean absorption coefficient is in m$^{-1}$, and radiative emission and absorption are in W/m$^3$.}
 \label{fig:PoolFire_quadcomparison}
 \end{figure}
 
@@ -245,7 +245,7 @@ Absorption follows the trend of planck-mean absorption coefficient, as expected 
 
 Figure \ref{fig:PoolFire_lineplot_nongray} displays the same normalized parameters in a LBL-accurate Pool-fire simulation. The contributions of CO$_2$ and H$_2$O are considered, but not soot.
 The most notable changes are the inversion of the radiative absorption profile. Absorption now increases with height in the flame. Line-by-line accuracy means that the rate of absorption is decided by the wavelength of the ray.
-This results in an increase of re-absorption as the rays with wavelengths of high rates of absorption are also preferentially selected for during the random wavenumber selection process. Thus results in a net increase of radiative re-absorption from $14$\% for the gray flame to $58$\% for the non-gray flame. Net radiative emission is equal between the two as the Planck-mean absorption coefficient was used to evaluate this term for both.
+This results in an increase of re-absorption as the rays with wavelengths of high rates of absorption are also preferentially selected for during the random wavenumber selection process. Thus results in a net increase of radiative re-absorption from $14$\% for the gray flame to $58$\% for the non-gray flame.
 The resulting negative radiation source contour shown in fig. \ref{fig:PoolFire_lineplot_nongray} also reflects this change by showing a slight degree of absorption towards the lower-sections of the flame.
 
 \begin{figure}[!ht]
@@ -289,12 +289,12 @@ The loading process consists of first loading the data into memory, initializing
 Numerical time-step comparisons are present in table \ref{table:PoolFireTimestep_runtime_table_1rpc}.
 
 \begin{figure}
-\includegraphics[width=0.6\linewidth]{figures/ch4/PoolFire_profiling_OnetimestepGPU.png}
+\includegraphics[width=0.675\linewidth]{figures/ch4/PoolFire_profiling_OnetimestepGPU.png}
 \caption{Profiling results for the GPU}
 \label{fig:PoolFire_profiling}
 \end{figure}
 \begin{figure}
-\includegraphics[width=0.6\linewidth]{figures/ch4/PoolFire_profiling_OnetimestepCPU.png}
+\includegraphics[width=0.675\linewidth]{figures/ch4/PoolFire_profiling_OnetimestepCPU.png}
 \caption{Profiling results for the CPU}
 \label{fig:PoolFire_profiling_CPU}
 \end{figure}
@@ -328,8 +328,8 @@ Identically, the GPU runtime can be expected to decrease from
  \hline
  Parallel Variation & Radiation Execution & Total Execution & Percent contribution \\ [0.5ex] 
  \hline\hline
- 30 CPU processors & 8.1s($\pm{}$0.578s) & 21.66s($\pm{}$0.845s) & 37.4\%($\pm{}$2.1\%) \\ 
- GPU & N/A & 6.91 s & - \\
+ 30 CPU processors & 8.1s($\pm{}$0.58s) & 21.7s($\pm{}$0.84s) & 37.4\%($\pm{}$2.10\%) \\ 
+ GPU & 4.7s($\pm$0.28s) & 16.2s($\pm$2.21)s & 29.4\%($\pm$2.30\%) \\
  \hline
 \end{tabular}
 \caption{Mean runtime contribution of radiation per timestep compared to total runtime. Standard deviations are presented in parenthesis. List CPU runtimes consist of radiation parallelized on 30 CPU processors, and CFD calculation occuring on 1 processor. GPU runtimes consist of radiation running on the GPU and CFD calculated using 1 CPU processor.}
@@ -340,16 +340,21 @@ Identically, the GPU runtime can be expected to decrease from
 \section{Pratt \& Whitney aircraft engine Combustor}
 A three dimensional Pratt \& Whitney combustor  \textbf{(Block C)}? geometry was next tested for verification and profiling of the present radiation model. Solver profiling is presented alongside general observations regarding the effects of radiation within the system.
 The combustor geometry follows a Rich-Quench-Lean (RQL) configuration, an optimal design for both emissions and stability.
-A single time-step from an LES of the combustor was taken for a frozen-field analysis. The effects of soot, spectral emission patterns, and wall-incident radiation were all captured within the model, and detailed account of these effects alongside profiling of the various parallel implementations of the model are presented as demonstration.
-The effects of liquid fuel spray on ray-scattering and absorption are neglected.
-
+A single time-step from an LES of the combustor was taken for a frozen-field analysis. 
 The combustor geometry is constructed to for highly turbulent flow with a high degree of separation to allow for a sufficiently stabilized flame.
-A re-circulation zone immediately behind the inlet section induces a swirl which facilitates mixing of the reactants, and a downstream dilution hole results in a complex chemical mixing process for the remaining reactions to occur in a fuel-lean condition. 
-
+A re-circulation zone immediately behind the inlet section induces a swirl which facilitates mixing of the reactants, and a downstream dilution hole results in a complex chemical mixing process for the remaining reactions to occur in a fuel-lean condition. This results in a more complex profile of radiation throughout the fluid and the walls.
+The resulting influences of radiation within the fluid and along the walls are non-monotonic with respect to distance from the inlet, and especially with consideration of the influences of non-gray emission and absorption. 
+All presented parameters are normalized by median values obtained through the computational cells or faces.
 
 
 \subsection{Case setup}
-The combustor geometry is meshed into a grid of 16,373,876 hexahedral cells of varying shapes and sizes. The simulation is completed with adaptive emission.
+The combustor geometry consists of one slice of the annular combustor, as replicated in fig \ref{fig:PW_Combustor_Replication}. The domain is meshed into a grid of 16,373,876 hexahedral cells of varying shapes and sizes. Radiation is modeled adaptive emission, as discussed in section \ref{section:SmallPoolFlame}, and specularly reflective boundaries are imposed on the periodic boundaries.
+The effects of soot, spectral emission patterns, and wall-incident radiation were all captured within the model, and detailed account of these effects alongside profiling of the various parallel implementations of the model are presented as demonstration.
+Contributions from the three primary emitting and absorbing chemical species are accounted for: CO$_2$, H$_2$O, and CO. The influences of soot are also accounted for.
+The effects of liquid fuel spray on ray-scattering and absorption and all turbulence-radiation interactions are neglected.
+
+
+
 
 
 
