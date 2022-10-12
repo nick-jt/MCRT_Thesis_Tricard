@@ -1,6 +1,5 @@
 \addchapheadtotoc
 \chapter{Background on Radiation in Combustion}\label{chapter:Importance}
-Brief introduction
 
 \section{Fundamentals of radiation} \label{Sec:FundOfRad}
 Thermal radiation is the transfer of thermal energy through through electromagnetic waves, according to electromagnetic wave theory, and by particulate photons, according to quantum mechanics. 
@@ -14,12 +13,10 @@ For combustion systems, where temperatures typically fall between 2000 and 2500K
 Thermal radiation is known to have an \textit{all-to-all} nature. Radiation emitted at one point has the ability to reach another point very far away. 
 This is in contrast to conductive and convective modes of heat transfer where thermal energy is transferred through direct contact and fluid motion (local phenomena). 
 It is for this reason that radiation plays a very important role in massive-scale studies such as in the vacuum of space.
-
-A brief description of radiation and its importance in combustion is presented,
+A brief description of various fundamental laws are presented,
 readers should review referenced texts for more thorough descriptions \cite{Howell2010ThermalTransfer,Modest2013RadiativeTransfer}.
 
 \subsection{Basic Laws of radiation}
-Brief introduction
 
 \subsubsection{The idealized 'Black body'}
 A body which absorbs perfectly cannot be seen and must therefore be black. Therefore, the term \textit{black body} refers to the an ideal absorber, upon which any incident light of any wavelength will be absorbed in its entirety. In addition, according to arguments posed in \ref{sec:KirchoffsLaw}, black-bodies are also ideal emitters.
@@ -36,60 +33,64 @@ Where $h$ is Planck's constant, $\nu{}$ is the wave frequency, $n$ is the refrac
     \label{eq:PlancksLawIntegrated}
 \end{equation}
 
-While emissive power is an important quantity for radiation modeling, the radiative intensity, $I$, or emissive power per unit solid angle on the unit sphere, is a more convenient quantity for many radiation problems. A "solid angle" is a three dimensional description of angle, similar to a two-dimensional angle on the unit circle. The definition for intensity from a diffuse emitter is eq. \ref{eq:Intensity}.
+While emissive power is an important quantity for radiation modeling, the radiative intensity, $I$, or emissive power per unit solid angle is a more convenient quantity for many radiation problems. A "solid angle" is a description of a differential area along the unit sphere, similar to a two-dimensional angle on the unit circle. The definition for intensity from a diffuse emitter is eq. \ref{eq:Intensity}.
 \begin{equation}
     I_b(T) = \frac{E_b(T)}{\pi}
     \label{eq:Intensity}
 \end{equation}
 
 
-\subsubsection{Kirchoff's Law} \label{sec:KirchoffsLaw}
-In a system consisting of non-black bodies surrounding a black body, the black body will absorb all incident radiation.
-If the surrounding surfaces emit at a higher rate than the black body, then there will be a net energy exchange between the enclosure and the object.
-As a result, there will be a driven temperature difference in the system, which violates the second law of thermodynamics.
-Therefore, according to \textit{Kirchoff's law}, this surface must also be an ideal emitter.
+\subsubsection{Kirchhoff's Law} \label{sec:KirchoffsLaw}
+Two systems are constructed consisting of an enclosure of black surfaces surrounding an object. The object in the first system is a black-body, and the object in the second system is a gray body (emits a fraction of the energy a black body emits). Both systems are thermally insulated to the surroundings. 
+According to the second law of thermodynamics, the temperatures in both systems will equalize to a constant value. This implies that the energy emitted and absorbed by each object should be the same.
+Since a black body is a better absorber than the gray body, it must also be a better emitter. This argument can be proposed for any variation of the gray body. Therefore, the black-body must also be the best possible emitter of radiation.
+Further continuation of this argument reveals that the ratio of emission of any object to that of a black body, the emissivity, must also equal the ratio of the absorption of that object to that of a black body, the absorptivity. This argument applies for emission at any wavelength and any direction for ingoing or outgoing electromagnetic rays, therefore establishing the equality of spectral, directional emissivity $\epsilon_{\eta{}\theta{}}$ and spectral, directional absorptivity $\alpha{}_{\eta,\theta}$ at thermal equilibrium, as shown in eq. \ref{eq:KirchhoffsLaw}.
+\begin{equation}
+    \epsilon{}_{\eta{},\theta{}}=\alpha{}_{\eta{},\theta{}}
+    \label{eq:KirchhoffsLaw}
+\end{equation}
 
 
 \subsection{Thermal radiation in participating media} \label{section:RTE}
 For combustion systems, thermal radiation interacts with the media as well as the walls. The fundamental equation to describe radiation in an absorbing-emitting medium is the radiative transfer equation (RTE), eq. \ref{eq:RTE2}.
 
 \begin{equation}
-    \frac{dI_\eta{}}{d\textbf{s}} = \textbf{s} \cdot \nabla{I_\eta{}} = \kappa{}_\eta{}I_{b\eta{}}-\kappa{}_\eta{}I_\eta{}-\sigma{}_{s\eta{}}I_\eta{}+\frac{\sigma{}_{s\eta{}}}{4\pi}\int_{4\pi{}}{I_\eta{}(\hat{s})\Phi_\eta{}(\hat{s}_i,\hat{s})}\,d\Omega{}_i
+    \frac{dI_\eta{}}{d\hat{\textbf{s}}} = \hat{\textbf{s}} \cdot \nabla{I_\eta{}} = \kappa{}_\eta{}I_{b\eta{}}-\kappa{}_\eta{}I_\eta{}-\sigma{}_{s\eta{}}I_\eta{}+\frac{\sigma{}_{s\eta{}}}{4\pi}\int_{4\pi{}}{I_\eta{}(\hat{\textbf{s}})\Phi_\eta{}(\hat{\textbf{s}}_i,\hat{\textbf{s}})}\,d\Omega{}_i
     \label{eq:RTE2}
 \end{equation}
 
-Where $I$ is ray intensity, $\textbf{s}$ is a path length (with both a direction and a location), $\kappa{}$ is the absorption coefficient, $I_b$ is the black-body intensity, $\sigma{}$ is the scattering coefficient, and $\Phi{}$ is the scattering phase-function (representing the probability a ray from direction $\hat{s}_i$ is scattered into direction $\hat{s}$). Subscript $\eta{}$ represents wavenumber (the inverse of wavelength) and $i$ marks an incident direction. This equation describes how the intensity of a pencil of rays changes along a path length $\hat{\textbf{s}}$. A ray intensity will decrease due to absorption ($\kappa{}_\eta{}I_\eta{}$, also known as Beer's law) and out-scattering ($\sigma{}_{s\eta{}}I_\eta{}$). And the ray intensity will increase due to further emission along the path-length ($\kappa{}_\eta{}I_{b\eta{}}$) and scattering of rays from other directions into the path length of interest ($\frac{\sigma{}_s}{4\pi}\int_{4\pi{}}{I_\eta{}(\hat{s})\Phi_\eta{}(\hat{s}_i,\hat{s})}\,d\Omega{}_i$). 
+Where $I$ is ray intensity, $\hat{\textbf{s}}$ is a path length (with both a direction and a location), $\kappa{}$ is the absorption coefficient, $I_b$ is the black-body intensity, $\sigma{}$ is the scattering coefficient, and $\Phi{}$ is the scattering phase-function (representing the probability a ray from direction $\hat{\textbf{s}}_i$ is scattered into direction $\hat{\textbf{s}})$. Subscript $\eta{}$ represents wavenumber (the inverse of wavelength) and $i$ marks an incident direction. 
+This equation describes how the intensity of a pencil of rays changes along a path length $\hat{\textbf{s}}$. A ray intensity will decrease due to absorption ($\kappa{}_\eta{}I_\eta{}$, also known as Beer's law) and out-scattering ($\sigma{}_{s\eta{}}I_\eta{}$). And the ray intensity will increase due to further emission along the path-length ($\kappa{}_\eta{}I_{b\eta{}}$) and scattering of rays from other directions into the path length of interest ($\frac{\sigma{}_s}{4\pi}\int_{4\pi{}}{I_\eta{}(\hat{\textbf{s}})\Phi_\eta{}(\hat{\textbf{s}}_i,\hat{\textbf{s}})}\,d\Omega{}_i$). 
 
-The existence of both an integral and a differential in eq. \ref{eq:RTE2} poses a complexity problem as the equation being modeled is now an integro-differential equation. 
+The existence of both an integral and a differential in eq. \ref{eq:RTE2} contributes to the complexity of the problem as the equation being modeled is an integro-differential equation. 
 This requires both modeling of local phenomena and the influence of global phenomena on local conditions. 
 This all-to-all nature is the reason for the immense computational difficulty of modeling the RTE. 
-In addition, as is explained in section \ref{Sec:Nongray}, the highly intermittent nature of the emission spectrum of gas imposes an additional modeling difficulty.
+In addition, as will be explained in section \ref{Sec:Nongray}, the highly intermittent nature of the emission spectrum of gas imposes an additional modeling difficulty.
 
-Absorption coefficient, $\kappa_{\eta{}}$ and scattering coefficient $\sigma{}_\eta{}$ are often combined into the extinction coefficient $\beta{}_\eta{}$. Equation \ref{eq:RTE2} can be rewritten for greater conceptual understanding to \ref{eq:RTErewritten}.
+Absorption coefficient, $\kappa_{\eta{}}$ and scattering coefficient $\sigma{}_\eta{}$ are often combined into the extinction coefficient $\beta{}_\eta{}$. Equation \ref{eq:RTE2} can then be rewritten to \ref{eq:RTErewritten}.
 \begin{equation}
-    \frac{dI_\eta{}}{ds} = \beta{}_\eta{}[S(s',\hat{s})-I_\eta{}]
+    \frac{dI_\eta{}}{d\hat{\textbf{s}}} = \beta{}_\eta{}[S(\hat{\textbf{s}}',\hat{\textbf{s}})-I_\eta{}]
     \label{eq:RTErewritten}
 \end{equation}
 \begin{equation}
-    S(s',\hat{s}) = (1-\omega{}_\eta{})I_{b\eta{}}+\frac{\omega{}_\eta{}}{4\pi}\int_{4\pi{}}{I_\eta{}(\hat{s})\Phi_\eta{}(\hat{s}_i,\hat{s})}\,d\Omega{}_i
+    S(\hat{\textbf{s}}',\hat{\textbf{s}}) = (1-\omega{}_\eta{})I_{b\eta{}}+\frac{\omega{}_\eta{}}{4\pi}\int_{4\pi{}}{I_\eta{}(\hat{\textbf{s}})\Phi_\eta{}(\hat{\textbf{s}}_i,\hat{\textbf{s}})}\,d\Omega{}_i
     \label{eq:RTE_S}
 \end{equation}
+Where $S_\eta{}(\hat{\textbf{s}}',\hat{\textbf{s}})$ is the ray-intensity source term eq. \ref{eq:RTE_S}, and $\omega{}_\eta{}=\sigma{}_{s\eta{}}/\beta_{\eta{}}$ is the single-scattering albedo. Eq. \ref{eq:RTErewritten} shows that the intensity of the pencil of rays increases due to a source term, and decreases proportional to it's current intensity.
+The extinction coefficient $\beta{}$, is often divided from both sides of eq. \ref{eq:RTE2}, and the resulting $\beta{}d\hat{\textbf{s}}$ term is called the optical distance, $d\tau{}_\eta{}$.
 
-Where $S_\eta{}(s',\hat{s})$ is the ray-intensity source term eq. \ref{eq:RTE_S}, and $\omega{}_\eta{}=\sigma{}_{s\eta{}}/\beta_{\eta{}}$ is the single-scattering albedo. Eq. \ref{eq:RTErewritten} shows that the intensity of the pencil of rays increases due to a source term, and decreases proportional to it's current intensity.
-The extinction coefficient $\beta{}$, is often divided from both sides of eq. \ref{eq:RTE2}, and the resulting $\beta{}d\hat{s}$ term is called the optical distance, $d\tau{}_\eta{}$.
-
-The RTE can finally be integrated along an optical path length resulting in eq. \ref{eq:RTE_Solution}.
+The RTE can be integrated along an optical path length resulting in eq. \ref{eq:RTE_Solution}.
 \begin{equation}
     I_\eta{}(\tau{}_\eta{}) = I_\eta{}(0)e^{-\tau{}_\eta{}}+\int_{0}^{\tau{}_\eta{}}{S_\eta{}(\tau{}'_\eta{},\hat{s})e^{-(\tau{}_\eta{}-\tau{}'_\eta{})}}d\tau{}'_\eta{}
     \label{eq:RTE_Solution}
 \end{equation}
-Where one assumes a solution to eq. \ref{eq:RTE_S}. Equations \ref{eq:RTE2} and \ref{eq:RTE_Solution} display an important trait in thermal radiation that is conceptually obvious, but has significant consequences on the modeling procedure:
+Equations \ref{eq:RTE2} and \ref{eq:RTE_Solution} display an important trait in thermal radiation that is conceptually obvious, but has significant consequences on the modeling procedure:
 the change in intensity is a function of the current intensity. In other words, the intensity of a pencil of rays at one location cannot be known without knowledge of the ray's intensity directly before.
 As a result, one cannot accurately predict the variation of intensity in space without tracing a ray sequentially through every point between where it is emitted, and the point of interest.
-This ordered nature is consequential to the tracing of rays on distributed-memory systems, and will be discussed more in section \ref{sec:DistMemAccel}.
+This ordered nature is forces the raytracing procedure to occur iteratively through the mesh.
 
-A very simple example of radiative heat transfer can be applied to an isothermal sphere with no scattering and surrounded by cold, black walls. 
-The resulting emanating intensity can be described by eq. \ref{eq:emitting_sphere}.
+A very simple example of radiative heat transfer can be applied to a non-scattering, isothermal sphere that is surrounded by cold, black walls. 
+The emanating intensity can be described by eq. \ref{eq:emitting_sphere}.
 \begin{equation}
     I_\eta{}(\tau{}_R,\theta{}) = I_{b\eta{}}\left(1-e^{-2\tau{}_R\cos{\theta}}\right)
     \label{eq:emitting_sphere}
@@ -116,10 +117,9 @@ Under the conditions of an optically thin sphere, radiative re-absorption can be
 Where the heat flux can be integrated across the surface area of the sphere to produce the net energy emitted.
 \begin{equation}
     Q_{emi}=4\kappa{}n^2\sigma{}T^4V
-    \label{eq:heatflux}
+    \label{eq:RadEmis}
 \end{equation}
-This equation can be generalized to define the emission from any isothermal volume without self absorption.
-This equation is often used to define the net energy emitted from a computational cell using the Monte-Carlo Ray Tracing method.
+This equation can be generalized to define the emission from any isothermal volume, and is often used to define the net energy emitted from a computational cell using the Monte-Carlo Ray Tracing method.
 
 \subsection{Spectral effects}\label{Sec:Nongray}
 Like all substances, gases emit radiation along the electromagnetic spectrum. Under most conditions for combustion phenomena, radiative emission is isolated to the infrared part of the spectrum, between wavelengths of 1 to 15 $\mu{}$m \cite{Liu2020TheFlames}.
@@ -134,30 +134,25 @@ Those databases can then be used to provide a radiation solver absorption coeffi
 
 While the emission spectrum of gases is discrete, the radiation from many flames have been observed to be much more continuous \cite{Modest2013RadiativeTransfer}. This is a direct result of the emission of soot.
 Soot particles are generated through the agglomeration of unburnt hydrocarbons. The resulting particulates contribute much to the visual glow seen in flames. 
-Soot particles have sizes of only tens of $\mu{}$m, and volume fractions of only $10^{-4}$\% to $10^{-6}$\%, but often contributes of majority of radiation from a flame \cite{Modest2013RadiativeTransfer}.
+Soot particles have sizes of only tens of $\mu{}$m, and volume fractions of only $10^{-4}$\% to $10^{-6}$\%, but often contribute the majority of radiation from a flame \cite{Modest2013RadiativeTransfer}.
 
 \subsection{Characterizing the contribution of radiation}
 Understanding relative influence of radiation compared against other forms of energy transfer is a necessary task for many scientists and engineers, however a complete solution to the RTE alongside within their simulated domain (eq. \ref{eq:RTE2}) is often unnecessary to accomplish this. 
 There exist several parameters and non-dimensional relationships which can adequately characterize its magnitude in relation to other relevant parameters.
 
-An obvious approach would be to determine the tendency for a medium to absorb any emitted radiation. The diminishment of intensity of a pencil of rays can be evaluated as in eq. \ref{eq:DiminishmentOfRayIntensity}.
+One approach would be to determine the tendency for a medium to absorb any emitted radiation. The diminishment of intensity of a pencil of rays due to absorption can be evaluated as in eq. \ref{eq:DiminishmentOfRayIntensity}.
 \begin{equation}
-    I_\lambda{}(s)=I_\lambda{}(0)\exp{\left(-\int^\infty_0{\kappa{}_\lambda{}~ds}\right)}
+    I_\eta{}(s)=I_\eta{}(0)\exp{\left(-\int^\infty_0{\kappa{}_\eta{}~ds}\right)}
     \label{eq:DiminishmentOfRayIntensity}
 \end{equation}
-
-The quantity in the exponential is known as the optical thickness. The optical thickness for absorption is essentially a description of the opacity of a medium. This is a function of not only the tendency for a fluid element to absorb the energy of passing radiation, defined by the absorption coefficient, but also the overall distance over which the ray can be absorbed, eq. \ref{eq:Tau}.
+The quantity in the exponential is known as the optical thickness, $\tau{}_\eta{}$ which is essentially a description of the opacity of a medium. It is a function of not only the tendency for a fluid element to absorb the energy of passing radiation, defined by the absorption coefficient, but also the overall distance over which the ray can be absorbed.
+If one assumes the absorption coefficient remains constant along the path length, $s$, the equation for optical thickness can be reduced to eq. \ref{eq:Tau_simple}.
 \begin{equation}
-    \tau{}_\lambda = \int^\infty_0{\kappa{}_\lambda{}~ds}
-    \label{eq:Tau}
-\end{equation}
-If one assumes the absorption coefficient remains constant along the path length, $s$, eq. \ref{eq:Tau} can be reduced to eq. \ref{eq:Tau_simple}.
-\begin{equation}
-    \tau{}_\lambda = \kappa{}_\lambda{}\Delta{s}
+    \tau{}_\eta = \kappa{}_\eta{}\Delta{s}
     \label{eq:Tau_simple}
 \end{equation}
 The dimension of absorption coefficient is $m^{-1}$. Therefore, the optical thickness is a non-dimensional parameter that defines the propensity for a medium to absorb any emitted radiation, and can be a useful term to predict the necessity of solving the RTE. 
-For example, values of $2.303$, $4.605$, and $6.908$ define the optical distances necessary to diminish intensities by $90$\%, $99$\%, and $99.9$\%, respectively.
+Optical thickness values of $2.303$, $4.605$, and $6.908$ define the optical distances necessary to diminish intensities by $90$\%, $99$\%, and $99.9$\%, respectively.
 Media which tend to absorb very little are known as \textit{optically thin}, and can be modeled using the \textit{optically thin assumption (OTA)}, where radiation contributes a simple volumetric energy loss to the local fluid differential volume, and any radiative absorption is ignored.
 Media with high absorption coefficients and/or long length scales are known as \textit{optically thick}. Under these circumstances the absorption component of the RTE becomes more significant and must be modeled.
 Very optically thick media that find radiative re-absorption to occur on very small length scales relative to the geometry can model radiation using the \textit{diffusion approximation}, where radiative heat transfer is assumed to act similar to conductive diffusion with a radiative conductivity coefficient acting in place of the coefficient of thermal conductivity. 
@@ -165,23 +160,11 @@ Under moderate absorption coefficients, the full RTE must be modeled for both em
 
 Many instances of radiative gases call for an averaged quantity of absorption coefficient across the spectrum. The Planck-mean absorption coefficient, eq. \ref{eq:PlanckMean}, is often used in this context.
 \begin{equation}
-    \kappa{}_p = \frac{\int^\infty_0{\kappa{}_\lambda{}I_{b,\lambda}~d\lambda}}{\int^\infty_0{I_{b,\lambda}~d\lambda}}=\frac{\pi}{\sigma{}T^4}\int^\infty_0{\kappa{}_\lambda{}I_{b,\lambda}~d\lambda}
+    \kappa{}_p = \frac{\int^\infty_0{\kappa{}_\eta{}I_{b,\eta}~d\eta}}{\int^\infty_0{I_{b,\eta}~d\eta}}=\frac{\pi}{\sigma{}T^4}\int^\infty_0{\kappa{}_\eta{}I_{b,\eta}~d\eta}
     \label{eq:PlanckMean}
 \end{equation}
 Separate Planck-mean absorption coefficients can be defined for each of the more significant radiatively participating components of the mixture (often CO$_2$, H$_2$O, CO, CH$_4$, and soot). The net Planck-mean absorption coefficient can then be evaluated as a summation of each, weighted by their respective mole fractions.
 A simplified optical thickness, finally, can be defined as $\tau{}=\kappa{}_p\Delta{s}$.
-
-To analyze the relative contribution of radiation and convection, the radiative flux number, eq. \ref{eq:RadFluxNumber}, can be used \cite{Pai1966RadiationDynamics}.
-\begin{equation}
-    R_{F,conv}=\frac{\text{radiative flux}}{\text{convective flux}}=\frac{c\sigma{}T^4L^2}{L_RC_p\rho{}UTL}
-    \label{eq:RadFluxNumber}
-\end{equation}
-Where $c$ is the speed of light, $L$ is a characteristic length scale, and $L_R$ is the mean-free path of radiation, eq. \ref{eq:MFP_Radiation}.
-\begin{equation}
-    R_{F,conv}=\frac{\text{radiative flux}}{\text{convective flux}}=\frac{c\sigma{}T^4L^2}{L_RC_p\rho{}UTL}
-    \label{eq:RadFluxNumber}
-\end{equation}
-Mean free path of radiation \cite{Pai1966RadiationDynamics}, average distance between photon-molecule collision.
 
 The comparison of radiative and chemical heat generation terms can also provide perspective as to its relevance. As discussed by \citet{Liu2020TheFlames}, the radiant fraction can be used for this, eq. \ref{eq:RadiantFraction}.
 \begin{equation}
@@ -203,18 +186,10 @@ While the contribution of these effects are generally small under most condition
 
 
 \section{Effect of radiation in combustion systems}
-The discussed physics of radiation culminate into a highly contributive heat transfer process in combustion.
-Its effects are present in a 
+Radiation presents a variety of influences in combustion systems from both a physical and modeling perspective. A variety of these influences will be discussed in this section. First, the direct influences on fluid-dynamics are presented, followed by influences specific to turbulent flows, within the enclosing walls or surrounding objects, and to the chemical propagation and product mixture compositions.
 
-While radiation influences most directly the thermal energy within a system. In-directly, however, radiation can introduce 
-
-
-Neglecting the influence of radiation may result in inaccurate deductions of combustion processes and can be the direct cause of inaccuracies revealed during validation studies.
-
-
-
-\subsection{On fluid motion}
-The strong influence of the radiative redistribution of energy does not exclude itself to reacting flows. Many fluid dynamical systems see a relevant contribution of radiation. These physics that are present with non-chemically reacting flows can present themselves equally or in greater magnitude in reacting flows, and therefore provide a useful initial basis to define the influence of radiation in combustion. 
+\subsection{On fluid motion – TODO}
+Many fluid dynamical systems see a relevant contribution of radiation. These physics that are present with non-chemically reacting flows can present themselves equally or in greater magnitude in reacting flows, and therefore provide a useful initial basis to define the influence of radiation in combustion. 
 
 In general, any systems with high temperature fluid dynamics can see a powerful influence of radiation, and its resulting effects. 
 Radiation is more pronounced in systems which have high residence times, where the relatively slow timescales of radiative heating have more time to influence the system \cite{Wu2021LimitationsFires}. 
@@ -236,8 +211,7 @@ Dr. Zhaos paper
 
 
 \subsection{On turbulence}
-
-The disparate time and length scales involved with turbulent fluctuations in many fluid dynamic systems presents a problem for many computational scientists.
+The modeling of disparate time and length scales involved with turbulent fluctuations in many fluid dynamic systems presents a problem for many computational scientists.
 Resolving all of these scales would require extremely well resolved grid, often to an infeasible degree computationally. 
 Instead, a coarser grid is often used, with properties defined by an average over that of the contained fluid structures. This is the approach used in Reynold's Averaged Navier Stokes (RANS) modeling and Large Eddy Simulations (LES).
 The averaging of the governing equations of fluid dynamics, however, presents another difficulty, as many non-linear terms cannot be well represented by a linear average over thermodynamic parameters.
@@ -247,65 +221,58 @@ The transport of radiation can be divided into processes of emission and absorpt
 Within a semi-transparent medium, or any surface-surface exchange of radiation, the emission and absorption are defined by a non-linear functions of the thermodynamic conditions in the medium.
 Equation \ref{eq:DivHeatFlux} is the divergence of heat flux due to radiation. It defines the contribution of radiation to a differential volume, and its negative represents the volumetric energetic source term in the energy equation for fluid dynamics.
 \begin{equation}
-    -S_{rad}=\nabla\cdot{}q_{rad} = \int_0^\infty{\left(4\pi{}\kappa_\lambda{}I_{b\lambda{}}-\int_{4\pi}{\kappa{}_\lambda{}I_\lambda{}~d\Omega{}}\right)~d\lambda{}}
+    -S_{rad}=\nabla\cdot{}q_{rad} = \int_0^\infty{\left(4\pi{}\kappa_\eta{}I_{b\eta{}}-\int_{4\pi}{\kappa{}_\eta{}I_\eta{}~d\Omega{}}\right)~d\eta{}}
     \label{eq:DivHeatFlux}
 \end{equation}
 The averaging process will reformulate the equation into the following, eq. \ref{eq:AvgDivHeatFlux}.
 \begin{equation}
-    -S_{rad}=\langle\nabla\cdot{}q_{rad}\rangle = \int_0^\infty{\left(4\pi{}\langle\kappa_\lambda{}I_{b\lambda{}}\rangle-\int_{4\pi}{\langle\kappa{}_\lambda{}I_\lambda{}\rangle~d\Omega{}}\right)~d\lambda{}}
+    -S_{rad}=\langle\nabla\cdot{}q_{rad}\rangle = \int_0^\infty{\left(4\pi{}\langle\kappa_\eta{}I_{b\eta{}}\rangle-\int_{4\pi}{\langle\kappa{}_\eta{}I_\eta{}\rangle~d\Omega{}}\right)~d\eta{}}
     \label{eq:AvgDivHeatFlux}
 \end{equation}
 The simple change introduces a significant complexity into the system. The distinction can be described in eq. \ref{eq:AbsTRI} and \ref{eq:EmiTRI}.
 \begin{equation}
-    \text{Absorption TRI:~~}\langle\kappa_\lambda{}I_{\lambda}\rangle \neq \kappa_\lambda{}(\langle\phi{}\rangle) I_{\lambda}(\langle{}T\rangle{})
+    \text{Absorption TRI:~~}\langle\kappa_\eta{}I_{\eta}\rangle \neq \kappa_\eta{}(\langle\phi{}\rangle) I_{\eta}(\langle{}T\rangle{})
     \label{eq:AbsTRI}
 \end{equation}
 \begin{equation}
-    \text{Emission TRI:~~}\langle\kappa_\lambda{}I_{b\lambda}\rangle \neq \kappa_\lambda{}(\langle\phi{}\rangle) I_{b\lambda}(\langle{}T\rangle{})
+    \text{Emission TRI:~~}\langle\kappa_\eta{}I_{b\eta}\rangle \neq \kappa_\eta{}(\langle\phi{}\rangle) I_{b\eta}(\langle{}T\rangle{})
     \label{eq:EmiTRI}
 \end{equation}
-The absorption and emission TRI thus represent the non-linear functions of mixture properties for absorption coefficient $\kappa_\lambda$, emitted intensity $I_{b\lambda}$, and incident intensity $I_\lambda$.
-
+Where $\phi{}$ is a vector defining the chemical composition of the mixture. Therefore, absorption and emission TRI refers to the modeling technique used to estimate the left-hand side terms in eqs. \ref{eq:AbsTRI} and \ref{eq:EmiTRI}.
 
 As a simple demonstration, the total intensity emitted from a black-body is defined by eq. \ref{eq:PlancksLawIntegrated} and \ref{eq:Intensity}.
 An apparent relationship between the emission and $T^4$ captures the first problem, as $\langle{T}\rangle^4 \neq \langle{}T^4\rangle$. 
-The consequences of which may be conceptualized easily. Many turbulent combustion systems exhibit a high degree of fluctuations in temperature. Even within the length-scale of a computational cell, a flame-thickness may be small enough that there may exist a pocket of rapid chemical reaction alongside an cooler, unburnt gas.
-Therefore, one can expect a higher degree of emission than predicted after an evaluation of $\langle{T}\rangle^4$. And this is often observation made when comparing radiation from a fully resolved DNS and averaged simulations with no TRI.
+The consequences of which may be conceptualized easily. Many turbulent combustion systems exhibit a high degree of fluctuations in temperature. Even within the length-scale of a computational cell, a flame-thickness may be small enough that there may exist a pocket of product mixture alongside an cooler, unburnt gas.
+Therefore, one can expect a higher degree of emission than predicted after an evaluation of $\langle{T}\rangle^4$, an phenomenon which becomes apparent when comparing radiation from a fully resolved Direct Numerical Simulation (DNS) and averaged simulations (RANS, LES) with no TRI.
+Similar arguments can be made regarding the influence of the absorption coefficient on emission, as it is also a nonlinear function of chemical composition and temperature.
 
-The importance of TRI modeling has been recognized for many years, and numerous models have been proposed to account for its contribution. Extensive reviews have been created such as that of \citet{Modest2016RadiativeSystems} and \citet{Coelho2018RadiativeSystems}. 
-In large part, the expected contribution of TRI is to increase radiative emission.
-However, the contribution to the absorption coefficient, $\kappa{}$ and incident intensity, also present themselves during the averaging process.
-Absorption coefficient is 
+The influences of $T$ and $\kappa{}_\eta{}$ on emission are categorized as emission TRI. Identically, absorption TRI accounts for the non-linearities within the the components of absorption. Unfortunately, this requires modeling of not only the local absorption coefficient, but also the irradiance across all solid angles throughout the unit sphere.
+The all-to-all nature of radiation means that the irradiation fluctuates as a function of emission fluctuations everywhere in the medium, as well as absorption fluctuations between all of those places and the point of interest. Fortunately, absorption TRI can often be neglected according to the Optically Thin Fluctuation Assumption (OTFA), which says that fluctuations of local absorption are only weakly correlated to fluctuations elsewhere, and therefore the left and right hand sides of eq. \ref{eq:AbsTRI} can be assumed equal.
+The OTFA is violated under conditions of high absorption coefficients, such as strongly sooting flames \cite{Modest2016RadiativeSystems}.
 
-
-
-This effect in a number of investigations.
-
-
-
-Turbulence-radiation interactions (TRI) poses an additional challenge for computational scientists. 
-At its current state, its inclusion in combustion simulations is even less common than the largely adequately modeling radiation at all, despite the commonality of LES and RANS modeling in combustion.
-Thankfully, the complexity involved with it come with various simplifications. 
+The importance of TRI modeling has been recognized for many years, and numerous methods have been proposed to account for its contribution. Extensive reviews have been created such as that of \citet{Modest2016RadiativeSystems} and \citet{Coelho2018RadiativeSystems}. 
+At its current state, the inclusion of TRI modeling in combustion simulations is even less common than the largely inadequate modeling radiation at all, despite the commonality of LES and RANS modeling in combustion.
 
 \subsection{On walls}
-One product of increasingly stringent efficiency requirements for the reduction in green-house gas emissions have is an increase in combustion temperatures of energy conversion systems. 
-The concomitant higher heat fluxes pose a significant problem for the materials enclosing these combustion systems, many of which are already existing in a state close to melting point. 
+One product of the increasingly stringent efficiency requirements for the reduction in green-house gas emissions is an increase in combustion temperatures of energy conversion systems. 
+The concomitant higher heat fluxes pose a significant challenge, as there is a increase of heat load on the materials enclosing these combustion systems, many of which are already existing in a state close to melting point. 
 Additionally, energy escape from the boundaries of the system can represent a thermodynamic loss to the system, and reduces the overall work contribution from the energy process.
 As a result, an understanding of the influence of all modes of heat transfer along the boundaries have seen increasing importance in order to manage thermal loads through the various heat-transfer management techniques.
 
-Various studies have been conducted regarding the influence of radiative heat transfer along the walls of combustion systems. \citet{Gamil2020AssessmentChamber} compared the contribution of radiation in a Rolls-Royce RB-183 turbofan engine combustor using the discrete ordinates method (DOM) and the P-1 approximation.
-The combustor geometry follows Rich-burn Quick-mix Lean-burn (RQL) design, where a high temperature, non-premixed flame is followed by a high degree of mixing with dilution gases from the secondary-flowpath, which is followed by a premixed fuel-lean reaction to the back-end of the combustor.
+Various studies have been conducted regarding the influence of radiative heat transfer along the walls of combustion systems. \citet{Gamil2020AssessmentChamber} compared the contribution of radiation in a Rolls-Royce RB-183 turbofan engine combustor using the discrete ordinates method (DOM) and the P-1 approximation. The influences of soot and non-gray absorption were neglected.
+The combustor geometry follows a Rich-Quenched-Lean (RQL) design, where a high temperature, non-premixed flame is followed by a high degree of mixing with dilution gases from a secondary-flowpath, which is followed by a premixed fuel-lean reaction to the back-end of the combustor.
 Apparently, radiation resulted in a 10\% higher temperature in the liner near the fuel-rich zone, and a 15\% reduction of temperature after the dilution zone.
 In total, radiation was shown to reduce peak flame temperatures by 200K compared to with no radiation.
 The P-1 model was shown to over-exaggerate the effect of radiation compared to the more accurate DOM.
+\citet{Paul2006RadiativeCombustor} applied the DOM to an LES of the Rolls Royce Tay gas turbine geometry. Soot and non-gray absorption were neglected. Emission was shown to maximize in regions where temperature is maximized. Again, the influences of soot would likely change these results.
 
-Automotive combustion systems, such as heavy-duty diesel piston engines, have shown to have drastically different thermal profiles with and without radiation modeling. 
+Radiation has also been shown to contribute significantly in rocket engines. Between 5\% and 30\% of the overall heat flux at the walls can be attributed to emission from the medium \cite{Johnson2021AnalysisMethod,Sutton2001RocketElements,Naraghi2005ModelingEngines,Pizzarelli2021OverviewChambers}. \citet{Leccese2018ConvectiveChambers} evaluated the influence of radiation and convection using a RANS CFD model with gray-gas radiation. 
+They observed radiation contributions totaling to 15\% and 11\% for liquid methane/liquid oxygen and liquid hydrogen/liquid oxygen, respectively.
+\citet{Leccese2019NumericalChambers} later studied the influences of radiation in a Space Shuttle Main Engine (SSME) in a time-accurate simulation, but with no radiation contribution to the energy equation.
+They observed peak wall-incident radiative heat flux follows where peak temperatures occur, within the combustion chamber rather than the throat or nozzle. They also developed a resource to gather predictions of wall heat transfer coefficients and fractional contributions of radiation as a function of chamber pressure and diameter for both liquid methane/liquid oxygen and liquid hydrogen/liquid oxygen.
+Radiative contribution was shown to increase with a decrease in pressure and an increase in chamber diameter.
 
-High speed reacting flows in rocket engine combustors have also 
-
-
-While incident intensity is more often considered, wall emission can also influence flame characteristics. In large part, the emission from any solid has a less intermittent emission spectrum than gases \cite{Liu2020TheFlames,Howell2010ThermalTransfer}, and therefore can often be modeled as a gray emitter.
-
+Additional studies have shown that radiation plays a very significant role in the wall heat fluxes in heavy-duty diesel pistons, re-entry vehicles, and many growing combustion technologies such as oxy-fuel combustion \cite{Modest2016RadiativeSystems}.
 
 
 \subsubsection{Thermal Barrier Coatings}
