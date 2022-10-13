@@ -11,27 +11,36 @@
 % Radiation is one of the most prominent physical processes that occurs during... 
 
 \section{Background/Motivation}
-Thermal radiation is often the most dominant form of heat transfer that accompanies most combustion systems~\cite{Coelho2018RadiativeSystems}. Its influences can present themselves in many forms. 
-Oftentimes, radiation presents an undesirable redistribution of thermal energy to surrounding objects.
+Thermal radiation is often the most dominant form of heat transfer that accompanies many combustion systems. The high temperatures from the rapid energy release combined with heavily radiating combustion products results in a consequential influence on the fluid motion, turbulence, heat flux to surrounding objects, and chemistry dynamics. Therefore, the neglect of radiation during the combustion modeling process can lead to significant errors in the prediction of the flame properties. These errors may present themselves, for example, in $200$K differences of peak flame temperature in gas-turbines~\cite{Gamil2020AssessmentChamber}, $50$\% under-predictions of heat loss from a piston engine~\cite{Modest2016RadiativeSystems}, or significant mispredictions of the damaging effects and the rate of spread of forest fires~\cite{Valendik2008EffectEnvironment}. The modeling procedure of radiation in a participating medium, however, is complex and computationally expensive, as emission and absorption between every point within the fluid system must be accounted for. Consequently, despite its significant role, many scientists and engineers apply simplified models of radiation such as “optically thin” and “gray” models, which may provide misleading and/or incomplete information as to the contribution of radiation. 
+A significant objective in the combustion and radiation communities is therefore to develop faster modeling approaches for radiation which can simultaneously accurately account for its non-linear and highly coupled influences to combustion.
+
+\section{Influence of radiation in combustion}
+
+Oftentimes, radiation can present a damaging effect to surrounding objects.
 In forest fires, for example, radiative energy can contribute extensively to the widespread propagation and expansiveness of a flame, contributing between 10\% and 90\% of the total energy flux~\cite{Valendik2008EffectEnvironment}. 
 The emission from the fire is known to heat nearby combustible materials, dry them substantially, and accelerate flame propagation. At the same time, nearby firemen, who are oftentimes only meters away from the flame, may be exposed to dangerous radiative loads up to 12 kW/m$^2$~\cite{Valendik2008EffectEnvironment} which can instantaneously burn to any unprotected skin.
-Likewise, in aeronautical engines, the high temperatures from the burning fuel may contribute a high degree of radiation throughout the system. Any unburnt hydrocarbons may agglomerate into soot particles.
-Soot emits heavily across the emission spectrum, adding further to the contribution of radiation.
-The high radiative loads will redistribute energy throughout the geometry. As a result, there will be higher temperatures in the surrounding casing, changes in chemistry dynamics such as flame extinction and pollutant emissions, and, thermodynamically, a net energy loss from the system which can no longer contribute to any desired work output.
-Several effects may be expected regarding the influence of radiation in combustion systems, as discussed in reviews from Modest and Haworth~\cite{Modest2016RadiativeSystems}, Coehlo~\cite{Coelho2018RadiativeSystems}, and Liu et. al.~\cite{Liu2020TheFlames}.
 
+
+Likewise, in aeronautical engines, high temperatures of combustion products may lead to high degrees of radiative emission.
+The high radiative loads will redistribute energy throughout the geometry. As a result, there will be higher temperatures in the surrounding casing, changes in chemistry dynamics such as flame extinction and pollutant emissions, and, thermodynamically, a net energy loss from the system which can no longer contribute to any desired work output.
+
+Several effects may be expected regarding the influence of radiation in combustion systems, as discussed in reviews from Modest and Haworth~\cite{Modest2016RadiativeSystems}, Coehlo~\cite{Coelho2018RadiativeSystems}, and Liu et. al.~\cite{Liu2020TheFlames}.
+\begin{itemize}
+    \item Radiation contributes thermal energy at the same order of magnitude as convection to the boundaries of many enclosed combustion systems~\cite{Gamil2020AssessmentChamber,Johnson2021AnalysisMethod}
+    \item Radiation has importance in pollutant formations (NO${}_x$, soot, CO)~\cite{Ihme2008ModelingFormulation,Habibi2007TurbulenceFlames}
+    \item Sooting flames may have more pronounced thermal radiation characteristics
+\end{itemize}
+And several more trends are broadly observed in relation to the modeling of radiation.
 \begin{itemize}
     \item Neglecting radiative emission results in temperature overprediction~\cite{Gamil2020AssessmentChamber}
     \item Neglecting radiative absorption results in temperature underestimation
-    \item Radiation contributes thermal energy at the same order of magnitude as convection to the boundaries of many enclosed combustion systems~\cite{Gamil2020AssessmentChamber,Johnson2021AnalysisMethod}
-    \item Radiation has importance in pollutant formations (NO${}_x$, soot, CO)~\cite{Ihme2008ModelingFormulation,Habibi2007TurbulenceFlames}
     \item Accounting for turbulence-radiation interaction (TRI) increases radiative emission and reduces temperatures
-    \item Soot dominates the emission and absorption spectra
-    \item Spectral effects of radiation increase re-absorption in the medium~\cite{Wu2021LimitationsFires}
+    \item Non-gray modeling of radiation will increase radiative re-absorption compared to gray modeling~\cite{Wu2021LimitationsFires}
 \end{itemize}
 
-These influences drive scientists and engineers to produce faster and more accurate radiation models.
-Computational approaches have proven useful for this by providing numerical results for a broad range of configurations.
+These influences drive scientists and engineers to produce faster and more accurate radiation models. 
+
+
 % Many computational models have been proposed for radiation, oftentimes accompanying Computational Fluid Dynamics (CFD) solutions to model the fluid dynamics and chemistry. 
 % The most accurate approach, Monte-Carlo Ray Tracing (MCRT), requires a significant amount of computational resources. As a result, scientists and engineers have historically resorted to lower-fidelity radiation models at the cost of increased uncertainty.
 % Over time, however, new implementations have emerged accelerating MCRT, largely driven by enhancements in computational hardware and software. 
@@ -70,7 +79,7 @@ Of those, many rely on complex mathematical assumptions and simplifications whic
 
 The Monte-Carlo Ray Tracing (MCRT) method stands out as the most accurate, robust, and conceptually simple of the available models~\cite{Tesse2002RadiativeApproach,Modest2013RadiativeTransfer,Coelho2018RadiativeSystems}, and is believed by many to be the best radiation model as computational power increases~\cite{Howell2010ThermalTransfer}.
 In MCRT, random rays are initialized and are traced from their source location to other locations in the domain, with the intention of stochastically approximating transport of radiation throughout the geometry.
-The resulting stochastic process can be intuitively thought of as the tracing of 'photon packets' traveling through the domain.
+The resulting process can be intuitively thought of as the tracing of 'photon packets' traveling through the domain.
 As a result of this approach, MCRT can account for many of the same effects that electromagnetic rays undergo during their travel.
 
 Although MCRT is often considered the most accurate, it has also been viewed traditionally as the most computationally expensive.
