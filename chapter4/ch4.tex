@@ -10,7 +10,7 @@ The configurations include the canonical one-dimensional plane-parallel medium, 
 \section{One dimensional plane-parallel medium}
 The plane-parallel medium provides a useful, one dimensional case to test the MCRT code. The geometry consists of two parallel plates surrounding a radiatively-participating medium. 
 The system is one-dimensional (implemented into OpenFOAM using either ray-reflections along the off-axis boundaries, or through a long stretch in both the Y and Z directions). The simulation is steady, and the walls are black-bodies (perfect absorbers and emitters).
-Using this configuration, the user can artificially select an absorption coefficient, $\kappa{}$, medium temperature, $T$, and wall temperatures $T_w$. For this configuration, the distance between the two plates is $1$m.
+Using this configuration, the user can artificially select an absorption coefficient, $\kappa{}$, number of rays emitted per computational cell, N$_r$ medium temperature, $T$, and wall temperatures $T_w$. For this configuration, the distance between the two plates is $1$m.
 Additionally, the relative simplicity of the configuration allows for a reduced-complexity numerical solution, which can be used for verification of the solver under variable absorption coefficients and temperatures.
 
 \subsection{Results}
