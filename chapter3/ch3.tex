@@ -4,23 +4,23 @@ While radiation often plays a significant role in the heat transfer within a com
 The RTE equation (eq. \ref{eq:RTE2}) is an \textit{integro}-differential equation. This is representative of the \textit{all-to-all} nature of the process. In combustion CFD, there exist a large number of physical processes occuring simultaneously, from chemistry to compressible fluid dynamics. 
 These require extensive computational resources to model. Imposing the additional requirement of modeling radiation, which can be up of the same order of runtime as the CFD itself, is often-times infeasible. 
 Several radiation models exist which promise accurate modeling at a reduced expense to mitigate this problem. Two of the most common methods are the method of spherical harmonics the discrete ordinates method (DOM).
-These methods are much faster, and oftentimes have very similar accuracy to the MCRT method. However, an increase of computational resources will converge to a solution of the method, whereas an increase of computational resources will bring MCRT to a more direct solution of the RTE \cite{Leccese2018ConvectiveChambers}.
+These methods are much faster, and oftentimes have very similar accuracy to the MCRT method. However, an increase of computational resources will converge to a solution of the method, whereas an increase of computational resources will bring MCRT to a more direct solution of the RTE~\cite{Leccese2018ConvectiveChambers}.
 
 Alternative methods, such as the zonal method and assumptive methods (Milne-Eddington approximation, Schuster-Schwarzchild approximation, etc), also exist for faster numerical solutions that can be applied under idealized circumstances.
-More information for these can be found in texts such as that of Modest \cite{Modest2013RadiativeTransfer} and Howell et. al. \cite{Howell2010ThermalTransfer}.
+More information for these can be found in texts such as that of Modest~\cite{Modest2013RadiativeTransfer} and Howell et. al.~\cite{Howell2010ThermalTransfer}.
 
 Many consider Monte-Carlo ray tracing to be the most computationally intensive, but also most accurate.
-Recent advances in computational implementations have shown that, using parallel processing, MCRT can consume even less runtime than their less accurate counterpart, DOM \cite{Humphrey2016RadiativeRefinement}.
-With this potential in mind, MCRT is chosen for the present implementation, as it offers the highest accuracy and greatest potential for growth as computational power increases \cite{Liu2020TheFlames,Howell2010ThermalTransfer}.
+Recent advances in computational implementations have shown that, using parallel processing, MCRT can consume even less runtime than their less accurate counterpart, DOM~\cite{Humphrey2016RadiativeRefinement}.
+With this potential in mind, MCRT is chosen for the present implementation, as it offers the highest accuracy and greatest potential for growth as computational power increases~\cite{Liu2020TheFlames,Howell2010ThermalTransfer}.
 
 This chapter will first review the common implementation for MCRT. This includes a description of the random number relations and the fundamental theoretical foundation.
 Next, a description of methods of MCRT acceleration through mathematical reformulations will be presented.
 Finally, a detailed account of the implementation for this research will be discussed.
 
 \section{Forward Monte-Carlo Ray Tracing}
-The Monte-Carlo method has long been an accurate method to numerically integrate many equations \cite{Howell2021TheTransfer}. 
+The Monte-Carlo method has long been an accurate method to numerically integrate many equations~\cite{Howell2021TheTransfer}. 
 The radiative transfer equation, eq. \ref{eq:RTE2}, is one application of this method. 
-MCRT is commonly known as the most robust and accurate model for radiation \cite{Tesse2002RadiativeApproach}, and is widely predicted to be the best choice as computational power increases \cite{Liu2020TheFlames,Howell2021TheTransfer}.
+MCRT is commonly known as the most robust and accurate model for radiation~\cite{Tesse2002RadiativeApproach}, and is widely predicted to be the best choice as computational power increases~\cite{Liu2020TheFlames,Howell2021TheTransfer}.
 
 The fundamental principle behind MCRT is that the radiative energy redistribution can be modeled using a series of randomized rays. 
 Each computational cell that has a quantity of energy that should be emitted (see section \ref{section:RTE}) will partition that energy among its rays. The rays are then initialized using a set a random numbers to define their points of emission, directions, and wavenumbers.
@@ -35,7 +35,7 @@ The ray attributes must be selected in a particular manner to ensure a physical 
 An accurate depiction of the random number relations would require a weighting over the range of possible values to ensure the resulting spectrum of intensity retains the expected profile. 
 By assigning each ray an equal amount of energy, the attribute selection process can proceed with the assumption that each ray carries an equal weight to the overall energy distributed from a cell.
 Therefore, the energy distribution profile will define the probability distribution of that attribute.
-The following descriptions follow that of \citet{Modest2013RadiativeTransfer}.
+The following descriptions follow that of~\citet{Modest2013RadiativeTransfer}.
 
 \subsubsection{Point of emission}
 Equation \ref{eq:PointOfEmission} defines the random number relations for the point of emission along the $x$ cartesian coordinate of a ray within a volume~\cite{Modest2013RadiativeTransferb}.
@@ -57,7 +57,7 @@ Similar relations would apply for any polyhedron with arbitrary shape. However, 
 The direction of emission for a ray can be evaluated using the polar and azimuthal angle along the unit sphere, defined in fig. \ref{fig:Unit_Sphere}. 
 \begin{figure}
 \includegraphics[width=\linewidth]{figures/ch3/solid_angl.png}
-\caption{Angle definitions. $\theta$ is the polar angle, and $\psi$ is the azimuthal angle \cite{Modest2013RadiativeTransfer}. }
+\caption{Angle definitions. $\theta$ is the polar angle, and $\psi$ is the azimuthal angle~\cite{Modest2013RadiativeTransfer}. }
 \label{fig:Unit_Sphere}
 \end{figure}
 Local thermodynamic equilibrium guarantees isotropic emission; therefore, integrand uniformity can be assumed and the relation simplified into eqs. \ref{eq:DirOfEmission_psi} and \ref{eq:DirOfEmission_theta}.
@@ -96,7 +96,7 @@ Where $\Delta{s_k}$ is the distance travelled through cell $k$. Because of the d
 The absorption process can also be modeled using the energy 
 partitioning approach, where eq. \ref{eq:transmissivity} is used directly in discrete form to define the gradual depletion of ray intensity. 
 Then, each cell that a ray intersects will receive an energy defined be the difference of ray energy at the entrance and exit of the cell.
-This approach is known to be more efficient in an optically thin medium where the rays will propagate far in the domain before complete absorption \cite{Modest2013RadiativeTransfer,Liu2020TheFlames}.
+This approach is known to be more efficient in an optically thin medium where the rays will propagate far in the domain before complete absorption~\cite{Modest2013RadiativeTransfer,Liu2020TheFlames}.
 
 \subsubsection{Wavelength}
 The random number relation for the wavelength can be described by eq. \ref{eq:RN_relation_wavelength}
@@ -107,7 +107,7 @@ The random number relation for the wavelength can be described by eq. \ref{eq:RN
 
 While the preceding relations for point of emission and direction of emission can be assumed uniform within a computational cell and across a unit sphere, the same assumption cannot be applied for the ray's wavelength. For most mixtures in combustion modeling, the emission spectrum will vary significantly with wavelength (see section \ref{Sec:Nongray}). 
 Therefore, the inversion process of eq. \ref{eq:RN_relation_wavelength} is more complex.
-A line-by-line accurate model of radiation requires a solution to the numerator through a high-fidelity spectroscopic database such as HITEMP \cite{Rothman2010HITEMPDatabase}.
+A line-by-line accurate model of radiation requires a solution to the numerator through a high-fidelity spectroscopic database such as HITEMP~\cite{Rothman2010HITEMPDatabase}.
 One approach includes first evaluating the emission spectrum (integrand of the numerator), and tabulating the numerator incrementally from $\lambda{}=\lambda{}_{min}$ to $\lambda{}_{max}$.
 Then, the wavelength corresponding to a random number can be determined through interpolation.
 
@@ -115,32 +115,39 @@ Then, the wavelength corresponding to a random number can be determined through 
 The MCRT method relies on a raytracing procedure to determine the optical distances a ray accumulates in each cell. This procedure requires calculations between every ray (tens of millions) with every cell that it intersects (several thousands). 
 It is for this reason that raytracing is responsible for the bulk of the runtime consumed by the MCRT method.
 
-Equation \ref{eq:transmissivity} requires knowledge of the order of cell intersection, as well as the distance travelled through each cell, $\Delta{}s$. While many structured meshes can evaluate tracing procedures using a fast pre-computing approach \cite{Amanatides1987ATracing}, when applied to mesh with cells of arbitrary number of sides, an additional layer of complexity is involved.
+Equation \ref{eq:transmissivity} requires knowledge of the order of cell intersection, as well as the distance travelled through each cell, $\Delta{}s$. While many structured meshes can evaluate tracing procedures using a fast pre-computing approach~\cite{Amanatides1987ATracing}, when applied to mesh with cells of arbitrary numbers of sides, an additional layer of complexity is involved.
 Only with both the distance travelled through a cell and the absorption coefficient can the fraction of ray energy that is deposited be calculated.
 And only with a correct ordering of cell intersections can the non-linear exponential decay function of ray transmissivity be correctly integrated across the ray's path.
-Therefore, the traditional approach to raytracing is to incrementally trace the ray through the mesh, one cell at a time, in order of intersection, as shown in algorithm  \ref{alg:traditional_raytracing}.
+Therefore, the traditional approach to raytracing is to incrementally trace the ray through the mesh, one cell at a time, in order of intersection, as shown in algorithm~\ref{alg:traditional_raytracing}.
 
-\begin{algorithm}[hbt!]
-\caption{Pseudocode for the traditional ray tracing process through a mesh. No ray-boundary interactions, ray scattering, or parallel processing is accounted for.}\label{alg:traditional_raytracing}
-\For{$emitting\_cell \in{} mesh$}{
-    \For{$ray \in{} emitting\_cell.rays$}{
-        \Call{ray.initialize}{~} \Comment*[r]{point of emission, direction, wavelength}
-        $cell \gets emitting\_cell$\;
-        \While{$ray.energy > energy\_minimum$}{\label{alg:line:depletion}
-              $\Delta{s} \gets \Call{ray.get\_intsec\_length}{cell}$\;
-              $\kappa{}_\lambda{} \gets$ \Call{cell.get\_absorption\_coeff}{$ray.wavelength$}\;
-              $optical\_distance \gets \Delta{s}\times{\kappa{}\_\lambda{}}$\;
-              \State old\_energy $\gets$ ray.energy\;
-              $ray.energy = ray.energy * \exp{(-optical\_distance)}$\;
-              $cell.energy = cell.energy + (old\_energy - ray.energy)$\;
-              $cell =$ \Call{ray.get\_next\_cell}{ }\;
-        }
-    }
-}
+\begin{algorithm}
+    \caption{Pseudocode for the traditional ray tracing process through a mesh. No ray-boundary interactions, ray scattering, or parallel processing is accounted for.}
+    \label{alg:traditional_raytracing}
+    \begin{algorithmic}[1] % The number tells where the line numbering should start
+
+        \Procedure{Raytracing}{$mesh$}
+            \For{$emitting\_cell \in{} mesh$}
+                \For{$ray \in{} emitting\_cell.rays$}
+                    \State \Call{Ray.Initialize}{~} \Comment{point of emission, direction, wavelength}
+                    \State $cell\gets emitting\_cell$
+                    \While{$ray.energy > energy\_minimum$}
+                        \State $\Delta{s} \gets \Call{ray.get\_intsec\_length}{cell}$
+                        \State $\kappa{}_\eta{} \gets \Call{cell.get\_absorption\_coeff}{ray.wavenumber}$
+                        \State $\tau_\eta{} \gets \Delta{s}\times{\kappa{}_\eta{}}$ \Comment{optical distance}
+                        \State $E_{temp} \gets ray.E$
+                        \State $ray.E \gets ray.E * \exp{(-\tau_\eta)}$
+                        \State $cell.E \gets cell.E + (E_{temp} - ray.E)$
+                        \State $cell \gets \Call{ray.get\_next\_cell}{ }$
+                    \EndWhile
+                \EndFor
+            \EndFor
+        \EndProcedure
+        
+    \end{algorithmic}
 \end{algorithm}
 
 \subsubsection{Trigonometric Calculations}
-Determining the distance travelled within a cell, $\Delta{s}$, requires trigonometric operations between the ray and each of the faces.
+Determining the distance travelled within a cell, $\Delta{s}$, requires trigonometric operations between the ray and each of the faces \cite{Zeeb2001AnGeometries}.
 The calculation proceeds as follows. At its initial state, the ray is located within it's origin cell. Each face within this cell must be iterated through, and the distance the ray must travel to intersect the representative plane of each face can be calculated. 
 Only the face which is the closest will be the exit face. 
 The face can be modeled as an infinite plane with an outward-facing normal vector, $\Vec{\textbf{n}}$, and centerpoint, $\textbf{c}$.
@@ -153,7 +160,7 @@ The ray traversal can be described by eq. \ref{eq:ray_face_intersection}.
     \label{eq:ray_face_intersection}
 \end{equation}
 Where the location, $\textbf{r}$ is described by the distance traversed, $t$.
-Meanwhile, the equation for a plane can be represented using eq. \ref{eq:eq_for_plane}.
+The equation for a plane can be represented using eq. \ref{eq:eq_for_plane}.
 \begin{equation}
     \Vec{\textbf{n}} \cdot (\textbf{r} - \textbf{c}) = 0
     \label{eq:eq_for_plane}
@@ -163,7 +170,7 @@ Substituting eq. \ref{eq:ray_face_intersection} into eq. \ref{eq:eq_for_plane} c
     t=\frac{d-\Vec{\textbf{n}}\cdot\textbf{p}}{\Vec{\textbf{n}}\cdot\Vec{\textbf{d}}}
     \label{eq:eq_for_plane}
 \end{equation}
-Where $d=\Vec{\textbf{n}}\cdot\textbf{c}$ \cite{Kay1986RayScenes}. This equation is calculated for every face in the polyhedron, and the exit face is determined through the minimum $t$ value. The exit face of a cell can then be used to determine the entrance face of the following cell using conveniently defined data structures.
+Where $d=\Vec{\textbf{n}}\cdot\textbf{c}$~\cite{Kay1986RayScenes}. This equation is calculated for every face in the polyhedron, and the exit face is determined through the minimum $t$ value. Assuming the cells are contiguous in space, the exit face of a cell can then be used to determine the entrance face of the following cell using conveniently defined data structures.
 The procedure then repeats until the ray has depleted sufficiently (see while loop entrance in algorithm~\ref{alg:traditional_raytracing}), or until a boundary has been intersected.
 
 \subsubsection{Boundary Interactions}
@@ -171,7 +178,7 @@ The boundary interactions are dependent on the boundary conditions defined withi
 
 A black surface is one that absorbs all incident radiation, and emits according to Planck's law, eq. \ref{eq:PlancksLaw}. 
 This could define a boundary to an open environment of surrounding, cold gas, a combustor boundary, or the high temperature boundaries of a rocket engine. 
-Under these conditions, a ray which intersects this boundary will be absorbed in its entirety, and an absorption profile can be determined by accumulating energy depositions along the exit faces on the boundary. The emission from a black surface is diffuse, and therefore defined by the random number relations for a diffuse emitter, eqs. \ref{eq:diffuse_emission_psi} and \ref{eq:diffuse_emission_theta}.
+Under these conditions, a ray which intersects this boundary will be absorbed in its entirety, and an absorption profile can be determined by tracking energy depositions along the exit faces on the boundary. The emission from a black surface is diffuse, and therefore defined by the random number relations for a diffuse emitting surface, eqs. \ref{eq:diffuse_emission_psi} and \ref{eq:diffuse_emission_theta}.
 \begin{equation}
     \psi{}=2\pi{}R_\psi
     \label{eq:diffuse_emission_psi}
@@ -190,7 +197,7 @@ Reflecting boundaries redirect incident rays from an incoming direction to an ex
 The exit direction can be evaluated using either a diffuse or specular model. 
 A diffuse reflection occurs when an incident ray is deflected back in a random direction into the medium. This is accurate for surfaces with a high degree of variability of surface norms (rough), and the exit direction can be evaluated using additional random number relations, eqs. \ref{eq:diffuse_emission_psi} and \ref{eq:diffuse_emission_theta}.
 A specular reflection is one that occurs from a smooth material. 
-An example would be a mirror, or the smooth surface of water. Under these conditions, eq. \ref{eq:specular_reflection} is used to model the exit direction, $\Vec{\textbf{d}_{e}}$, given the incident direction, $\Vec{\textbf{d}_i}$, and surface norm, $\vec{\textbf{n}}$.
+An example would be a mirror or the smooth surface of water. Under these conditions, eq. \ref{eq:specular_reflection} is used to model the exit direction, $\Vec{\textbf{d}_{e}}$, given the incident direction, $\Vec{\textbf{d}_i}$, and surface norm, $\vec{\textbf{n}}$.
 \begin{equation}
     \Vec{\textbf{d}_e}=2(\Vec{\textbf{n}}\cdot\Vec{\textbf{d}_i})\Vec{\textbf{n}} -\Vec{\textbf{d}_i}
     \label{eq:specular_reflection}
@@ -202,18 +209,18 @@ An example would be a mirror, or the smooth surface of water. Under these condit
 
 \subsection{Monte-Carlo reformulations}
 The traditional forward-tracing approach provides a strong starting point to the understanding of the Monte-Carlo ray tracing model. Alternative methods, however, have been proposed that provide unique advantages under various circumstances.
-Many methods rely on an inversion of the radiation problem, so rays can be traced back to their point of origin, a concept that relies on the reciprocity principle of radiation \cite{Case1957TransferPrinciple}.
+Many methods rely on an inversion of the radiation problem, so rays can be traced back to their point of origin, a concept that relies on the reciprocity principle of radiation~\cite{Case1957TransferPrinciple}.
 
 \subsubsection{Backwards/Reverse Monte-Carlo}
 Oftentimes it is desired to evaluate the incident radiation upon a point or small surface, as opposed to the distribution of radiation throughout the domain.
 Applying the forward-MC approach would result in be an exhaustive calculation, as only a small portion of the rays would reach the point of interest. It would be more convenient to exclusively compute rays which are known in advance to arrive at that point. 
 Backwards Monte-Carlo provides a more efficient route for this type of problem.
 Instead of tracing rays from their points of emission, rays are instead traced backwards from their point of absorption.
-In this approach, instead of allocating a ray-energy based on the emitting computational cell, rays are instead backtracked from the "destination cell", back to their "emission cell", while accumulating energy along the way.
-This approach is common in radiation modeling, and can be applied to frozen-field problems, transient radiative transfer problems \cite{Lu2004ReverseMedia}, and semi-transparent media \cite{Li2005BackwardSlab}.
+In this approach, instead of allocating a ray-energy based on the emitting computational cell, rays are instead backtracked from the "destination cell", back to their "emission cell", while accumulating the energy emitted from each cell along the way.
+This approach is common in radiation modeling, and can be applied to transient radiative transfer problems~\cite{Lu2004ReverseMedia}, and semi-transparent media~\cite{Li2005BackwardSlab}.
 
-The principle of reciprocity approach formally derived by \citet{Case1957TransferPrinciple} was expanded to include the effects of volumetric emission and absorption by \citet{Walters1992RigorousMedia}.
-Further background regarding the method can be found in papers by \citet{Modest2003BackwardTransfer} and \citet{Howell2010ThermalTransfer}.
+The principle of reciprocity approach formally derived by~\citet{Case1957TransferPrinciple} was expanded to include the effects of volumetric emission and absorption by~\citet{Walters1992RigorousMedia}.
+Further background regarding the method can be found in papers by~\citet{Modest2003BackwardTransfer} and~\citet{Howell2010ThermalTransfer}.
 
 The RTE, eq. \ref{eq:RTE_Solution}, can be inverted for an incident ray traveling into a point, $-\hat{s}$.
 \begin{equation}
@@ -223,15 +230,16 @@ The RTE, eq. \ref{eq:RTE_Solution}, can be inverted for an incident ray travelin
     \label{eq:Inverted_RTE}
     \end{aligned}
 \end{equation}
-Equation \ref{eq:Inverted_RTE} provides a method to now evaluate the radiative emission throughout the domain in reverse manner.
+Where $l$ defines the distance along the ray's path. Equation \ref{eq:Inverted_RTE} provides a method to now evaluate the radiative emission throughout the domain in reverse manner.
 Assuming piecewise homogeneity, eq. \ref{eq:Inverted_RTE} can be reformulated into eq. \ref{eq:discrete_Inverted_RTE} to be solved in stochastic form using the Monte-Carlo method.
 \begin{equation}
     \begin{aligned}
     I_\eta{}(\textbf{r}_i,-\hat{s}_i)& = \epsilon{}_\eta{}(r_w)I_{b\eta{}}(r_w)\exp{\left[-\sum_{m=1}^M\kappa{}_{\eta{},m}(l_{m_{out}}-l_{m_{in}})~dl'\right]}\\
-    &+\sum_{m=1}^M\left( I_{b\eta}(T_m)\left\{ \exp{\left[-\sum_{p=m_{out}}^M\kappa{}_{\eta{},p}(l_{p}-l_{p-1})\right]}- \exp{\left[-\sum_{p=1}^{m_in}\kappa{}_{\eta{},p}(l_{p}-l_{p-1})\right]} \right\} \right)
+    &+\sum_{m=1}^M\left( I_{b\eta}(T_m)\left\{ \exp{\left[-\sum_{p=m_{out}}^M\kappa{}_{\eta{},p}(l_{p}-l_{p-1})\right]}- \exp{\left[-\sum_{p=1}^{m_{in}}\kappa{}_{\eta{},p}(l_{p}-l_{p-1})\right]} \right\} \right)
     \label{eq:discrete_Inverted_RTE}
     \end{aligned}
 \end{equation}
+For $M$ intersected cells along the ray's path.
 
 Which leaves an equation which provides a physical description of the backtracking of a ray.
 As the ray travels in the reverse direction, it will pass through a series of computational cells. 
@@ -241,12 +249,12 @@ Provided a statistically significant number of ray samples, the average radiativ
 
 
 \subsubsection{Reciprocal Monte-Carlo}
-Reciprocal Monte-Carlo\footnote{Also referred to as direct-exchange MC in the text by \citet{Modest2013RadiativeTransfer}.} is a variance reduction technique that relies on evaluations of the net exchange of power between two computational cells or surfaces.
+Reciprocal Monte-Carlo\footnote{Also referred to as direct-exchange MC in the text by~\citet{Modest2013RadiativeTransfer}.} is a variance reduction technique that relies on evaluations of the net exchange of power between two computational cells or surfaces.
 The discussed Monte-Carlo methods forcefully impose the requirement defined by the first law of thermodynamics by ensuring energy emitted and deposited will sum to equal values. The second law, however, is only imposed stochastically.
 The enforcement of the second law would provide additional information into the model, and theoretically reduce variance in the solution. One contribution of the second law is to say that there can be no spontaneous energy exchange between two objects of equal temperature. 
-The approach in the reciprocal Monte-Carlo implementation is to embed the requirement of first and second law satisfaction in the model \cite{Howell2020ThermalTransfer}.
+The approach in the reciprocal Monte-Carlo implementation is to embed the requirement of first and second law satisfaction in the model~\cite{Howell2020ThermalTransfer}.
 
-Several alternative methods have been proposed by \citet{Tesse2002RadiativeApproach} and \citet{Dupoirieux2006AnThicknesses}. These include the Emission reciprocity method (ERM), absorption reciprocity method (ARM), and a hybrid of the two, optimized reciprocity method (ORM).
+Several alternative methods have been proposed by~\citet{Tesse2002RadiativeApproach} and~\citet{Dupoirieux2006AnThicknesses}. These include the Emission reciprocity method (ERM), absorption reciprocity method (ARM), and a hybrid of the two, optimized reciprocity method (ORM).
 
 A complete solution to the RTE would require the evaluation of all power exchanges, $P_{i,j}^{exch}$, between every pair of surfaces and cells $(i,j)$ in the domain.
 The net power exchange with one particular object can thereafter be evaluated as the sum of net power exchange with every other object.
@@ -268,7 +276,7 @@ Meanwhile, for ARM, the exchange is evaluated as,
     P_{jq\eta}^{ARM}=4\pi{}\kappa_{j\eta}V_j(I_{bq\eta}-I^0_{bj\eta})A_{jq\eta}.
     \label{eq:power_exchange_ARM}
 \end{equation}
-$A$ represents the fraction of spectral power emitted by cell $j$ that is absorbed by cell $q$, and requires a stochastic solution using the Monte-Carlo method. Additional formulations for $A$ between surfaces, and surfaces and volumes can be found in \citet{Dupoirieux2006AnThicknesses}.
+$A$ represents the fraction of spectral power emitted by cell $j$ that is absorbed by cell $q$, and requires a stochastic solution using the Monte-Carlo method. Additional formulations for $A$ between surfaces, and surfaces and volumes can be found in~\citet{Dupoirieux2006AnThicknesses}.
 
 \citet{Dupoirieux2006AnThicknesses} also presented a mathematical description of variance given the two procedures ERM and ARM, and determined that the standard deviation of ERM is lower than that of ARM when the temperature $T_q$ is larger than $T_j$, and conversely ARM is more precise under the opposite condition.
 Therefore, the procedure conducted in ORM is to select which to evaluate at runtime for every pair exchange by comparing on the relative temperatures between the two objects.
@@ -283,7 +291,7 @@ The reason for tracing originates from the expected variability of extinction co
 This variability is nearly guaranteed; the spatial in-homogeneity of the system's temperature, pressure, chemical composition will result in spatial in-homogeneity of the ray's extinction coefficient. 
 The ray must be traced through each computational cell to explicitly evaluate the interaction of the ray with that cell.
 If one could assume homogeneity in $\beta{}_\eta{}$, however, no mesh tracing procedure would be required. The interaction of the ray with the surrounding medium could be assumed uniform along the ray's travel.
-This is the intention behind the null-collision algorithm \cite{Galtier2013IntegralAlgorithms,Eymet2013Null-collisionSimulators}.
+This is the intention behind the null-collision algorithm~\cite{Galtier2013IntegralAlgorithms,Eymet2013Null-collisionSimulators}.
 
 The principle of null collision is to redefine the extinction coefficient as,
 \begin{equation}
@@ -311,11 +319,11 @@ The procedure the ray undergoes next is then determined using a Russian-roulette
 The ray is terminated if $R<\kappa{}_\eta{}/\beta{}_\eta{}$, scattered if $\kappa{}_\eta{}/\beta{}_\eta{}<R<(\kappa{}_\eta{}+\sigma{}_\eta{})/\beta{}_\eta{}$ and continues propagation if $R>(\kappa{}_\eta{}+\sigma{}_\eta{})/\beta{}_\eta{}$. 
 The null collision event can therefore be thought of as a scattering event, but with continued travel in the same direction.
 
-Since its recent re-consideration for the field of stochastic modeling of radiation and graphics rendering by \citet{Galtier2013IntegralAlgorithms}, null-collision has see a promising growth in usage as an alternative to the traditional approach of tracing through a grid. 
+Since its recent re-consideration for the field of stochastic modeling of radiation and graphics rendering by~\citet{Galtier2013IntegralAlgorithms}, null-collision has see a promising growth in usage as an alternative to the traditional approach of tracing through a grid. 
+Various interpretations of the algorithm are offered by~\citet{ElHafi2021ThreeAlgorithms} of the algorithm each revealing a new perspective and application for the method.
+The method has been applied under a variety of circumstances with recent extensions to negative null-collision coefficients~\cite{}, spectroscopic perspectives~\cite{}, Oct-tree method for an optimal evaluation of extinction locations~\cite{Villefranque2019AAtmospheres}, and combustion~\cite{Eymet2013Null-collisionSimulators}.
 
-Additional inspirations from computer graphics have introduced the Oct-tree method for an optimal evaluation of extinction locations~\cite{Villefranque2019AAtmospheres}.
-
-In particular, an alternate form of the null-collision algorithm has been applied to combustion simulations by \citet{Eymet2013Null-collisionSimulators}...
+The extension to combustion simulations introduced by~\citet{Eymet2013Null-collisionSimulators}.
 
 
 \subsection{Adaptive mesh approaches}
@@ -330,7 +338,7 @@ Mesh coarsening is one approach to alleviate this problem. The approach is to lo
 To store the full mesh on one node would violate the purpose of a distributed-memory simulation, so a mesh coarsening approach is imposed, where the mesh is less-refined at increasing distances from the point of emission.
 The coarsened mesh reduces the memory load required to load the mesh. Several layers can be added of increasing the degree of coarsening further from node of interest. The concept capitalizes on the local nature of thermal radiation: 
 while radiation can travel long distances, in many circumstances the radiation will have its most significant contributions local to the point of emission.
-The following explanation follows that of \citet{Silvestri2019ASimulation}.
+The following explanation follows that of~\citet{Silvestri2019ASimulation}.
 
 The transmitted radiative intensity through a mesh follows an exponential decay function of intersection length and absorption coefficient, proportional to
 \begin{equation}
@@ -341,8 +349,8 @@ It is immediately apparent that the majority of ray absorption occurs at lower o
 The ray will be emitted and traced within the fine mesh locally, and transferred to a coarsened mesh after a prescribed number of grid steps.
 Resulting, in total, for a reduced number of ray-cell calculations, and also the potential to store the entirety of the mesh on a single node, in a coarsened manor. 
 
-The idea has been implemented a limited number of times, but with much success. \citet{Silvestri2019ASimulation} presented speedups approximately equal to the number of coarsened layers within a structured mesh, along with an method to optimally select the number of cells a ray should travel before coarsening. 
-\citet{Humphrey2015ATracing} applied a similar concept to a gray reverse Monte-Carlo model within a structured mesh. \citet{Kelm2021TheTransport} applied the OpenFOAM-embedded LaGrangian particle tracking library to radiation transport in their solver, \verb|containmentFoam|, which uses a global mesh to prevent MPI communications.
+The idea has been implemented a limited number of times, but with much success.~\citet{Silvestri2019ASimulation} presented speedups approximately equal to the number of coarsened layers within a structured mesh, along with an method to optimally select the number of cells a ray should travel before coarsening. 
+\citet{Humphrey2015ATracing} applied a similar concept to a gray reverse Monte-Carlo model within a structured mesh.~\citet{Kelm2021TheTransport} applied the OpenFOAM-embedded LaGrangian particle tracking library to radiation transport in their solver, \verb|containmentFoam|, which uses a global mesh to prevent MPI communications.
 
 Several possible issues remain within the method, however. For one, the requirement of a user specified number of grid steps inserts a certain degree of potential error into the calculation. 
 The model is restricted in accuracy and applicability to only those who understand its limitations. A sufficiently general model could be applied under any circumstance, without user choice.
@@ -350,80 +358,74 @@ Additionally, the model has the potential to introduce TRI-related effects into 
 Even if appropriate averaging is conducted (averaging the complete emissive power term from each cell, weighted by cell volume) the usage of a spatially-averaging model is questionable for TRI-related studies, particularly within the context of absorption-TRI.
 Finally, the implementation of a non-gray modeling with such models appears to be inefficient.
 
-\subsubsection{Traversal Algorithms}
-
-
-\textbf{Mesh Coarsening and Optimized Traversal}
-and \citet{Kelm2021TheTransport}
-\cite{Nery2011MassivelyTracing,Zeeb2001AnGeometries,Humphrey2015ATracing,Mazumder2006MethodsTransport,Saftly2013UsingNote,Kuczynskia2014RadiationBoundaries}
-
 
 \subsection{Ray Tracing in computer graphics}
 Many improvements to ray tracing have been introduced in recent years capitalizating on advancements in computational hardware and algorithms.
-These improvements have largely been focused in the field of computer graphics, owing in large part to the dramatic increase in the need for fast and detailed visualization software \cite{Gupta2020CUDAComputing}. 
-The vast knowledge obtained through extensive work to accelerate ray-tracing in computer graphics would be of significant value to many heat transfer researchers, but has historically been ignored \cite{Howell2021TheTransfer}. 
+These improvements have largely been focused in the field of computer graphics, owing in large part to the dramatic increase in the need for fast and detailed visualization software~\cite{Gupta2020CUDAComputing}. 
+The vast knowledge obtained through extensive work to accelerate ray-tracing in computer graphics would be of significant value to many heat transfer researchers, but has historically been ignored~\cite{Howell2021TheTransfer}. 
 In particular, the increased involvement of the Graphics Processing Unit (GPU) has resulted in dramatic boosts in computational efficiency, but has been used relatively few times in radiation modeling.
 Additionally, the bounding volume hierarchy (BVH) provides a optimal data structure to accelerate the geometric search procedure of the ray-tracing process.
 
 \subsubsection{Graphics Processing Units (GPUs)}
 GPUs offer high throughput for highly parallelizable, compute-bound problems.
 GPUs differ from Central Processing Units (CPUs) because of the increased attention to hiding latency through raw data parallelism as opposed to minimizing cache access time. 
-This Single Instruction Multiple Data (SIMD) approach is optimized because the GPU structure has more area dedicated to the data processing as opposed to the cache and control unit on the CPU \cite{Gupta2020CUDAComputing}.
+This Single Instruction Multiple Data (SIMD) approach is optimized because the GPU structure has more area dedicated to the data processing as opposed to the cache and control unit on the CPU~\cite{Gupta2020CUDAComputing}.
 At its origin, the GPU was used for the acceleration of graphical visualization of games and animation rendering. Today, GPUs are applied in vast number of fields for more general purposes (GPGPUs).
 
 Computational scientists in particular have begun to take advantage of GPUs in their fields of study. In the hybrid computing model, a central processing unit (CPU) offloads compute-intensive and time consuming parts of the code to the GPUs.
 By applying this model, users can selectively offload the necessary parts of the code to the GPU, while maintaining others on the CPU.
 
-While many fields have seem considerable improvements with GPUs, thermal radiation modeling has seen them applied relatively few times. This comes as a surprise seeing that MCRT in particular carries many similarities to the ray-tracing in computer graphics.
+While many fields have seem considerable improvements with GPUs, thermal radiation modeling has seen them applied relatively few times. This comes as a surprise seeing that MCRT in particular carries many similarities to the ray-tracing in computer graphics \cite{Zeeb2001AnGeometries}.
 \citet{Heymann2012GPU-basedAGN} applied GPUs to their thermal radiation simulations for radiation in active galactic nuclei.
-\citet{Humphrey2012RadiationSystem} applied GPUs to the field of combustion, for their massively scalable code Uintah, where they have coupled their CPU-solved CFD with GPU-solved gray-model radiation \cite{Humphrey2015ATracingb,Humphrey2016RadiativeRefinement,Holmen2017ImprovingTasks,Peterson2018DemonstratingComputations}. 
+\citet{Humphrey2012RadiationSystem} applied GPUs to the field of combustion, for their massively scalable code Uintah, where they have coupled their CPU-solved CFD with GPU-solved gray-model radiation~\cite{Humphrey2015ATracingb,Humphrey2016RadiativeRefinement,Holmen2017ImprovingTasks,Peterson2018DemonstratingComputations}. 
 \citet{Silvestri2019ASimulation}, finally, applied GPUs to combustion simulations with non-gray modeling, and were able to show 1000x speedups using the GPU with reverse monte-carlo and mesh-coarsening compared to CPU-run forward MC.
 
 \subsubsection{Bounding Volume hierarchy}
-At its simplest form, the bounding volume hierarchy (BVH) is a tree-based data structure which can be used to represent a series of objects in space \cite{Shirley2020RayWeek,Meister2021ATracing}. The usage in computer graphics is to detect intersections between a ray and a far-away object in logarithmic time (traversal through a tree), rather than linear time (test each object once at a time).
+At its simplest form, the bounding volume hierarchy (BVH) is a tree-based data structure which can be used to represent a series of objects in space~\cite{Shirley2020RayWeek,Meister2021ATracing}. The usage in computer graphics is to detect intersections between a ray and a far-away object in logarithmic time (traversal through a tree), rather than linear time (test each object once at a time)~\cite{Zeeb2001AnGeometries}.
 
 BVHs are constructed by first wrapping the objects in Axis Aligned Bounding Boxes (AABBs). In a cartesian coordinate system, the cornerpoints of this box can be determined by the maximum and minimum X, Y, and Z coordinates of the object.
 This ensures that an intersection of the ray with the object cannot occur without an intersection of the ray with the bounding box. 
-In practice, the ray-face intersection calculation needs to be fast, and the calculation between an axis-aligned face with a ray is the fastest \cite{Kay1986RayScenes}.
+In practice, the ray-face intersection calculation needs to be fast, and the calculation between an axis-aligned face with a ray is the fastest~\cite{Kay1986RayScenes}.
 
 The object-level AABBs represent the leaf nodes of the binary tree. These boxes are then wrapped in further bounding-boxes, and the procedure repeats until there is one bounding box which wraps around the whole domain, which represents the root node of the BVH. 
-For a binary tree, each node must have only two child nodes. The ray-tracing procedure can then proceed iteratively down the tree (rejecting nodes and their children which the ray does not intersect) until a final list of leaf nodes are left.
+For a binary tree, each node must have only two child nodes. The ray-tracing procedure can then proceed iteratively down the tree, rejecting nodes and their children which the ray does not intersect, until a final list of leaf nodes are left.
 
-Graphics processing sees massive speedup with the use of the BVH data structure, especially with recent approaches using GPUs \cite{Nery2013ParallelGPGPUs,Meister2021ATracing,Karras2012MaximizingTrees}.
-However BVHs see almost no usage in thermal radiation modeling \cite{Liu2020TheFlames}.
+Graphics processing sees massive speedup with the use of the BVH data structure, especially with recent approaches using GPUs~\cite{Nery2013ParallelGPGPUs,Meister2021ATracing,Karras2012MaximizingTrees}.
+However BVHs see almost no usage in thermal radiation modeling~\cite{Liu2020TheFlames}.
 \citet{Kuczynskia2014RadiationBoundaries} for one, were able to accelerate computation of thermal radiation between faces with non-participating media. 
-Also, \citet{Mazumder2006MethodsTransport} compared the BVH approach with a spatial-partitioning approach known as volume-by-volume advancement and found the BVH to be slower for surface-to-surface calculations. 
-There apparently exist no applications of the BVH to participating media in thermal radiation modeling. Alternative approaches, such as the oct-tree approach, where a mesh is refined in regions of increased opacity, however, have been introduced and shown to provide significant speedups over linear ray tracing \cite{Saftly2013UsingNote}.
+Also,~\citet{Mazumder2006MethodsTransport} compared the BVH approach with a spatial-partitioning approach known as volume-by-volume advancement and found the BVH to be slower for surface-to-surface calculations. 
+There apparently exist no applications of the BVH to participating media in thermal radiation modeling. Alternative approaches, such as the oct-tree approach, where a mesh is refined in regions of increased opacity, however, have been introduced and shown to provide significant speedups over tradiational ray tracing~\cite{Saftly2013UsingNote,Villefranque2019AAtmospheres}.
 
 \section{Implementation for this Research} \label{section:ModelForThisStudy}
 In this research we capitalize on the proven speedup of GPUs to accelerate thermal radiation modeling, and attempt to additionally use the BVH data structure to provide speedup as well.
-The flow chart in fig. \ref{fig:joint_flow_chart} describes the procedure followed by the current implementation of the radiation code.
+The flow chart in fig. \ref{fig:joint_flow_chart} describes the procedure followed by the present implementation of the radiation code.
 
 \begin{figure}
-  \includegraphics[width=\linewidth]{figures/ch3/joint_flow_chart.png}
+  \centering
+  \includegraphics[width=0.8\linewidth]{figures/ch3/joint_flow_chart.png}
   \caption{Diagram of MCRT implementation. The solver in its current implementation can solve radiation on the GPU and CFD on the CPU. Future work will include maintaining a fully asynchronous calculation using both CPU/GPU at the same time.}
   \label{fig:joint_flow_chart}
 \end{figure}
 
 \subsection{Description of the code}
-Following the implementations discussed by \citet{Silvestri2019ASimulation} and \citet{Humphrey2015ATracing}, we implement an MCRT model on GPUs. 
-This code connects to the OpenFOAM open-sourced CFD platform \cite{Weller1998ATechniques}, can run on distributed memory systems for scalable computation, and optionally uses a BVH to accelerate the geometric search process of the ray-box and ray-node intersections.
-Our code consists of more than 3,000 lines of C++ code, and relies on the Kokkos programming model for a performance-portable parallelization framework \cite{Trott2021KokkosEra}, and the ArborX geometric search library for optimal BVH tree management and traversal functions (which itself relies on Kokkos) \cite{Lebrun-Grandie2019ArborX:Library}.
+Following the implementations discussed by~\citet{Silvestri2019ASimulation} and~\citet{Humphrey2015ATracing}, we implement an MCRT model on GPUs. 
+This code connects to the OpenFOAM open-sourced CFD platform~\cite{Weller1998ATechniques}, can run on distributed memory systems for scalable computation, and optionally uses a BVH to accelerate the geometric search process of the ray-box and ray-node intersections.
+Our code consists of more than 3,000 lines of C++ code, and relies on the Kokkos programming model for a performance-portable parallelization framework~\cite{Trott2021KokkosEra}, and the ArborX geometric search library for optimal BVH tree management and traversal functions~\cite{Lebrun-Grandie2019ArborX:Library}.
 
 
 \subsubsection{OpenFOAM}
-With OpenFOAM\footnote{https://github.com/OpenFOAM/OpenFOAM-5.x}, this code can be applied to any CFD solver of interest enabling its use in applications from aeronautical combustor engineering to fire suppression and management. OpenFOAM provides an extensive list of supplemental libraries, allowing the user to model RANS, LES, or DNS simulations with multi-phase flow and detailed chemistry. 
+With OpenFOAM\footnote{https://github.com/OpenFOAM/OpenFOAM-5.x}, this code can be applied to any CFD solver of interest enabling its use in applications from aeronautical combustor engineering to fire suppression and management. OpenFOAM provides an extensive list of supplemental libraries, allowing the user to simulate with RANS, LES, or DNS in multi-phase flow and detailed chemistry. 
 Time-accurate simulations can be implemented with MCRT-GPU with or without Adaptive Mesh Refinement (AMR) on polyhedral, unstructured mesh.
-Users can adapt their own OpenFOAM solvers to use MCRT-GPU, or use the default examples for reactingFoam and fireFoam. Instructions are available in the public repository (or private?).
+Users can adapt their own OpenFOAM solvers to use MCRT-GPU, or use the default examples for reactingFoam and fireFoam.
 
 \subsubsection{Kokkos}
-Kokkos~\footnote{https://github.com/kokkos} is a performance-portable programming model from the Department of Energy \cite{Trott_Kokkos3_2022,TrottKokkosOGPaper2014}. 
-Targeted for HPCs, Kokkos provides abstractions over the parallel execution process and memory management in your solver. By programming in Kokkos, the user can neglect many worries about the underlying parallel execution process and instead focus on their code.
+Kokkos~\footnote{https://github.com/kokkos} is a performance-portable programming model from the Department of Energy~\cite{Trott_Kokkos3_2022,TrottKokkosOGPaper2014}. 
+Targeted for HPCs, Kokkos provides abstractions over the parallel execution process and memory management in many solvers. By programming in Kokkos, the user can void the complications of the underlying parallel execution process and instead focus on their appropriately structuring their code.
 Kokkos supports CUDA, HIP, SYCL, HPX, OpenMP and C++ threads as parallel backends, which the user can easily switch between at compile time.
-Additionally, the Kokkos ecosystem streamlines the debugging and profiling process \cite{Trott_KokkosEcosystem2021}.
+Additionally, the Kokkos ecosystem streamlines the debugging and profiling process~\cite{Trott_KokkosEcosystem2021}.
 
 \subsubsection{ArborX}
-Following the Bounding Volume Hierarchy (BVH) description from \citet{Karras2012MaximizingTrees}, ArborX~\footnote{https://github.com/arborx/ArborX} provides a parallel implementation for both spatial-search and nearest-neighbor calculations using a BVH \cite{Lebrun-Grandie2019ArborX:Library}.
+Following the Bounding Volume Hierarchy (BVH) description from~\citet{Karras2012MaximizingTrees}, ArborX~\footnote{https://github.com/arborx/ArborX} provides a parallel implementation for both spatial-search and nearest-neighbor calculations using a BVH~\cite{Lebrun-Grandie2019ArborX:Library}.
 
 The ArborX API enables usage of the BVH through a two-step process: construction and traversal. The user can define \textit{primitives}, or underlying objects with labeled bounding-boxes, and ArborX will efficiently construct a balanced BVH for usage with any parallel backend (using Kokkos). Then, the user can define \textit{predicates} which define the operation the traversal process will be conducting (i.e. spatial search criteria) while traversing the tree.
 MCRT-GPU enables the user to optionally use the BVH through ArborX to optimize the ray-tracing procedure. The \textit{primitives} are the computational cells in the CFD process (convex polyhedrons), and the \textit{predicates} are the rays traveling through space.
@@ -433,13 +435,11 @@ Each node contains knowledge of an upper-tree, which defines defines a BVH for e
 MCRT-GPU applies ray-tracing procedure across the distributed memory system using this method, which provides enhancement over the traditional MPI iteration approach as discussed in section \ref{sec:DistMemAccel}.
 
 \subsubsection{Non-gray model}
-MCRT-GPU has been built to enable use with one of three nongray models: line-by-line, gray modeling with a user-defined absorption coefficient, or gray modeling with planck-mean absorption coefficients. Non-gray databases have been previously derived from HITEMP \cite{Rothman2010HITEMPDatabase} including contributions of CO$_2$, H$_2$O, and CO spectral lines.
+MCRT-GPU has been built to enable use with one of three nongray models: line-by-line, gray modeling with a user-defined absorption coefficient, or gray modeling with planck-mean absorption coefficients. Non-gray databases have been previously derived from HITEMP~\cite{Rothman2010HITEMPDatabase} including contributions of CO$_2$, H$_2$O, and CO spectral lines.
 
 
 \subsubsection{User functionality}
 MCRT-GPU is meant to be an adaptable radiation model that can be quickly linked to the user's OpenFOAM solver for fast and accurate radiation modeling during their time-accurate CFD simulation.
-
 While the BVH may enable faster computation, in absence of proper development there exist both a version with and without its use.
 The version without applies the traditional Monte-Carlo algorithms with Kokkos acceleration. This enables fast GPU-acceleration, with line-by-line non-gray modeling, ray-reflections, and distributed-memory calculation.
-
-Users can access the code through a public repository on github \footnote{https://github.com/nick-jt/MCRT-GPU}.
+Users can access the code through a public repository on github \footnote{https://github.com/nick-jt/MCRT-GPU}?.
