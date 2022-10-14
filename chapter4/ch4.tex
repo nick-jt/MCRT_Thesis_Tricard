@@ -8,34 +8,73 @@ The configurations include the canonical one-dimensional plane-parallel medium, 
 
 
 \section{One dimensional plane-parallel medium}
-The plane-parallel medium provides a useful, one dimensional case to test the MCRT code. The geometry consists of two parallel plates surrounding a radiatively-participating medium. 
-The system is one-dimensional (implemented into OpenFOAM using either ray-reflections along the off-axis boundaries, or through a long stretch in both the Y and Z directions). The simulation is steady, and the walls are black-bodies (perfect absorbers and emitters).
-Using this configuration, the user can artificially select an absorption coefficient, $\kappa{}$, number of rays emitted per computational cell, N$_r$ medium temperature, $T$, and wall temperatures $T_w$. For this configuration, the distance between the two plates is $1$m.
-Additionally, the relative simplicity of the configuration allows for a reduced-complexity numerical solution, which can be used for verification of the solver under variable absorption coefficients and temperatures.
-
-\subsection{Results}
-Figures \ref{fig:PPcomp_kappa} to \ref{fig:PPcom_nrays} display comparisons of the MCRT solutions alongside the described analytical solutions. The configuration is tested under a variety of absorption coefficients, temperatures, and Monte-Carlo ray counts.
-
+The plane-parallel medium provides a useful, one dimensional case to test the MCRT code. The geometry consists of two parallel plates surrounding a radiatively-participating medium, as shown in fig. \ref{fig:PlaneParallel}. 
 \begin{figure}
 \centering
-\includegraphics[width=0.90\linewidth]{figures/ch4/PPcomparison1.png}
+\includegraphics[width=0.5\linewidth]{figures/ch4/PlaneParallel.png}
+\caption{Plane parallel medium. Reflective walls are marked in gray, cold-black walls are marked in blue. }
+\label{fig:PlaneParallel}
+\end{figure}
+The system is one-dimensional (implemented into OpenFOAM using ray reflections on the off-axis boundaries). The simulation is steady, and the walls are black-bodies.
+Using this configuration, the user can artificially select an absorption coefficient, $\kappa{}$, number of rays emitted per computational cell, N$_r$ medium temperature, $T$, and wall temperatures $T_w$.
+
+Additionally, the relative simplicity of the configuration allows for a reduced-complexity numerical solution which can be used for verification of the solver under variable absorption coefficients and temperatures. Following the derivation from \citet{Modest2013RadiativeTransfer}, eq. \ref{eq:IrrPlaneParallel} defines the irradiance $G$ in $W/m^2$ as a function of optical distance $\tau{}$ between the two plates.
+\begin{equation}
+    \centering
+    G(\tau{})=2\pi{}\left[I_{b1}E_2(\tau{})+I_{b2}E_2(\tau{}_L-\tau{})+\int_0^\tau{}I_b(\tau')E_1(\tau-\tau')d\tau'+\int^{\tau{}_L}_\tau{}I_b(\tau')E_1(\tau'-\tau)d\tau'\right]
+    \label{eq:IrrPlaneParallel}
+\end{equation}
+Where $I_{b1}$ and $I_{b2}$ are the black body intensities from the two plates, and $E_n$ is the exponential integral defined in eq. \ref{eq:ExpInt}.
+\begin{equation}
+    \centering
+    E_n(x)=\int_0^1\mu{}^{n-2}e^{-x/\mu{}}d\mu{}
+    \label{eq:ExpInt}
+\end{equation}
+The absorption in $W/m^3$ at each location can then be evaluated as $\kappa{}G$.
+
+\subsection{Results}
+Figures \ref{fig:PPcomp_kappa} to \ref{fig:PPcom_nrays} display comparisons of the MCRT solutions alongside the described analytical implementations for two plates $1$ m apart. The configuration is tested under a variety of absorption coefficients, temperatures, and Monte-Carlo ray counts.
+Results show excellent agreement between the MCRT and analytical solutions. The standard deviations of the percent differences between the MCRT and analytical solutions are given in table \ref{table:PPcomp_std}. Little to no variability can be observed throughout the solution across the range of optical thicknesses.
+\begin{table}
+\centering
+\caption{Standard deviations of the percent difference of MCRT and analytical at various absorption coefficients.}
+\begin{tabular}{||c c c c c c c c||} 
+ \hline
+ Absorption Coefficient [m$^{-1}$] & $0.5$ & $1$ & $2$ & $4$ & $6$ & $8$ & $10$\\ [0.5ex] 
+ \hline\hline
+ $\text{StdDev}\left(\frac{|Q_{rad,MCRT}-Q_{rad,ana}|}{Q_{rad,ana}}\times{100}\right)$ [\%]& $0.27$ & $0.26$ & $0.30$ & $0.37$ & $0.43$ & $0.48$ & $0.52$\\
+ \hline
+\end{tabular}
+\label{table:PPcomp_std}
+\end{table}
+
+In fig. \ref{fig:PPcomp_kappa}, it is apparent that higher absorption coefficients result in higher radiative absorption within the medium; however, it should be noted that the increase in absorption coefficient also results in increased emission per eq. \ref{eq:emitting_sphere}. Therefore, there is also a larger degree of available radiation to be absorbed. 
+Larger absorption occurs towards the center of the space between the plates due to a greater degree of incident radiation from the emitting medium on both sides.
+Towards the edges, radiative absorption decreases due to the absence of radiation from the adjacent cold-black wall.
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=0.95\linewidth]{figures/ch4/PPcomparison1.png}
 \caption{Variable absorption coefficient $\kappa{}$ in m$^{-1}$ with T=$2000$K, N$_r$=$1000$, N$_{cells}$=1000.}
 \label{fig:PPcomp_kappa}
 \end{figure}
-
-\begin{figure}
+\begin{figure}[!ht]
 \centering
-\includegraphics[width=0.90\linewidth]{figures/ch4/PPcomparison2.png}
+\includegraphics[width=0.95\linewidth]{figures/ch4/PPcomparison2.png}
 \caption{Variable temperature with $\kappa{}$=$10$ m$^{-1}$, N$_r$=$1000$, N$_{cells}$=1000.}
 \label{fig:PPcomp_temp}
 \end{figure}
-
+Temperature also increases radiative absorption, as shown in fig. \ref{fig:PPcomp_temp}. This follows from the fourth order scaling of temperature in the black-body emission function, eq. \ref{eq:PlancksLaw}. An increase in temperature of $400$K approximately doubles the net radiation absorbed.
+Finally, as shown in fig. \ref{fig:PPcom_nrays}, lower ray counts show a higher degree of variability, resulting from the stochastic nature of the MCRT method.
+The total number of rays traced within the domain scales as $N_r\times{}N_{cells}$. Therefore, an increase in the number of cells can be expected to decrease variability as well.
 \begin{figure}
 \centering
-\includegraphics[width=0.90\linewidth]{figures/ch4/PPcomparison3.png}
+\includegraphics[width=0.95\linewidth]{figures/ch4/PPcomparison3.png}
 \caption{Variable number of rays emitted per cell (N$_r$) with $\kappa{}$=$10$ m$^{-1}$, T=$2000$K, N$_{cells}$=1000.}
 \label{fig:PPcom_nrays}
 \end{figure}
+
+\subsection{Profiling}
+Profiling results from the plane-parallel medium were then 
 
 % \begin{figure}
 
@@ -44,11 +83,7 @@ Figures \ref{fig:PPcomp_kappa} to \ref{fig:PPcom_nrays} display comparisons of t
 %   \label{fig:PPcomp}
 % \end{figure}
 
-Results show excellent agreement between the MCRT and analytical implementations. 
-The lower ray counts show a higher degree of variability resulting from the stochastic nature of the MCRT method. 
-% Increasing absorption coefficient leads in an increase of radiative emission and re-absorption, with re-absorption increasing at a higher rate resulting in a net increase of radiative source.
 
-% These expected results demonstrate the requirement for RTE modeling in optically thick media. Not only does radiative emission result in heat loss from computational cells, but also the re-absorption can be high enough to require modeling of the self-absorption process of radiation.
 
 \section{Backward-Facing Step Combustor}
 The backward-facing step (BFS) combustor is a convenient configuration often used as a simple, repeatable geometry for a variety of studies in fluid dynamics.
@@ -133,21 +168,22 @@ Almost no mesh data is duplicated during the mesh transfer process, allowing for
 
 \begin{table}[h!]
 \centering
+\caption{BFS runtime comparisons with 1 ray emitted per CFD cell. The MCRT-Fort parallel procedure is conducted using separate MPI processes within a shared-memory system. The MCRT-Kokkos and MCRT-ArborX run using 30 OpenMP processes.}
 \begin{tabular}{||c c c c||} 
  \hline
  Parallel Variation & MCRT-Fort & MCRT-Kokkos & MCRT-ArborX \\ [0.5ex] 
  \hline\hline
  Serial & 2687 s & 376 s & - \\ 
- 30 CPU Processors & 52.26 s & 22.5 s & - \\
+ 30 CPU Processors & 52.26 s & 22.5 s & 44.9 \\
  GPU & N/A & 6.91 s & - \\
  \hline
 \end{tabular}
-\caption{BFS runtime comparisons with 1 ray emitted per CFD cell. The MCRT-Fort parallel procedure is conducted using separate MPI processes within a shared-memory system. The MCRT-Kokkos and MCRT-ArborX run using 30 OpenMP processes.}
 \label{table:BFS_runtime_table_1rpc}
 \end{table}
 
 \begin{table}[h!]
 \centering
+\caption{BFS runtime comparisons with 10 rays emitted per CFD cell.}
 \begin{tabular}{||c c c c||} 
  \hline
  Parallel Variation & MCRT-Fort & MCRT-Kokkos & MCRT-ArborX \\ [0.5ex] 
@@ -156,7 +192,6 @@ Almost no mesh data is duplicated during the mesh transfer process, allowing for
  GPU & N/A & 49.1 s & - \\
  \hline
 \end{tabular}
-\caption{BFS runtime comparisons with 10 rays emitted per CFD cell.}
 \label{table:BFS_runtime_table_10rpc}
 \end{table}
 
@@ -293,7 +328,9 @@ Numerical time-step comparisons are present in table \ref{table:PoolFireTimestep
 \caption{Profiling results for the GPU}
 \label{fig:PoolFire_profiling}
 \end{figure}
+
 \begin{figure}
+\centering
 \includegraphics[width=0.675\linewidth]{figures/ch4/PoolFire_profiling_OnetimestepCPU.png}
 \caption{Profiling results for the CPU.}
 \label{fig:PoolFire_profiling_CPU}
@@ -301,6 +338,7 @@ Numerical time-step comparisons are present in table \ref{table:PoolFireTimestep
 
 \begin{table}[h!]
 \centering
+\caption{Single time-step runtime profiling.}
 \begin{tabular}{||c c c c c||} 
  \hline
  Parallel Variation & Init non-gray & Tracing rays & Init cell parameters & Total \\ [0.5ex] 
@@ -309,7 +347,6 @@ Numerical time-step comparisons are present in table \ref{table:PoolFireTimestep
  GPU & 2.25s & 1.44s & 0.218s & 4.34s \\ 
  \hline
 \end{tabular}
-\caption{Single time-step runtime profiling.}
 \label{table:PoolFireTimestep_runtime_table_1rpc}
 \end{table}
 
@@ -324,6 +361,7 @@ Identically, the GPU runtime will target $3.07$s, or $21$\% of the total runtime
 
 \begin{table}[h!]
 \centering
+\caption{Mean runtime contribution of radiation per timestep compared to total runtime. Standard deviations are presented in parenthesis. List CPU runtimes consist of radiation parallelized on 30 CPU processors, and CFD calculation occuring on 1 processor. GPU runtimes consist of radiation running on the GPU and CFD calculated using 1 CPU processor.}
 \begin{tabular}{||c c c c||} 
  \hline
  Parallel Variation & Radiation Execution & Total Execution & Percent contribution \\ [0.5ex] 
@@ -332,7 +370,6 @@ Identically, the GPU runtime will target $3.07$s, or $21$\% of the total runtime
  GPU & 4.7s($\pm$0.28s) & 16.2s($\pm$2.21)s & 29.4\%($\pm$2.30\%) \\
  \hline
 \end{tabular}
-\caption{Mean runtime contribution of radiation per timestep compared to total runtime. Standard deviations are presented in parenthesis. List CPU runtimes consist of radiation parallelized on 30 CPU processors, and CFD calculation occuring on 1 processor. GPU runtimes consist of radiation running on the GPU and CFD calculated using 1 CPU processor.}
 \label{table:PoolFireTransient_runtime_table_1rpc}
 \end{table}
 

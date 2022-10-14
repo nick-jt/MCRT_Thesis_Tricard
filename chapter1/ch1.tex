@@ -11,10 +11,12 @@
 % Radiation is one of the most prominent physical processes that occurs during... 
 
 \section{Background/Motivation}
-Thermal radiation is often the most dominant form of heat transfer that accompanies many combustion systems. The high temperatures from the rapid energy release combined with heavily radiating combustion products results in a consequential influence on the fluid motion, turbulence, heat flux to surrounding objects, and chemistry dynamics. Therefore, the neglect of radiation during the combustion modeling process can lead to significant errors in the prediction of the flame properties. These errors may present themselves, for example, in $200$K differences of peak flame temperature in gas-turbines~\cite{Gamil2020AssessmentChamber}, $50$\% under-predictions of heat loss from a piston engine~\cite{Modest2016RadiativeSystems}, or significant mispredictions of the damaging effects and the rate of spread of forest fires~\cite{Valendik2008EffectEnvironment}. The modeling procedure of radiation in a participating medium, however, is complex and computationally expensive, as emission and absorption between every point within the fluid system must be accounted for. Consequently, despite its significant role, many scientists and engineers apply simplified models of radiation such as “optically thin” and “gray” models, which may provide misleading and/or incomplete information as to the contribution of radiation. 
+Thermal radiation is often the most dominant form of heat transfer that accompanies many combustion systems. The high temperatures from the rapid energy release combined with heavily radiating combustion products results in a consequential influence on the fluid motion, turbulence, heat flux to surrounding objects, and chemistry dynamics. 
+Therefore, the neglect of radiation during the combustion modeling process can lead to significant errors in the prediction of the flame properties. These errors may present themselves, for example, in $200$K differences of peak flame temperature in gas-turbines~\cite{Gamil2020AssessmentChamber}, $50$\% under-predictions of heat loss from a piston engine~\cite{Modest2016RadiativeSystems}, or significant mispredictions of the damaging effects and the rate of spread of forest fires~\cite{Valendik2008EffectEnvironment}. 
+The modeling procedure of radiation in a participating medium, however, is complex and computationally expensive, as emission and absorption between every point within the fluid system must be accounted for. Consequently, despite its significant role, many scientists and engineers apply simplified models of radiation such as “optically thin” and “gray” models, which may provide misleading and/or incomplete information as to the contribution of radiation. 
 A significant objective in the combustion and radiation communities is therefore to develop faster modeling approaches for radiation which can simultaneously accurately account for its non-linear and highly coupled influences to combustion.
 
-\section{Influence of radiation in combustion}
+\section{Influence of radiation from combustion}
 
 Oftentimes, radiation can present a damaging effect to surrounding objects.
 In forest fires, for example, radiative energy can contribute extensively to the widespread propagation and expansiveness of a flame, contributing between 10\% and 90\% of the total energy flux~\cite{Valendik2008EffectEnvironment}. 
@@ -33,12 +35,12 @@ Several effects may be expected regarding the influence of radiation in combusti
 And several more trends are broadly observed in relation to the modeling of radiation.
 \begin{itemize}
     \item Neglecting radiative emission results in temperature overprediction~\cite{Gamil2020AssessmentChamber}
-    \item Neglecting radiative absorption results in temperature underestimation
+    \item Neglecting radiative absorption results in temperature underprediction
     \item Accounting for turbulence-radiation interaction (TRI) increases radiative emission and reduces temperatures
     \item Non-gray modeling of radiation will increase radiative re-absorption compared to gray modeling~\cite{Wu2021LimitationsFires}
 \end{itemize}
 
-These influences drive scientists and engineers to produce faster and more accurate radiation models. 
+These influences drive scientists and engineers to produce faster and more accurate radiation models.
 
 
 % Many computational models have been proposed for radiation, oftentimes accompanying Computational Fluid Dynamics (CFD) solutions to model the fluid dynamics and chemistry. 
@@ -79,7 +81,7 @@ Of those, many rely on complex mathematical assumptions and simplifications whic
 
 The Monte-Carlo Ray Tracing (MCRT) method stands out as the most accurate, robust, and conceptually simple of the available models~\cite{Tesse2002RadiativeApproach,Modest2013RadiativeTransfer,Coelho2018RadiativeSystems}, and is believed by many to be the best radiation model as computational power increases~\cite{Howell2010ThermalTransfer}.
 In MCRT, random rays are initialized and are traced from their source location to other locations in the domain, with the intention of stochastically approximating transport of radiation throughout the geometry.
-The resulting process can be intuitively thought of as the tracing of 'photon packets' traveling through the domain.
+The resulting process can be intuitively thought of as the tracing of `photon packets' traveling through the domain.
 As a result of this approach, MCRT can account for many of the same effects that electromagnetic rays undergo during their travel.
 
 Although MCRT is often considered the most accurate, it has also been viewed traditionally as the most computationally expensive.
@@ -87,16 +89,13 @@ This additional cost results from the stochastic nature of MCRT. A large sample 
 Too few rays may result in excessive noise, while too many will require a longer runtime.
 Much effort has been put into making the computation more manageable while maintaining the benefits MCRT has to offer over other methods~\cite{Liu2020TheFlames,Tesse2002RadiativeApproach,Zeeb2001AnGeometries,Modest2003BackwardTransfer,Howell2010ThermalTransfer}.
 
-A \textit{frozen-field analysis} is one approach used in many thermal radiation models. In frozen-field analysis, it is assumed that the time required for a given ray to propagate across the domain is extremely small relative to even the shortest computational time-steps. 
-As a result, the temporal evolution of parameters in the system can be assumed negligible during a ray's travel.
-This greatly simplifies the solution to the radiative transfer equation (eq. \ref{eq:RTE2}, which is already presented with temporal-evolution neglected), as it can now be modeled at any given time-step of the CFD solution, while assuming the radiation solution can be calculated using a single timestep.
-
 In this paper, we implement an accelerated implementation of MCRT that is coupled with the \verb|OpenFOAM| open-sourced CFD platform~\cite{Weller1998ATechniques}. 
 This implementation relies on Kokkos programming model for performance-portable parallel computing with interchangeable parallel computing back-ends~\cite{Trott2021KokkosEra}. This enables the use of Graphics Processing Units (GPUs) to dramatically accelerate the ray-tracing procedure, a process has been done very few times, but has shown significant speedups~\cite{Silvestri2019ASimulation,Humphrey2016RadiativeRefinement,Heymann2012GPU-basedAGN}. 
 Additionally, the ArborX geometric search library is introduced to implement a bounding-volume hierarchy based structure which has shown efficiency boosts in the field of graphics processing~\cite{Lebrun-Grandie2019ArborX:Library}. 
 
 \section{Organization}
-This thesis will first present background on the importance on radiation and its importance in combustion in chapter \ref{chapter:Importance}. 
-Following the description of the reasons, various methods of modeling radiation will be presented in chapter \ref{chapter:Modeling}. Included in this chapter will be the description of a Monte-Carlo approach that provides massive speedup on high performance computers (HPCs) using multiple layers of computing parallelism including Message Passing Interface (MPI) and Graphics Processing Units (GPUs).
-Chapter \ref{chapter:Example} will provide a demonstration of the model on both canonical and practical configurations, including a plane-parallel medium, a backward-facing step . Various observations will be made regarding the influence of radiation and computational speedup will be presented in this chapter.
+This thesis will first present background on the fundamentals of radiation and its importance in combustion in chapter \ref{chapter:Importance}. 
+Following the description of the reasons, various methods of modeling radiation will be presented in chapter \ref{chapter:Modeling}.
+Included in this chapter will be the description of the present Monte-Carlo approach that provides massive speedup on high performance computers (HPCs) using multiple layers of computing parallelism including Message Passing Interface (MPI) and Graphics Processing Units (GPUs).
+Chapter \ref{chapter:Example} will provide a demonstration of the model on both canonical and practical configurations, including a plane-parallel medium, a backward-facing step, turbulent pool fire, and a Pratt \& Whitney combustor. Various observations will be made regarding the influence of radiation and computational speedup will be presented in this chapter.
 Finally, conclusions and future work will be discussed in chapter \ref{chapter:conclusion}.

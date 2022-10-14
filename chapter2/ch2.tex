@@ -127,8 +127,15 @@ Like all substances, gases emit radiation along the electromagnetic spectrum. Un
 The black body spectrum in section \ref{Sec:FundOfRad} can approximate the emission spectrum of many solid materials, but is inadvisable to be used for gas emission. 
 Most solid structures have a multitude of modes of oscillations, from the crystal-lattice structure down to the molecular energy states \cite{Viskanta1975HeatSolids}. As a result, the emission spectrum of solids is often continuous and can be approximated as a constant fraction of the black body emission spectrum (gray) \cite{Howell2010ThermalTransfer}. 
 Gases, however, are restricted to the oscillation modes from the natural energy states of the molecules in the mixture. Quantum mechanics postulates that these energy states are discrete, and therefore the change in energy states and resulting emission frequencies must also be discrete \cite{Hanson2016SpectroscopyGases}.
+\begin{figure}
+\centering
+\includegraphics[width=0.8\linewidth]{figures/ch2/SpectralLinesCO2.png}
+\caption{Spectrals lines of CO$_2$ at $1$ bar and $1600$ K }
+\label{fig:SpectralLines}
+\end{figure}
 
-Figure above shows the emission spectrum from a flame. The largest molecular contributors to emission in most hydrocarbon flames are included: $CO_2$, $CO$, $H_2O$.
+
+The largest molecular contributors to emission in most hydrocarbon flames are $CO_2$, $CO$, $H_2O$, and soot. Figure \ref{fig:SpectralLines} shows the absorption coefficient spectrum of CO$_2$. 
 \textit{Ab initio} modeling and empirical evidence can be used to obtain approximations for the emission spectra of a molecule at a specified pressure and temperature. This information has been collected into a series of available online databases \cite{Rothman2010HITEMPDatabase}. 
 Those databases can then be used to provide a radiation solver absorption coefficients as a function of chemical mixture composition and thermodynamic state.
 
@@ -184,6 +191,10 @@ The third term is the flame transparency. This term quantifies degree of re-abso
 It should be noted that additional parameters may be used to estimate the importance of other effects, such as radiative pressure and radiative energy density.
 While the contribution of these effects are generally small under most conditions studied in combustion, they should be considered under extreme circumstances, and the reader should consult representative texts for further information in this context \cite{Pai1966RadiationDynamics}.
 
+\subsection{Frozen-Field Analysis}
+A \textit{frozen-field analysis} is one approach used in many thermal radiation models. In frozen-field analysis, it is assumed that the time required for a given ray to propagate across the domain is extremely small relative to even the shortest computational time-steps. 
+As a result, the temporal evolution of parameters in the system can be assumed negligible during a ray's travel.
+This greatly simplifies the solution to the radiative transfer equation (eq. \ref{eq:RTE2}, which is already presented with temporal-evolution neglected), as it can now be modeled at any given time-step of the CFD solution, while assuming the radiation solution can be calculated using a single timestep.
 
 \section{Effect of radiation in combustion systems}
 Radiation presents a variety of influences in combustion systems from both a physical and modeling perspective. A variety of these influences will be discussed in this section. First, the direct influences on fluid-dynamics are presented, followed by influences specific to turbulent flows, within the enclosing walls or surrounding objects, and to the chemical propagation and product mixture compositions.
@@ -255,8 +266,8 @@ At its current state, the inclusion of TRI modeling in combustion simulations is
 
 \subsection{On walls}
 One product of the increasingly stringent efficiency requirements for the reduction in green-house gas emissions is an increase in combustion temperatures of energy conversion systems. 
-The concomitant higher heat fluxes pose a significant challenge, as there is a increase of heat load on the materials enclosing these combustion systems, many of which are already existing in a state close to melting point. 
-Additionally, energy escape from the boundaries of the system can represent a thermodynamic loss to the system, and reduces the overall work contribution from the energy process.
+The concomitant higher heat fluxes pose a significant challenge, as there is a increase of heat load on the materials enclosing these combustion systems, many of which are already existing in environments of temperatures greater than their melting points. 
+Additionally, energy escape from the boundaries of the system can represent a thermodynamic loss to the system, and reduces the overall work contribution from the energy conversion process.
 As a result, an understanding of the influence of all modes of heat transfer along the boundaries have seen increasing importance in order to manage thermal loads through the various heat-transfer management techniques.
 
 Various studies have been conducted regarding the influence of radiative heat transfer along the walls of combustion systems. \citet{Gamil2020AssessmentChamber} compared the contribution of radiation in a Rolls-Royce RB-183 turbofan engine combustor using the discrete ordinates method (DOM) and the P-1 approximation. The influences of soot and non-gray absorption were neglected.
@@ -264,7 +275,7 @@ The combustor geometry follows a Rich-Quenched-Lean (RQL) design, where a high t
 Apparently, radiation resulted in a 10\% higher temperature in the liner near the fuel-rich zone, and a 15\% reduction of temperature after the dilution zone.
 In total, radiation was shown to reduce peak flame temperatures by 200K compared to with no radiation.
 The P-1 model was shown to over-exaggerate the effect of radiation compared to the more accurate DOM.
-\citet{Paul2006RadiativeCombustor} applied the DOM to an LES of the Rolls Royce Tay gas turbine geometry. Soot and non-gray absorption were neglected. Emission was shown to maximize in regions where temperature is maximized. Again, the influences of soot would likely change these results.
+\citet{Paul2006RadiativeCombustor} applied the DOM to an LES of the Rolls Royce Tay gas turbine geometry. Soot and non-gray absorption were also neglected. Emission was shown to maximize in regions where temperature is maximized.
 
 Radiation has also been shown to contribute significantly in rocket engines. Between 5\% and 30\% of the overall heat flux at the walls can be attributed to emission from the medium \cite{Johnson2021AnalysisMethod,Sutton2001RocketElements,Naraghi2005ModelingEngines,Pizzarelli2021OverviewChambers}. \citet{Leccese2018ConvectiveChambers} evaluated the influence of radiation and convection using a RANS CFD model with gray-gas radiation. 
 They observed radiation contributions totaling to 15\% and 11\% for liquid methane/liquid oxygen and liquid hydrogen/liquid oxygen, respectively.
@@ -287,8 +298,18 @@ transfer: conduction, convection and radiation. Conjugate modeling of the three 
 The inclusion of radiative heat transfer within the conjugate heat transfer model will make a solution analytically intractable when complex material properties and boundary conditions are involved.
 
 As a result, appropriate modeling of TBCs is rare in high temperature systems. A fully comprehensive, one dimensional, analytical method was presented by \citet{Siegel1996InternalCoatings}. Through the use of the Milne-Eddington approximation for radiation, the method can solve conduction and radiation simultaneously
-within the semitransparent TBC \cite{Milne1930ThermodynamicsStars,Eddington1920TheStars}. The combined heat transfer solution for the TBC was established to be very accurate in most circumstances and not very computationally intensive according to \citet{Siegel1996InternalCoatings}. 
-However, assumptions such as gray gases, one-dimensionality, and two flux can limit the applicability of Siegel’s method. \citet{Johnson2021AnalysisMethod} coupled the Siegel’s method with a Monte Carlo ray tracing analysis of a gas turbine combustor, where non-gray radiation from the flame is accounted for. Differences in temperature as large as 150 K were observed within the TBC between non-gray and gray analyses.
+within the semitransparent TBC \cite{Milne1930ThermodynamicsStars,Eddington1920TheStars}. The TBC is assumed to have a cutoff wavelength, $\lambda{}_c$ where all incident radiation with wavelengths below $\lambda{}_c$ transmit through the TBC surface and are solved according to the RTE, while the remaining incident radiation is absorbed at the surface and modeled through the conduction process.
+The combined heat transfer solution for the TBC was established to be very accurate in most circumstances and not very computationally intensive according to \citet{Siegel1996InternalCoatings}. 
+However, assumptions such as gray gases, one-dimensionality, and two flux can limit the applicability of Siegel’s method. \citet{Johnson2021AnalysisMethod} coupled the Siegel’s method with a Monte Carlo ray tracing analysis of a gas turbine combustor, where non-gray radiation from the flame is accounted for. Differences in temperature as large as $150$ K were observed within the TBC between non-gray and gray analyses.
+Finally,~\citet{Tricard2021ModelingEnvironments.} generated a 3-D model of conjugate heat transfer in a semitransparent TBC at steady state using MCRT radiation coupled with Finite-Volume Method (FVM) conduction. 
+The simulation followed that of~\cite{Siegel1996InternalCoatings}, where a cutoff wavelength was assumed.
+Results where comparable to Siegel's method, and three dimensional influences were shown to be influential to the steady-state temperature distribution in the domain. Additionally, a parametric study concluded that increasing $\lambda{}_c$ results in a decrease in net heat flux through the TBC.
+\begin{figure}
+\centering
+\includegraphics[width=1\linewidth]{figures/ch2/TBC.png}
+\caption{The computational domain for the conjugate heat transfer solver from~\cite{Tricard2021ModelingEnvironments.}. Various sources of heat transfer rate are labeled, with the red-fonted heat transfer rates accounted for by the conduction solver and the black-fonted heat transfer rates accounted for by the radiation solver. The yellow domain and blue domains are the TBC and metal, respectively. The x direction follows from the flame to the impingement flow. The y and z directions are vertical and into the page, respectively. }
+\label{fig:TBC}
+\end{figure}
 
 \subsection{On chemistry}
 Combustion processes are highly coupled to the accompanying complex chemical reaction network.
@@ -298,7 +319,7 @@ This presents an additional, indirect, influence of radiation on the combustion 
 
 The obvious influence on temperature influences the product species concentrations at the exit of many combustion systems. In particular, the production of pollutant species NO$_x$ (nitrous oxides) and soot can be significantly affected \cite{Viskanta2010RadiativeSystems}.
 
-\citet{Ihme2008ModelingFormulation} demonstrated the influence of radiation on NO$_x$ production by including an additional dimension to their flamelet progress variable approach for chemistry tabulation.
+\citet{Ihme2008ModelingFormulation} demonstrated the influence of radiation on NO$_x$ production by including an additional dimension to the flamelet progress variable approach for chemistry tabulation.
 They applied the optically thin assumption (OTA), where only radiative emission is considered, to simulations of the Sandia D. flame, and the Pratt \& Whitney PW6000 combustor without accounting for turbulence-radiation interaction.
 For both cases, production of nitric oxide was reduced as a result of the lower temperatures.
 
