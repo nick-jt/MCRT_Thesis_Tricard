@@ -2,7 +2,7 @@
 \chapter{Solver Performance}\label{chapter:Example}
 The complexity of the radiation solver resulting from both its theoretical foundation as well as its computational implementation calls for an extensive series of validation and performance studies.
 Four test geometries are presented in this chapter for verification and profiling using the two methods discussed in section \ref{section:ModelForThisStudy}. The new MCRT models using the bounding volume hierarchy approach will be refered to as MCRT-ArborX, and the model without will be referred to as MCRT-Standard. 
-A well-established Fortran implementation developed over the course of many years will be used for comparison, and will be referred to as MCRT-Fort.
+A well-established Fortran implementation will be used for verification and will be referred to as MCRT-Fort.
 The configurations include the canonical one-dimensional plane-parallel medium, a three-dimensional backward-facing step in high temperature flow, a time-accurate turbulent pool fire, and a three-dimensional sooting Pratt \& Whitney aeronautical combustor. 
 
 
@@ -16,7 +16,7 @@ The plane-parallel medium provides a useful, one dimensional case to test the MC
 \label{fig:PlaneParallel}
 \end{figure}
 The system is one-dimensional (implemented into OpenFOAM using ray reflections on the off-axis boundaries). The simulation is steady, and the walls are black-bodies.
-Using this configuration, the user can artificially select an absorption coefficient, $\kappa{}$, number of rays emitted per computational cell, N$_r$ medium temperature, $T$, and wall temperatures $T_w$.
+This configuration allows for a variable absorption coefficient $\kappa{}$, number of rays emitted per computational cell N$_r$ medium temperature $T$, and wall temperatures $T_w$.
 
 Additionally, the relative simplicity of the configuration allows for a reduced-complexity numerical solution which can be used for verification of the solver under variable absorption coefficients and temperatures. Following the derivation from \citet{Modest2013RadiativeTransfer}, eq. \ref{eq:IrrPlaneParallel} defines the irradiance $G$ in $W/m^2$ as a function of optical distance $\tau{}$ between the two plates.
 \begin{equation}
@@ -30,10 +30,11 @@ Where $I_{b1}$ and $I_{b2}$ are the black body intensities from the two plates, 
     E_n(x)=\int_0^1\mu{}^{n-2}e^{-x/\mu{}}d\mu{}
     \label{eq:ExpInt}
 \end{equation}
-The absorption in $W/m^3$ at each location can then be evaluated as $\kappa{}G$.
+The absorption in $W/m^3$ at each location can then be evaluated as $Q_{abs}=\kappa{}G$.
 
 \subsection{Results}
-Figures \ref{fig:PPcomp_kappa} to \ref{fig:PPcom_nrays} display comparisons of the MCRT solutions alongside the described analytical implementations for two plates $1$ m apart. The configuration is tested under a variety of absorption coefficients, temperatures, and Monte-Carlo ray counts.
+The configuration is tested under a variety of absorption coefficients, temperatures, and Monte-Carlo ray counts. The walls are assumed to be minor emitters.
+Figures \ref{fig:PPcomp_kappa} to \ref{fig:PPcom_nrays} display comparisons of the MCRT solutions alongside the described analytical implementations for two plates $1$ m apart. 
 Results show excellent agreement between the MCRT and analytical solutions. The standard deviations of the percent differences between the MCRT and analytical solutions are given in table \ref{table:PPcomp_std}. Little to no variability can be observed throughout the solution across the range of optical thicknesses.
 \begin{table}
 \centering
@@ -42,14 +43,15 @@ Results show excellent agreement between the MCRT and analytical solutions. The 
  \hline
  Absorption Coefficient [m$^{-1}$] & $0.5$ & $1$ & $2$ & $4$ & $6$ & $8$ & $10$\\ [0.5ex] 
  \hline\hline
- $\text{StdDev}\left(\frac{|Q_{rad,MCRT}-Q_{rad,ana}|}{Q_{rad,ana}}\times{100}\right)$ [\%]& $0.27$ & $0.26$ & $0.30$ & $0.37$ & $0.43$ & $0.48$ & $0.52$\\
+ $\text{StdDev}\left(\frac{|Q_{abs,MCRT}-Q_{abs,ana}|}{Q_{abs,ana}}\times{100}\right)$ [\%]& $0.27$ & $0.26$ & $0.30$ & $0.37$ & $0.43$ & $0.48$ & $0.52$\\
  \hline
 \end{tabular}
 \label{table:PPcomp_std}
 \end{table}
 
-In fig. \ref{fig:PPcomp_kappa}, it is apparent that higher absorption coefficients result in higher radiative absorption within the medium; however, it should be noted that the increase in absorption coefficient also results in increased emission per eq. \ref{eq:emitting_sphere}. Therefore, there is also a larger degree of available radiation to be absorbed. 
-Larger absorption occurs towards the center of the space between the plates due to a greater degree of incident radiation from the emitting medium on both sides.
+In fig. \ref{fig:PPcomp_kappa}, it is apparent that higher absorption coefficients result in higher radiative absorption within the medium; however, it should be noted that the increase in absorption coefficient also results in increased emission per eq. \ref{eq:emitting_sphere}. Therefore, the higher absorption results from both a higher degree of emission as well as a higher degree of absorption. 
+
+Towards the center of the media, larger absorption is apparent due to a higher amount of incident radiation from the emitting medium on both sides.
 Towards the edges, radiative absorption decreases due to the absence of radiation from the adjacent cold-black wall.
 \begin{figure}[!ht]
 \centering
@@ -86,7 +88,7 @@ Profiling results from the plane-parallel medium were then
 
 
 \section{Backward-Facing Step Combustor}
-The backward-facing step (BFS) combustor is a convenient configuration often used as a simple, repeatable geometry for a variety of studies in fluid dynamics.
+The backward-facing step (BFS) combustor is a simple, repeatable geometry used for a variety of studies in fluid dynamics.
 Numerous examples exist demonstrating its use for experimental and numerical investigations of turbulent fluid flow~\cite{Armaly1983ExperimentalFlow,Neto1993AStep,Jovic1994Backward-facing5000,Le1997DirectStep}. In contrast, studies of combined turbulent and high temperature flow~\cite{Niemann2016Buoyancy-affectedNumber,Xie2017GeometrySteps}, and reacting flows~\cite{Pouech2021PremixedStep} over backward-facing steps have been modeled significantly less frequently.
 In the relatively few studies that exist, the addition of volumetric heating and composition changes resulting from the exothermic chemical reactions have been shown to influence the flow patterns and turbulence intensity of the fluid. 
 Recent interest has emerged regarding the relative influence of radiation and convection along the walls many configurations, and the backward-facing step geometry provides a convenient approach for doing so.
@@ -99,12 +101,17 @@ Recent interest has emerged regarding the relative influence of radiation and co
 \end{figure}
 
 The BFS geometry used in this study is diagrammed in figure \ref{fig:BFS_geometry} based on an experimental configuration at the Pennsylvania State University.
-A three-dimensional CFD calculation is intended to be performed for validation with respect to measurements obtained from the experiment. For this case, no chemically reacting flow is included. 
+A three-dimensional CFD calculation is intended to be performed in future collaborations for validation with respect to measurements obtained from the experiment. For this case, no chemically reacting flow is included. 
 The flow is present in only vitiated form, where a chemical reaction is initiated in a portion of the flow upstream of the step, and the resulting "dirty" air with high CO$_2$ and H$_2$O content is mixed with unreacted air. 
 The mixture reaches the main section at an elevated temperature of up to 850K, appreciably lower than expected temperatures of above 2000K when full reactions are present. 
-The simulations account for the elevated temperature, but neglect any further chemical reactions beyond the step, resulting in a purely fluid-mechanical and heat-transfer calculation.
+The simulations account for the elevated temperature, but neglect any further chemical reactions beyond the step, resulting in a purely fluid-mechanic and heat-transfer calculation.
+The presented results will first provide further confirmation as to the accuracy of the new MCRT implementation through comparison against results from the established Fortran code. This will be followed by a high level account of the apparent influences of radiation in the fluid and along the walls, noting the decreased relevance of radiation due to the lower temperatures. Finally, an assessment of model performance will be presented.
 
-Figures \ref{fig:BFS_temperature}, \ref{fig:BFS_streamlines} show temperature and velocity magnitude contours in the BFS. The pressure is atmospheric, and the absorption coefficient is assumed uniform at a value of 0.5 m$^{-1}$ due to the absence of chemical properties in the CFD simulations.
+
+
+\subsection{Results}
+A single time-step of the CFD simulation was extracted for a frozen field analysis. 
+Figures \ref{fig:BFS_temperature}, \ref{fig:BFS_streamlines} show temperature and velocity magnitude contours at the frozen timestep in the simulation. The pressure is atmospheric, and the absorption coefficient is assumed uniform at a value of 0.5 m$^{-1}$ due to the absence of chemical properties in the CFD simulations.
 
 \begin{figure}
 
@@ -122,9 +129,6 @@ Figures \ref{fig:BFS_temperature}, \ref{fig:BFS_streamlines} show temperature an
   \end{subfigure}
   \label{fig:BFS_contours}
 \end{figure}
-
-\subsection{Results}
-A single time-step of the CFD simulation was extracted for a \textit{frozen field analysis} (see chapter \ref{chapter:Introduction}). 
 The resulting radiative emission and wall-heat flux iso-contours are shown in figure \ref{fig:BFS_radiationcontours}.
 \begin{figure}
 \includegraphics[width=\linewidth]{figures/ch4/BFS_volwallflux3.png}
@@ -174,8 +178,8 @@ Almost no mesh data is duplicated during the mesh transfer process, allowing for
  Parallel Variation & MCRT-Fort & MCRT-Kokkos & MCRT-ArborX \\ [0.5ex] 
  \hline\hline
  Serial & 2687 s & 376 s & - \\ 
- 30 CPU Processors & 52.26 s & 22.5 s & 44.9 \\
- GPU & N/A & 6.91 s & - \\
+ 30 CPU Processors & 52.26 s & 22.5 s & 44.9. s \\
+ GPU & N/A & 6.91 s & 9.16 s \\
  \hline
 \end{tabular}
 \label{table:BFS_runtime_table_1rpc}
@@ -403,7 +407,7 @@ Equation \ref{eq:RadEmis} (repeated in volumetric form in eq. \ref{eq:RadEmis2})
 Where the refractive index $n$ is assumed constant. 
 The volumetric emission is a function of both Planck mean absorption coefficient and temperature. It is important to note, however, that Planck mean absorption coefficient is itself a function of temperature, in addition to the chemical composition of the mixture. 
 
-\textbf{\checkmark Figure: 3 Scatter plots of emission, kplanck, and fvSoot vs temperature}
+\textbf{Figure: 3 Scatter plots of emission, kplanck, and fvSoot vs temperature}
 
 Parameters from computational cell data are displayed in normalized form in fig. \ref{fig:PW_Scatterplot_emission}. 
 Suprisingly, radiative emission displays a non-monotonic trend with respect to temperature. The scaling reflects the expected fourth-order nature before the normalized temperature value of $0.7$, but decreases sharply as temperature continues to increase.
@@ -429,7 +433,7 @@ The walls are assumed to be cold and black; they absorb all incident radiation a
 Wall-incident radiation increases throughout the rich-burn section of the combustor, reaches a local maximum just before the dilution holes, and decreases throughout the lean-burn section.
 This corroborates the results presented by \citet{Gamil2020AssessmentChamber}, where the fuel-rich section of the flame was shown to emit highly and increase the temperatures of the combustor walls.
 
-\textbf{\checkmark Figure: Average wall heat flux profile as a function of distance from the inlet}
+\textbf{Figure: Average wall heat flux profile as a function of distance from the inlet}
 
 To analyze the contribution of non-gray absorption to the flame, gray and non-gray wall heat flux is presented in fig. \ref{fig:WallHeatFlux_GrayVsNongray}.
 Both ID and OD walls see up to 50 to 60\% decreases in wall heat flux when the line-by-line radiation model is introduced. Decreases diminish slightly in the fuel-rich part of the combustor to 30 to 40\%, but remain substantial.
@@ -460,7 +464,7 @@ The overall budgeted contributions to wall heat flux are diagrammed in fig. \ref
 The intermittent nature of the emission from the molecules is reflected by the accounted contributions of CO$_2$, H$_2$O, and CO. The emission of soot is more continuous throughout the spectrum, as expected.
 Overall, soot contributes the majority of emission from the flame, with emission occurring generally at more moderate temperatures, as previously discussed.
 
-\textbf{\checkmark Figure:Budgeted contributions of species and soot across the spectrum.}
+\textbf{Figure:Budgeted contributions of species and soot across the spectrum.}
 
 \subsection{Profiling}
 The new MCRT implementation displayed a significant speedup compared to the established fortran model. A comparison of runtimes is present in fig. \ref{table:PW_runtime_table}
