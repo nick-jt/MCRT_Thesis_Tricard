@@ -1,18 +1,13 @@
 \addchapheadtotoc
 \chapter{Monte-Carlo Ray Tracing}\label{chapter:Modeling}
-While radiation often plays a significant role in the heat transfer within a combustion system, and is therefore essential to model, doing so comes at a large computational expense. 
+While radiation often plays a significant role in the heat transfer within a combustion system and is therefore essential to model, doing so comes at a large computational expense. 
 The RTE equation (eq. \ref{eq:RTE2}) is an integro-differential equation. This is representative of the \textit{all-to-all} nature of the process. In combustion CFD, there exist a large number of physical processes occuring simultaneously, from chemistry to compressible fluid dynamics. 
-These require extensive computational resources to model. Imposing the additional requirement of modeling radiation, which can be up of the same order of runtime as the CFD itself, is often-times infeasible. 
+These require extensive computational resources to model. Imposing the additional requirement of modeling radiation, which can be up of the same order of magnitude runtime as the CFD itself, is often-times infeasible. 
 
-Several radiation models exist which promise accurate modeling at a reduced expense to mitigate this problem. Two of the most common methods are the method of spherical harmonics the discrete ordinates method (DOM).
-These methods are much faster, and oftentimes have very similar accuracy to the MCRT method. 
-
-However, an increase of computational resources will converge to a solution of the method, whereas an increase of computational resources will bring MCRT to a more direct solution of the RTE~\cite{Leccese2018ConvectiveChambers}.
-
-Alternative methods, such as the zonal method and differential methods (Milne-Eddington approximation, Schuster-Schwarzchild approximation, etc), also exist for faster numerical solutions that can be applied under idealized circumstances.
-More information for these can be found in texts such as that of~\citet{Modest2013RadiativeTransfer} and~\citet{Howell2010ThermalTransfer}.
-
-While, many consider Monte-Carlo ray tracing to be the most computationally intensive, recent advanced implementations have shown that, using parallel processing, MCRT can consume even less runtime than its less accurate counterpart, DOM~\cite{Humphrey2016RadiativeRefinement}.
+Several radiation models exist which promise accurate modeling at a reduced expense. Two of the most common methods are the method of spherical harmonics the discrete ordinates method (DOM).
+These methods are often considered to be much faster, and offer very similar accuracy to the MCRT method under many circumstances. 
+However, these methods are limited in that when they are supplied additional computational resources, they do not provide exact solutions. Monte-Carlo Ray Tracing, however, does offer this advantage~\cite{Leccese2018ConvectiveChambers}.
+Additionally, while many consider Monte-Carlo ray tracing to be more computationally intensive, recent advanced implementations have shown that by using parallel processing, MCRT can consume even less runtime than its less accurate counterpart, DOM~\cite{Humphrey2016RadiativeRefinement}.
 With this potential in mind, MCRT is chosen for the present implementation, as it offers the highest accuracy and greatest potential for growth as computational power and parallel processing capabilities increase~\cite{Liu2020TheFlames,Howell2010ThermalTransfer}.
 
 This chapter will first review the common implementation for MCRT. This includes a description of the random number relations and the fundamental theoretical foundation.
@@ -58,8 +53,9 @@ Similar relations would apply for any polyhedron with arbitrary shape. However, 
 \subsubsection{Direction of emission}
 The direction of emission for a ray can be evaluated using the polar and azimuthal angle along the unit sphere, defined in fig. \ref{fig:Unit_Sphere}. 
 \begin{figure}
-\includegraphics[width=\linewidth]{figures/ch3/solid_angl.png}
-\caption{Angle definitions. $\theta$ is the polar angle, and $\psi$ is the azimuthal angle~\cite{Modest2013RadiativeTransfer}. }
+\centering
+\includegraphics[width=0.7\linewidth]{figures/ch3/solid_angl.png}
+\caption{Angle definitions. $\theta$ is the polar angle, and $\psi$ is the azimuthal angle. }
 \label{fig:Unit_Sphere}
 \end{figure}
 Local thermodynamic equilibrium guarantees isotropic emission; therefore, integrand uniformity can be assumed and the relation simplified into eqs. \ref{eq:DirOfEmission_psi} and \ref{eq:DirOfEmission_theta}.
@@ -211,7 +207,7 @@ An example would be a mirror or the smooth surface of water. Under these conditi
 \centering
 \includegraphics[width=0.8\linewidth]{figures/ch3/SpecularReflection.png}
 \caption{Visual depiction of a specular ray reflection. }
-\label{fig:raytracing}
+\label{fig:specularreflection}
 \end{figure}
 
 
@@ -275,7 +271,7 @@ The net power exchange with one particular object can thereafter be evaluated as
 Where $N_V$ and $N_S$ are all of the volumes and surfaces within the geometry, and
 $P_{ab}$ defines the net power exchange from object $b$ into object $a$.
 ERM and ARM differ in which term they attempt to estimate: ERM estimates the first summational term, and ARM estimates the second summational term.
-In ERM, estimated value for a spectral power exchange from a volume $j$ into a volume $q$ can be evaluated as
+In ERM, the estimated value for a spectral power exchange from a volume $j$ into a volume $q$ can be evaluated as
 \begin{equation}
     P_{qj\eta}^{ERM}=4\pi{}\kappa_{q\eta}V_q(I_{bj\eta}-I^0_{bq\eta})A_{qj\eta}.
     \label{eq:fraction_spectralpower_ERM}
