@@ -49,7 +49,7 @@ Results show excellent agreement between the MCRT and analytical solutions. The 
 \label{table:PPcomp_std}
 \end{table}
 
-In fig. \ref{fig:PPcomp_kappa}, it is apparent that higher absorption coefficients result in higher radiative absorption within the medium; however, it should be noted that the increase in absorption coefficient also results in increased emission per eq. \ref{eq:emitting_sphere}. Therefore, the higher absorption results from both a higher degree of emission as well as a higher degree of absorption. 
+In fig. \ref{fig:PPcomp_kappa}, it is apparent that higher absorption coefficients result in higher radiative absorption within the medium. This results from the increased optical thickness, but also the increased emission per eq. \ref{eq:emitting_sphere}. 
 
 Towards the center of the media, larger absorption is apparent due to a higher amount of incident radiation from the emitting medium on both sides.
 Towards the edges, radiative absorption decreases due to the absence of radiation from the adjacent cold-black wall.
@@ -66,8 +66,7 @@ Towards the edges, radiative absorption decreases due to the absence of radiatio
 \label{fig:PPcomp_temp}
 \end{figure}
 Temperature also increases radiative absorption, as shown in fig. \ref{fig:PPcomp_temp}. This follows from the fourth order scaling of temperature in the black-body emission function, eq. \ref{eq:PlancksLaw}. An increase in temperature of $400$K approximately doubles the net radiation absorbed.
-Finally, as shown in fig. \ref{fig:PPcom_nrays}, lower ray counts show a higher degree of variability, resulting from the stochastic nature of the MCRT method.
-The total number of rays traced within the domain scales as $N_r\times{}N_{cells}$. Therefore, an increase in the number of cells can be expected to decrease variability as well.
+Finally, as shown in fig. \ref{fig:PPcom_nrays}, lower ray counts show a higher degree of variability, resulting from the stochastic nature of the MCRT method. Standard deviations of percent differences for the varying ray counts can be found in table~\ref{table:PPcomp_rayct}
 \begin{figure}
 \centering
 \includegraphics[width=0.95\linewidth]{figures/ch4/PPcomparison3.png}
@@ -75,8 +74,21 @@ The total number of rays traced within the domain scales as $N_r\times{}N_{cells
 \label{fig:PPcom_nrays}
 \end{figure}
 
-\subsection{Profiling}
-Profiling results from the plane-parallel medium were then 
+
+\begin{table}
+\centering
+\caption{Standard deviations of the percent difference of MCRT and analytical solution at various absorption coefficients. Each simulation is run with $1000$ computational cells, a temperature of $2000$K, and absorption coefficient of 10m$^{-1}$}.
+\begin{tabular}{||c c c c||} 
+ \hline
+ Rays emitted per cell & $10$ & $100$ & $1000$ \\ [0.5ex] 
+ \hline\hline
+ $\text{StdDev}\left(\frac{|Q_{abs,MCRT}-Q_{abs,ana}|}{Q_{abs,ana}}\times{100}\right)$ [\%]& $4.83$ & $1.47$ & $0.52$ \\
+ \hline
+\end{tabular}
+\label{table:PPcomp_rayct}
+\end{table}
+% \subsection{Profiling}
+% Profiling results from the plane-parallel medium were then 
 
 % \begin{figure}
 
