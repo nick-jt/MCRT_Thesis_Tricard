@@ -21,14 +21,14 @@ graph TD
 ## Single-pass (backwards MC):
 ```mermaid
 graph TD
-    A[Absorbing node] -->|Ray information| B[Node 1]
-    A -->|Ray information| C[Node 2]
-    A -->|Ray information| D[Node 3]
-    A -->|Ray information| E[Node 4]
-    B -->|Added ray intensity| F[Absorbing node]
-    C -->|Added ray intensity| F
-    D -->|Added ray intensity| F
-    E -->|Added ray intensity| F
+    A[Originating rank] -->|Ray information| B[Rank 1]
+    A -->|Ray information| C[Rank 2]
+    A -->|Ray information| D[Rank 3]
+    A -->|Ray information| E[Rank n]
+    B -->|Accum. Intensity,Optical Distance| F[Originating Rank]
+    C -->|Accum. Intensity,Optical Distance| F
+    D -->|Accum. Intensity,Optical Distance| F
+    E -->|Accum. Intensity,Optical Distance| F
 ```
 
 ## CFD-rad flow chart
