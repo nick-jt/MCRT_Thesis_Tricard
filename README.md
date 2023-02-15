@@ -62,3 +62,46 @@ graph TD
     
 ```
 
+```mermaid
+flowchart LR
+    A[Load CFD\n parameters\ninto MCRT solver] --> B[Initialize\n Rays]
+    B --> C["Kokkos::parallel_for\n(CPU or GPU)"]
+    C --> |Thread N| D
+    subgraph D[" "]
+        direction BT
+        X[Trace ray N\nthrough cell] --> Q[Deposit energy]
+        Q --> X
+    end
+    C --> |Thread 1| E
+    subgraph E[" "]
+        direction BT
+        Y[Trace ray 1\nthrough cell] --> R[Deposit energy]
+        R --> Y
+    end
+    C --> |Thread 2| F
+    subgraph F[" "]
+        direction BT
+        Z[Trace ray 2\nthrough cell] --> S[Deposit energy]
+        S --> Z
+    end
+    E --> G
+    F --> G
+    D --> G[Calculate\n Rad. Src.]
+  
+```
+
+```mermaid
+flowchart LR
+    A[Load CFD\n parameters\ninto MCRT solver] --> B[Initialize\n Rays]
+    B --> C["Kokkos::parallel_for\n(CPU or GPU)"]
+    C --> |Thread N| D
+    subgraph D[" "]
+        direction BT
+        X[Trace ray N\nthrough cell] --> Q[Deposit energy]
+        Q --> X
+    end
+    D --> G[Calculate\n Rad. Src.]
+  
+```
+
+
