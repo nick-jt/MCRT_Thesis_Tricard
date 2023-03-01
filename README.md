@@ -46,6 +46,31 @@ graph TD
   
 ```
 
+## Rad flow chart alternative
+```mermaid
+flowchart TD
+
+    subgraph Y[" "]
+        L[Deep-copy CFD parameters to device] --> M[Evaluate cell radiative emissions\nin parallel]
+        M --> N[Load non-gray table from file\n and deep copy to GPU]
+        N --> O[Init ray directions, points of emission\nenergies and wavenumbers]
+        O --> P["\nConduct ray tracing procedure\n\n"]
+        P --> Q[Evaluate net rad. source terms]
+    end
+
+    subgraph X[" "]
+        A[Init CFD] -->B[Init Kokkos]
+        B --> C[Init Radiation]
+        C --> D[Begin time-step]
+        D --> |CPU| E[Solve CFD]
+        D --> |"Kokkos::parallel_for (CPU or GPU)"| F[Solve radiation]
+        E --> G[Add radiation source to energy equation]
+        F --> G
+        G --> |Increment time| D
+        G --> H[Finalize Run]
+    end
+```
+
 ## Rad flow chart
 ```mermaid
 graph TD
