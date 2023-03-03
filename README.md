@@ -62,8 +62,8 @@ flowchart TD
         A[Init CFD] -->B[Init Kokkos]
         B --> C[Init Radiation]
         C --> D[Begin time-step]
-        D --> |CPU| E[Solve CFD]
-        D --> |"Kokkos::parallel_for (CPU or GPU)"| F[Solve radiation]
+        D --> E[Solve CFD]
+        D --> F[Solve radiation]
         E --> G[Add radiation source to energy equation]
         F --> G
         G --> |Increment time| D
