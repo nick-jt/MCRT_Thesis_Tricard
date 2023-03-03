@@ -1,0 +1,109 @@
+\section{Pratt \& Whitney Aeronautical Combustor}
+A three dimensional Pratt \& Whitney combustor \textbf{(Block C)}? geometry was next tested for verification and profiling of the present radiation model. Solver profiling is presented alongside general observations regarding the effects of radiation within the system.
+The combustor geometry follows a Rich-Quench-Lean (RQL) configuration, an optimal design for both emissions and stability.
+A single time-step from an LES of the combustor was taken for a frozen-field analysis. 
+The combustor geometry is constructed to for highly turbulent flow with a high degree of separation to allow for a sufficiently stabilized flame.
+A re-circulation zone immediately behind the inlet section induces a swirl which facilitates mixing of the reactants, and a downstream dilution hole results in a complex chemical mixing process for the remaining reactions to occur in a fuel-lean condition. This results in a more complex profile of radiation throughout the fluid and the walls.
+The resulting influences of radiation within the fluid and along the walls are non-monotonic with respect to distance from the inlet, and especially with consideration of the influences of non-gray emission and absorption. 
+All presented parameters are normalized by median values obtained through the computational cells or faces.
+
+
+\subsection{Case setup}
+The combustor geometry consists of one slice of the annular combustor. The domain is meshed into a grid of 16,373,876 hexahedral cells of varying shapes and sizes. 
+Radiation is modeled with adaptive emission, as discussed in section \ref{section:SmallPoolFlame}, and specularly reflective boundary conditions are imposed on the periodic boundaries.
+The effects of soot, spectral emission patterns, and wall-incident radiation were all captured within the model, and detailed account of these effects alongside profiling of the various parallel implementations of the model are presented as demonstration.
+Contributions from the three primary emitting and absorbing chemical species are accounted for: CO$_2$, H$_2$O, and CO, as well as the influences of soot are also accounted for.
+The effects of liquid fuel spray on ray-scattering and absorption and all turbulence-radiation interactions are neglected.
+
+\subsection{Results}
+
+\subsubsection{Radiative Emission}
+It is of interest to first investigate the radiative emission characteristics of the combustor.
+Equation \ref{eq:RadEmis} (repeated in volumetric form in eq. \ref{eq:RadEmis2}) defines the influence of both Planck mean absorption coefficient $\kappa{}$ and temperature $T$ on volumetric radiative emission.
+\begin{equation}
+    Q_{emi}=4\kappa{}_{p}n^2\sigma{}T^4
+    \label{eq:RadEmis2}
+\end{equation}
+Where the refractive index $n$ is assumed constant. 
+The volumetric emission is a function of both Planck mean absorption coefficient and temperature. It is important to note, however, that Planck mean absorption coefficient is itself a function of temperature, in addition to the chemical composition of the mixture. 
+
+\textbf{Figure: 3 Scatter plots of emission, kplanck, and fvSoot vs temperature}
+
+Parameters from computational cell data are displayed in normalized form in fig. \ref{fig:PW_Scatterplot_emission}. 
+Suprisingly, radiative emission displays a non-monotonic trend with respect to temperature. The scaling reflects the expected fourth-order nature before the normalized temperature value of $0.7$, but decreases sharply as temperature continues to increase.
+At this point, the contribution of temperature to radiative emission is superseded by the decrease in Planck-mean absorption coefficient.
+This is evident in figure \ref{fig:PW_kplanck_scatter}.
+Between temperatures of T=$0.4$ and $0.7$, $\kappa{}_p$ shows a gradual decline. After a value of T=$0.7$, however, $\kappa{}_{p}$ begins to decrease much more rapidly towards $0$. 
+The various contributions of the $\kappa{}$ are presented in eq. \ref{eq:Kplanck_definition}.
+\begin{equation}
+    \kappa{}_p=f_{v,soot}\kappa{}_{soot}+X_{CO_2}\kappa{}_{CO_2}+X_{H_2O}\kappa{}_{H_2O}+X_{CO}\kappa{}_{CO}
+    \label{eq:Kplanck_definition}
+\end{equation}
+Where $f_{v,soot}$ is the soot volume fraction, and $X_i$ is the mole fraction of species $i$.
+The contributions of each of the terms in equation \ref{eq:Kplanck_definition} are presented in fig. \ref{fig:PW_kplanck_contributions}. All values are normalized by the contributions of soot.
+It is evident that soot plays the most significant role in defining the absorption coefficient at present conditions. Additionally, the sharp decrease of Planck mean absorption coefficient present in fig. \ref{fig:PW_Scatterplot_kplanck} at T=$0.7$, also presents itself in the temperature profile of soot volume fraction in fig. \ref{fig:PW_Scatterplot_soot}.
+This sudden drop represents a crossover point. At this temperature, soot particles are consumed rapidly by the gas, and the resulting radiative emission rapidly decreases.
+
+\subsubsection{Radiative Absorption}
+As mentioned in chapter \ref{chapter:Importance}, the redistribution of thermal energy from radiation is significant for multiple reasons: radiation can produce changes in the fluid dynamics, turbulence, wall heat flux, and the chemical production of pollutants.
+The Pratt \& Whitney combustor displays a relevant degree involvement of radiative absorption to each of these characteristics.
+
+Figure \ref{fig:PW_WallAverages} presents the averaged wall heat flux for the inner diameter (ID) and outer diameter (OD) surfaces of the annular combustor slice. 
+The walls are assumed to be cold and black; they absorb all incident radiation and re-emit a negligible amount. 
+Wall-incident radiation increases throughout the rich-burn section of the combustor, reaches a local maximum just before the dilution holes, and decreases throughout the lean-burn section.
+This corroborates the results presented by \citet{Gamil2020AssessmentChamber}, where the fuel-rich section of the flame was shown to emit highly and increase the temperatures of the combustor walls.
+
+\textbf{Figure: Average wall heat flux profile as a function of distance from the inlet}
+
+To analyze the contribution of non-gray absorption to the flame, gray and non-gray wall heat flux is presented in fig. \ref{fig:WallHeatFlux_GrayVsNongray}.
+Both ID and OD walls see up to 50 to 60\% decreases in wall heat flux when the line-by-line radiation model is introduced. Decreases diminish slightly in the fuel-rich part of the combustor to 30 to 40\%, but remain substantial.
+Net percent differences in wall heating is presented for various boundaries in fig. \ref{table:PW_GrayVsNonGray}.
+The decrease in radiative transmission to the walls is a direct result of the increased re-absorption within the flame. 
+The introduction of non-gray modeling causes increased attenuation of radiation. Changes in radiative re-absorptions are presented for both soot and 
+
+
+\textbf{$\times$ Figure: gray vs non-gray averaged heat flux values in the fluid}
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{||c c||} 
+ \hline
+ Boundary & Percent Decrease \\ [0.5ex] 
+ \hline\hline
+ OD Wall & 6 \\ 
+ ID Wall & 7  \\
+ Turbine & 545  \\
+ Inlet & 545  \\ [1ex] 
+ \hline
+\end{tabular}
+\caption{Percent differences in incident radiative power between gray and non-gray radiation models.}
+\label{table:PW_GrayVsNonGray}
+\end{table}
+
+The overall budgeted contributions to wall heat flux are diagrammed in fig. \ref{fig:PW_emission_contributions} across the emission spectrum.
+The intermittent nature of the emission from the molecules is reflected by the accounted contributions of CO$_2$, H$_2$O, and CO. The emission of soot is more continuous throughout the spectrum, as expected.
+Overall, soot contributes the majority of emission from the flame, with emission occurring generally at more moderate temperatures, as previously discussed.
+
+\textbf{Figure:Budgeted contributions of species and soot across the spectrum.}
+
+\subsection{Profiling}
+The new MCRT implementation displayed a significant speedup compared to the established fortran model. A comparison of runtimes is present in fig. \ref{table:PW_runtime_table}
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{||c c c c||} 
+ \hline
+ Variation & MCRT-Fort & MCRT-Kokkos & MCRT-ArborX \\ [0.5ex] 
+ \hline\hline
+ Gray & 5770s     & 2308 & 57  \\ % TODO
+ Non-Gray & 5770s & 3000 & 78 \\ [1ex] 
+ \hline
+\end{tabular}
+\caption{Runtime comparisons for the Pratt \& Whitney combustor geometry.}
+\label{table:PW_runtime_table}
+\end{table}
+
+
+- Runtime gray
+
+- Runtime non-gray

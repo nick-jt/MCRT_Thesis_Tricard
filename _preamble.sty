@@ -109,9 +109,9 @@
     
   \Abstract{
     Thermal radiation contributes significantly to the dynamics and heat transfer within combustion systems. Appropriately capturing its influences during the modeling procedure is therefore essential for accurate prediction of the flame.
-    The Monte-Carlo Ray tracing (MCRT) is the most robust and accurate method of modeling radiation, but it is also the most computationally expensive. 
-    Therefore, enhanced mathematical techniques and computational approaches must be implemented for an optimal and efficient solution.
-    Several alternatives have been introduced including backward Monte-Carlo, reciprocal Monte-Carlo, and null-collision Monte-Carlo. Above all, the introduction of Graphics Processing Units (GPUs) and additional computer-graphics data structures have shown the most potential for accelerating MCRT.
+    Monte-Carlo Ray tracing (MCRT) is the most robust and accurate method of modeling radiation, but is also considered to be the most computationally expensive. 
+    Therefore, in order to gather the most accurate depiction of thermal radiation, enhanced mathematical techniques and computational approaches must be implemented for an optimal and efficient implementation of MCRT.
+    Several alternatives have been introduced including backwards Monte-Carlo, reciprocal Monte-Carlo, and null-collision Monte-Carlo. Above all, the introduction of Graphics Processing Units (GPUs) and additional computer-graphics data structures have shown the most potential for accelerating MCRT.
     
     This thesis presents work in the development of a GPU-based MCRT model with line-by-line accurate non-gray modeling and a bounding-volume hierarchy based approach for ray-tracing search in logarithmic time.
     The solver is connected to the OpenFOAM open-sourced CFD platform to enable time-accurate simulations of joint combustion-radiation calculations.
@@ -122,7 +122,7 @@
     Observations are also made regarding the influences of radiation in the various configurations.
     Validations show excellent agreement between the solvers with respect to analytical solutions and established radiation models. Radiation is shown to have a strong increase in contribution with increasing media opacities and temperatures.
     Time-accurate simulations showed significant reduction in temperatures of $500$K or more compared to simulations without radiation. The influences of non-gray emission and absorption, as well as soot are deemed essential to model for an accurate description to radiation. 
-    GPUs are shown to accelerate computation by 75\% or more, with the potential for further acceleration. The Bounding Volume Hierarchy (BVH) is shown to be less efficient for semi-transparent media, but there remains potential for their application in distributed-memory environments 
+    GPUs are shown to accelerate computation by 75\% or more, with the potential for further acceleration. The Bounding Volume Hierarchy (BVH) is shown to be less efficient for semi-transparent media, but there remains potential for its application in distributed-memory environments 
 
 
 
