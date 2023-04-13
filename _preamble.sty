@@ -74,8 +74,8 @@
 % ==================================================== %
 
 % This is the year and month that you submit the thesis
-  \Year{2022}
-  \Month{December}
+  \Year{2023}
+  \Month{March}
   \Author{Nicolas Tricard}
   \University{University of Connecticut}
   \College{School of Engineering}
@@ -86,7 +86,7 @@
 % If you have a long title, split it between two lines. The \TitleBottom field defines the second line
 % A two line title should be an "inverted pyramid" with the top line longer than the bottom.
   \TitleTop{Radiation modeling in combustion}
-  \TitleMiddle{systems using GPU-accelerated}
+  \TitleMiddle{systems using a GPU-accelerated}
   \TitleBottom{Monte Carlo method}
 
 % Your research advisor
@@ -108,22 +108,21 @@
     
     
   \Abstract{
-    Thermal radiation contributes significantly to the dynamics and heat transfer within combustion systems. Appropriately capturing its influences during the modeling procedure is therefore essential for accurate prediction of the flame.
-    Monte-Carlo Ray tracing (MCRT) is the most robust and accurate method of modeling radiation, but is also considered to be the most computationally expensive. 
-    Therefore, in order to gather the most accurate depiction of thermal radiation, enhanced mathematical techniques and computational approaches must be implemented for an optimal and efficient implementation of MCRT.
-    Several alternatives have been introduced including backwards Monte-Carlo, reciprocal Monte-Carlo, and null-collision Monte-Carlo. Above all, the introduction of Graphics Processing Units (GPUs) and additional computer-graphics data structures have shown the most potential for accelerating MCRT.
+    Thermal radiation contributes significantly to the dynamics and heat transfer within combustion systems. Appropriately capturing its influences during the modeling procedure is essential for a comprehensive prediction of the flame.
+    Monte Carlo Ray tracing (MCRT) is the most robust and accurate method of modeling radiation but is also considered to be the most computationally expensive. 
+    Therefore, in order to gather the most accurate depiction of thermal radiation, enhanced mathematical techniques and computational approaches must be implemented for an efficient use of MCRT.
+    Several alternatives have been introduced including backward Monte Carlo, reciprocal Monte Carlo, and null-collision Monte Carlo. Above all, the field of graphics processing has demonstrated the potential of Graphics Processing Units (GPUs) and Bounding Volume Hierarchies (BVHs) to the radiation modeling procedure.
     
-    This thesis presents work in the development of a GPU-based MCRT model with line-by-line accurate non-gray modeling and a bounding-volume hierarchy based approach for ray-tracing search in logarithmic time.
-    The solver is connected to the OpenFOAM open-sourced CFD platform to enable time-accurate simulations of joint combustion-radiation calculations.
-    Parallel programming is used with the Kokkos programming model for an interchangeable parallel computing backend and performance-portability. Enhanced memory management techniques are implemented to reduce overhead upon execution of the radiation solver.
+    This thesis presents work in the development of a GPU-accelerated MCRT solver with line-by-line non-gray modeling.
+    The solver is connected to the OpenFOAM open-sourced CFD platform to enable transient simulations of joint combustion-radiation calculations. Distributed-memory capabilities are enabled through the use of the Message Passing Interface (MPI).
+    Parallel programming is applied using the Kokkos C++ library for an interchangeable parallel computing backend and performance-portability across CPUs and GPUs. The ArborX geometric search library is applied for a Bounding Volume Hierarchy implementation.
     
-    The model is applied to four geometries of varying degrees of practicality. 
-    Solver performances are presented for a 1-D plane-parallel participating medium, a 3-D backward-facing step combustor, a 3-D time-accurate simulation of a pool fire, and a Pratt \& Whitney aeronautical combustor. 
+    The model is applied to four geometries of varying degrees of complexity. 
+    Solver performances are presented for a 1-D plane-parallel participating medium, a 3-D backward-facing step combustor, a direct-numerical simulation of a small pool fire, and a 3-D transient simulation of a pool fire. 
     Observations are also made regarding the influences of radiation in the various configurations.
-    Validations show excellent agreement between the solvers with respect to analytical solutions and established radiation models. Radiation is shown to have a strong increase in contribution with increasing media opacities and temperatures.
-    Time-accurate simulations showed significant reduction in temperatures of $500$K or more compared to simulations without radiation. The influences of non-gray emission and absorption, as well as soot are deemed essential to model for an accurate description to radiation. 
-    GPUs are shown to accelerate computation by 75\% or more, with the potential for further acceleration. The Bounding Volume Hierarchy (BVH) is shown to be less efficient for semi-transparent media, but there remains potential for its application in distributed-memory environments 
-
+    Verifications show excellent agreement between the solvers with respect to analytical solutions and established radiation models for both 1-D and 3-D geometries with non-gray modeling. Single-timestep frozen-field analyses show GPUs accelerate MCRT up to almost $400$ times in research-relevant geometries. The Bounding Volume Hierarchy (BVH) is shown to be less efficient in a shared-memory environment, but there remains a potential advantage for its application in distributed-memory simulations. 
+    Analysis of MCRT in transient simulations showed a significant reduction in temperatures of $600$K or more compared to simulations without radiation. Loading the line-by-line database contributes significantly to the overall computational cost at each time step, and future work involves minimizing this cost while enabling asynchronization between CPUs and GPUs.%The influences of non-gray emission and absorption are deemed essential to model for an accurate description of radiation. 
+    
 
 
   
@@ -139,7 +138,19 @@
 
 % Acknowledge those who helped and supported you
   \Acknowledgments{
-    Insert acknowledgements here.
+    
+    I would like to start by thanking my advisor, Prof. Xinyu Zhao. Your incredible patience and high standards of excellence have pushed me to expand my abilities well beyond what I thought possible, all while supporting a research environment that embraces curiosity and self-motivation. I have you to thank for my tremendous growth throughout my time in your lab, and I will certainly retain the lessons you have taught me throughout life and my career.
+
+    Second, my lab-mates: Fraga, Julian, Patrick, Jon, Sam, Joe, Andressa, and (our friendly neighbor) Islam. 
+    You have always been open and generous in providing technical advice and thoughts. Our discussions have both shaped my perspective and heightened my curiosity.
+    Fraga, I thank you immensely for joining us at the hackathon, and for your patient explanations of various radiation phenomena. Patrick, your guiding questions and feedback have helped immensely on the side of detonation.
+
+    I sincerely thank Drs. Andrey Prokopenko, Wenjun Ge, and Damien Lebrun-Grandié for your technical expertise and for kindly implementing many new features into ArborX to enable the research in this thesis. Your guidance has provided an invaluable contribution to my knowledge of computational science.
+
+    I am also grateful to my thesis committee, Prof. Baki Cetegen and Prof. Alexei Poludnenko. I appreciate your being amenable with your time and for your advice. Prof. Poludnenko, I have greatly appreciated our conversations and your expertise during our collaborations.
+
+    Lastly, to my siblings, Chris, Jess, and Dave, and my parents Mom and Papa. You have provided the environment to make this thesis possible. I owe you a great deal of gratitude.
+
   }
 
 % The text of your dedication

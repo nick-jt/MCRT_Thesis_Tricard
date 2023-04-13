@@ -5,10 +5,10 @@
 The term \textit{radiative heat transfer} commonly refers to the transfer of thermal energy through electromagnetic waves~\cite{Modest2022ChapterRadiation}.
 % Thermal radiation is the transfer of thermal energy through electromagnetic waves, according to electromagnetic wave theory, and by particulate photons, according to quantum mechanics~\cite{Modest2013RadiativeTransfer}. 
 % Either perspective may be more convenient for a given circumstance, but both perspectives are required for a complete definition \cite{Modest2013RadiativeTransfer}. 
-This transfer occurs at the speed of light, which is $2.998 \times 10^8$ meters per second in a vacuum, a speed much higher than what is seen in most combustion processes on earth.
-The effects of thermal radiation can be seen in everyday life. Common examples include the sun, a campfire, and a hot pavement. 
+This transfer occurs at the speed of light, which is $2.998 \times 10^8$ meters per second in a vacuum. This results in timescales much faster than the flow and chemical timescales within a combustion system.
+The effects of thermal radiation can be seen in everyday life. Common examples include the sun, a campfire, and hot pavement. 
 Wavelengths range from picometers ($10^{-12}$ m) for gamma rays to megameters ($10^6$ m) for ultra-low frequency radio waves.
-For combustion systems, relevant wavelengths generally fall between 1 and 15 $\mu{}$m ($10^{-6}$ m), in the infrared and visible light parts of the electromagnetic spectrum~\cite{Liu2020TheFlames}.
+For thermal radiation in combustion systems, relevant wavelengths generally fall between 1 and 15 $\mu{}$m ($10^{-6}$ m), in the infrared part of the electromagnetic spectrum~\cite{Liu2020TheFlames}.
 
 Transport of thermal radiation is known to have a non-local nature. Radiation emitted at one point in space can impact the energy and temperature at another point very far away. 
 This is in contrast to conductive and convective modes of heat transfer where thermal energy is transferred through direct contact (local phenomena). 
@@ -19,10 +19,10 @@ Readers can refer to \cite{Howell2010ThermalTransfer,Modest2013RadiativeTransfer
 \subsection{Basic laws of radiation}\label{section:BasicLaws}
 
 \subsubsection{The idealized `Black body'}
-The term \textit{black body} refers to a theoretical object that can absorb all incident radiation. The term \textit{black} is used because a body that absorbs perfectly does not reflect any light and must therefore appear to be black. In addition, according to arguments posed by Kirchhoff~\cite{Bergman2017FundamentalsTransfer}, black bodies are also ideal emitters.
-Black bodies are commonly employed as the perfect emitter and absorbers in radiation calculations in the literature.
+The term \textit{black body} refers to a theoretical object that can absorb all incident radiation. The term \textit{black} is used because a body that absorbs perfectly does not reflect any light and therefore appears to be black. In addition, according to arguments posed by Kirchhoff~\cite{Modest2013RadiativeTransfer}, black bodies are also ideal emitters.
+This idealized nature results in black bodies often appearing in radiation literature.
 
-The emission spectrum of a black body was derived by Max Planck, and is shown in Eq.~\ref{eq:PlancksLaw},
+The emission spectrum of a black body was derived by Max Planck, and is shown in Eq.~\ref{eq:PlancksLaw}, as
 \begin{equation}
     E_{bv}(T,\nu{}) = \frac{2\pi{}\hbar\nu{}^3n^2}{c_0^2\left[e^\frac{\hbar\nu{}}{kT}-1\right]}\ ,
     \label{eq:PlancksLaw}
@@ -39,27 +39,26 @@ where $c$ is the speed of light in the medium. When Eq.~\ref{eq:PlancksLaw} is i
 \end{equation}
 where emissive power has dimensions of [ power / area on surface ]. 
 
-A more fundamental quantity of radiation is the radiative intensity, $I$, which has dependence on direction and wavelength. Intensity defines the emission in dimensions of [ power / area / unit solid angle / wavelength ]. %where the area is now the unit area normal to the direction of interest as opposed to the unit area on the surface as it is for emissive power. 
+A more fundamental quantity of radiation is the radiative intensity $I$ which has a dependence on direction and wavelength. Intensity defines the emission in dimensions of [ power / area / unit solid angle ]. %where the area is now the unit area normal to the direction of interest as opposed to the unit area on the surface as it is for emissive power. 
 A ``solid angle'' is a description of a differential area along the unit sphere, similar to an angle on the unit circle.
 % While radians are used as angular units of a unit circle, sterradians are used for angular units along the unit sphere. 
 
-For a black body, intensity has no directional dependence (i.e. is \textit{diffuse}). Black body emissive power can be evaluated from intensity by integrating over the hemispherical solid angle of emission from a surface, as 
+For a black body, the intensity has no directional dependence (i.e. is \textit{diffuse}). Black body emissive power can be evaluated from intensity by integrating over the hemispherical solid angle of emission from a surface, as 
 \begin{equation}
     E_b(\textbf{r},T) = \int_{2\pi}{I_b(\textbf{r},\hat{\textbf{s}},T)}~d\Omega{}\ ,
     \label{eq:EmissivePowerFromIntensity}
 \end{equation}
-where the variable of integration, $\Omega{}$, is the solid angle, $\hat{\textbf{s}}$ is direction, and $\textbf{r}$ is the point of interest. The solution of the integration requires accounting for the change in perspective of the unit area on the surface at different angles, and results in
+where the variable of integration, $\Omega{}$, is the solid angle, $\hat{\textbf{s}}$ is direction, and $\textbf{r}$ is the point of interest. The solution of the integration requires accounting for the change in perspective of the unit area on the surface at different angles and results in
 \begin{equation}
-    I_b(T) = \frac{E_b(T)}{\pi}\ ,
+    I_b(T) = \frac{E_b(T)}{\pi}\ .
     \label{eq:Intensity}
 \end{equation}
-where the subscript $b$ denotes blackbody. 
 
 \subsubsection{Kirchhoff's Law} \label{sec:KirchoffsLaw}
-Kirchhoff's law proves that a black-body is both an ideal emitter and absorber and can be described through a simple thought experiment, as follows. Two systems are constructed consisting of an enclosure of black-body surfaces surrounding an object. The object in the first system is a black-body, and the object in the second system is a non-ideal absorber. Both systems are thermally insulated to the surroundings. 
+Kirchhoff's law proves that a black body is both an ideal emitter and absorber and can be described through a simple thought experiment, as follows. Two systems are constructed consisting of an enclosure of black-body surfaces surrounding an object. The object in the first system is a black body, and the object in the second system is a non-ideal absorber. Both systems are thermally insulated from the surroundings. 
 According to the second law of thermodynamics, after a long period of time, the temperatures in both systems will independently equalize to constant values. This implies that the energy emitted and absorbed by the object and the surroundings in each system should be the same.
-Kirchhoff postulated that since a black body is a better absorber than the gray body, the second law requires it to be a better emitter. Therefore, because a black-body is the most ideal absorber, it must also be the most ideal emitter of radiation, as this argument applies for any variation of non-ideal absorber.
-Further continuation of this argument reveals that the ratio of emission of any object to that of a black body must also equal the ratio of the absorption of that object to that of a black body, and that this argument applies for emission at any wavelength $\eta$ (inverse of $\lambda$) and any direction $\theta$ for in-going or out-going electromagnetic rays. Kirchhoff therefore established the equality of spectral, directional emissivity $\epsilon_{\eta{}\theta{}}$ and spectral, directional absorptivity $\alpha{}_{\eta,\theta}$ at thermal equilibrium, as shown in Eq.~\ref{eq:KirchhoffsLaw},
+Kirchhoff postulated that since a black body is a better absorber than the gray body, the second law requires it to also be a better emitter. And because the listed `gray body' can be any non-ideal absorber, then a black body is the most ideal emitter.
+Further continuation of this argument reveals that the ratio of emission of any object to that of a black body must also equal the ratio of the absorption of that object to that of a black body and that this argument applies to emission at any wavelength $\eta$ (inverse of $\lambda$) and any direction $\theta$ for in-going or out-going electromagnetic rays. Kirchhoff therefore established the equality of spectral, directional emissivity $\epsilon_{\eta{}\theta{}}$ and spectral, directional absorptivity $\alpha{}_{\eta,\theta}$ at thermal equilibrium, as shown in Eq.~\ref{eq:KirchhoffsLaw},
 \begin{equation}
     \epsilon{}_{\eta{}\theta{}}=\alpha{}_{\eta{}\theta{}}\ .
     \label{eq:KirchhoffsLaw}
@@ -67,7 +66,7 @@ Further continuation of this argument reveals that the ratio of emission of any 
 
 \subsection{Spectral effects}\label{Sec:Nongray}
 % Unlike a black body, gases emit radiation in a discontinuous manner.
-The black body spectrum discussed in section~\ref{section:BasicLaws} can approximate the emission spectrum from the surface of many solid materials, but is discouraged for use with gas emission. 
+The black body spectrum discussed in section~\ref{section:BasicLaws} can approximate the emission spectrum from the surface of many solid materials but is discouraged for use with gas emission. 
 Most solid structures have a multitude of modes of oscillations, from the crystal-lattice structure down to the molecular energy states~\cite{Viskanta1975HeatSolids}. As a result, the emission spectra of solids are often continuous and can be approximated as a constant fraction of the black body emission spectrum (i.e. gray)~\cite{Howell2010ThermalTransfer}. 
 However, gases are restricted to the oscillation modes of the natural energy states of the individual molecules in the mixture. Quantum mechanics postulates that the energy states of molecules are discrete, and therefore the change in energy states and resulting emission spectra are also discrete~\cite{Hanson2016SpectroscopyGases}.
 \begin{figure}
@@ -79,14 +78,14 @@ However, gases are restricted to the oscillation modes of the natural energy sta
 
 
 The largest molecular contributors to emission in most hydrocarbon flames are CO$_2$, CO, H$_2$O, and soot. Figure~\ref{fig:SpectralLines} shows the absorption coefficient spectrum of CO$_2$~\cite{Liu2020TheFlames}. 
-\textit{Ab initio} modeling and experimental data are nowadays used to obtain approximations for the emission spectra of a molecule at a specified pressure and temperature~\cite{Hanson2016SpectroscopyGases}. This information has been collected into a series of online databases such as HITEMP~\cite{Rothman2010HITEMPDatabase}, which are used to predict absorption coefficients for given gaseous thermodynamic states and wavelengths.
+\textit{Ab initio} modeling and experimental data are used to obtain approximations for the emission spectra of a molecule at a specified pressure and temperature~\cite{Hanson2016SpectroscopyGases}. This information has been collected into a series of online databases such as HITEMP~\cite{Rothman2010HITEMPDatabase}, which are used to predict absorption coefficients for given gaseous thermodynamic states at different ray wavelengths.
 
 Radiation from soot can make the emission spectra of flames much more continuous.
 Soot particles are generated through the agglomeration of unburnt hydrocarbons~\cite{Mueller2013LargeCombustor}. The resulting particulates contribute much to the visual yellow glow seen in flames, ergo sooting flames are known as \textit{luminous}. 
 Soot particles have sizes of only tens of microns, and volume fractions of order $10^{-4}$\% to $10^{-6}$\%, but often contribute the majority of radiation from a flame when present~\cite{Modest2016RadiativeSystems}.
 
 \subsection{Thermal radiation in participating media} \label{section:RTE}
-For combustion systems, thermal radiation interacts with the medium as well as the walls. The governing equation to describe radiation in an absorbing-emitting medium is the radiative transfer equation (RTE), as in Eq.~\ref{eq:RTE2},
+The interaction of gases with thermal radiation is more complex than the interaction of surfaces with radiation. The governing equation to describe radiation in an absorbing-emitting medium is the radiative transfer equation (RTE),
 \begin{equation}
     \frac{dI_\eta{}}{ds} = \hat{\textbf{s}} \cdot \nabla{I_\eta{}} = \kappa{}_\eta{}I_{b\eta{}}-\kappa{}_\eta{}I_\eta{}-\sigma{}_{s\eta{}}I_\eta{}+\frac{\sigma{}_{s\eta{}}}{4\pi}\int_{4\pi{}}{I_\eta{}(\hat{\textbf{s}})\Phi_\eta{}(\hat{\textbf{s}}_i,\hat{\textbf{s}})}\,d\Omega{}_i \ ,
     \label{eq:RTE2}
@@ -172,7 +171,7 @@ The definition can be reformulated into
 \end{equation}
 The first term considers the flow residence time; larger volumes and slower velocities result in a longer period for radiation to have its effect.
 The second term is inverse of the characteristic radiation cooling time. 
-The third term is the flame transparency. This term quantifies the degree of re-absorption in the fame. A high degree of re-absorption will have a lower flame transparency. Overall, the radiant fraction is a useful metric to measure radiant loss in flames relative to the chemical energy conversion rate.
+The third term is the flame transparency. This term quantifies the degree of re-absorption in the flame. A high degree of re-absorption will have a lower flame transparency. Overall, the radiant fraction is a useful metric to measure radiant loss in flames relative to the chemical energy conversion rate.
 
 \subsubsection{Other parameters}
 It should be noted that additional parameters may be used to estimate the importance of other effects, such as radiative pressure and radiative energy density.
@@ -198,7 +197,7 @@ The net radiation source term at a point may be determined by integrating across
 \begin{equation}
     \nabla \cdot \dot{\textbf{q}}_\eta{} = 4\pi\kappa{}_\eta{}I_{b\eta{}}-\beta{}_{\eta{}}\int_{4\pi}I_\eta{}\,d\Omega+\sigma{}_{s\eta{}}\int_{4\pi}I_\eta{}(\hat{\textbf{s}})\,d\Omega \ ,
 \end{equation}
-where $\int_{4\pi}\hat{\textbf{s}}_\eta{} \cdot \nabla{I_\eta{}}\,d\Omega$ is replaced with $\nabla \cdot \int_{4\pi}I_\eta{}\hat{\textbf{s}}\,d\Omega$ knowing that spacial and directional coordinates are independent of one another.
+where $\int_{4\pi}\hat{\textbf{s}}_\eta{} \cdot \nabla{I_\eta{}}\,d\Omega$ is replaced with $\nabla \cdot \int_{4\pi}I_\eta{}\hat{\textbf{s}}\,d\Omega$ knowing that spatial and directional coordinates are independent of one another.
 Additionally, $\int_{4\pi}I_\eta{}\hat{\textbf{s}}\,d\Omega$ is equivalent to $\dot{\textbf{q}}_\eta{}$ and the definition of the scattering phase function $\Phi$ has been applied to replace $\frac{1}{4\pi}\int_{4\pi{}}{\Phi_\eta{}(\hat{\textbf{s}}_i,\hat{\textbf{s}})}\,d\Omega{}_i$ with $1$.
 Applying the definition of extinction coefficient, $\beta_\eta=\kappa_\eta+\sigma_{s\eta}$ then allows for simplification of the overall equation to
 \begin{equation}
@@ -231,37 +230,37 @@ The intensity traveling at a point within a sphere can be described as
     \label{eq:emitting_sphere}
 \end{equation}
 Where $\tau{}_R$ is the radius weighted by absorption coefficient and $\theta{}$ is the exit angle (angle between the exit direction and the negative norm of the sphere's surface).
-Then, the radiative heat flux at a point along the surface of the sphere can be evaluated by integration over all incident angles and wavenumbers.
+Then, the radiative heat flux at a point along the surface of the sphere can be evaluated by integration over all incident angles and wavenumbers, as
 \begin{equation}
-    \textbf{q}=\int_0^\infty{}\int_0^{2\pi}\int_0^{\pi{}}I_\eta{}(\tau{}_R,\theta)\cos{\theta}\sin{\theta}~d\theta{}~d\psi{}~d\eta{}
+    \textbf{q}=\int_0^\infty{}\int_0^{2\pi}\int_0^{\pi{}}I_\eta{}(\tau{}_R,\theta)\cos{\theta}\sin{\theta}~d\theta{}~d\psi{}~d\eta{}~,
     \label{eq:heatflux}
 \end{equation}
 \begin{equation}
-    \textbf{q}=\int_0^\infty{}\int_0^{2\pi}\int_0^{\pi{}}I_{b\eta{}}\left(1-e^{-2\tau{}_R\cos{\theta}}\right)\cos{\theta}\sin{\theta}~d\theta{}~d\psi{}~d\eta{}
+    \textbf{q}=\int_0^\infty{}\int_0^{2\pi}\int_0^{\pi{}}I_{b\eta{}}\left(1-e^{-2\tau{}_R\cos{\theta}}\right)\cos{\theta}\sin{\theta}~d\theta{}~d\psi{}~d\eta{}~\text{, and}
     \label{eq:heatflux}
 \end{equation}
 \begin{equation}
-    \textbf{q}=n^2\sigma{}T^4\left\{1-\frac{1}{2\tau{}_R^2}\left[1-(1+2\tau{}_R)e^{-2\tau{}_R}\right]\right\}
+    \textbf{q}=n^2\sigma{}T^4\left\{1-\frac{1}{2\tau{}_R^2}\left[1-(1+2\tau{}_R)e^{-2\tau{}_R}\right]\right\}~.
     \label{eq:heatflux}
 \end{equation}
 Under the conditions of an optically-thin sphere, radiative re-absorption can be ignored, and the equation can be simplified to
 \begin{equation}
-    \textbf{q}=n^2\sigma{}T^4\frac{4}{3}\tau{}_R.
+    \textbf{q}=n^2\sigma{}T^4\frac{4}{3}\tau{}_R~,
     \label{eq:heatflux}
 \end{equation}
-Where the heat flux can be integrated across the surface area of the sphere to produce the net energy divergence from the optically thin sphere.
+where the heat flux can be integrated across the surface area of the sphere to produce the net energy divergence from the optically thin sphere, as
 \begin{equation}
-    Q_{emi}=4\kappa{}n^2\sigma{}T^4V
+    Q_{emi}=4\kappa{}n^2\sigma{}T^4V~.
     \label{eq:RadEmis}
 \end{equation}
 This equation is equivalent to~\ref{eq:EmissionFromVolume} and can equally be used to evaluate the emission from an uniform, optically thin volume of arbitrary shape.
 
 \subsubsection{Radiation in a plane-parallel medium}
-An analytical solution to the RTE can also be obtained for a one-dimensional radiatively participating medium surrounded by walls, as shown in Fig.~\ref{fig:PlaneParallel}. Following~\citet{Modest2022ChapterMedia}, the derivation is as follows.
+An analytical solution to the RTE can also be obtained for a one-dimensional radiatively participating medium surrounded by walls, as shown in Fig.~\ref{fig:PlaneParallel}.
 \begin{figure}
 \centering
 \includegraphics[width=0.5\linewidth]{figures/ch2/PlaneParallelVisualization.png}
-\caption{Plane parallel medium. Reflective walls are marked in gray, cold-black walls are marked in blue. }
+\caption{Graphic of a plane parallel medium and a ray being traced. }
 \label{fig:PlaneParallel}
 \end{figure}
 
@@ -272,27 +271,26 @@ The modified RTE, Eq.~\ref{eq:RTErewritten}, is repeated below for convenience a
 \end{equation}
 where $d\tau_\eta$ has been substituted for $\beta_\eta{}ds$, as discussed in section~\ref{section:RTE}. An integration factor $e^{-\tau_\eta}$ may be multiplied through as  
 \begin{equation}
-    e^{-\tau_\eta}\frac{dI_\eta{}}{d\tau{}_\eta} + e^{\tau_\eta}I_\eta= S(-\tau_\eta,\hat{\textbf{s}})e^{-\tau_\eta} ~,
+    e^{\tau_\eta}\frac{dI_\eta{}}{d\tau{}_\eta} + e^{\tau_\eta}I_\eta= S(\tau_\eta,\hat{\textbf{s}})e^{\tau_\eta} ~,
 \end{equation}
 \begin{equation}
-    \frac{dI_\eta{}e^{-\tau_\eta}}{d\tau{}_\eta} = S(\tau_\eta,\hat{\textbf{s}})e^{-\tau_\eta} \ .
+    \frac{dI_\eta{}e^{\tau_\eta}}{d\tau{}_\eta} = S(\tau_\eta,\hat{\textbf{s}})e^{\tau_\eta} \ .
 \end{equation}
 After integration, this becomes,
 \begin{equation}
     I_\eta{}(\tau_\eta) = I_\eta{}(0)e^{-\tau_\eta} + \int_0^{\tau_\eta}{S(\tau_\eta',\hat{\textbf{s}})e^{-(\tau_\eta-\tau_\eta')}}d\tau_\eta' ~.
     \label{eq:RTEintegrated}
 \end{equation}
-The source term $S(\tau_\eta',\hat{\textbf{s}})$, is defined in Eq.~\ref{eq:RTE_S},
+The source term $S(\tau_\eta',\hat{\textbf{s}})$ is defined in Eq.~\ref{eq:RTE_S},
 \begin{equation}
     S(\tau_\eta',\hat{\textbf{s}}) = (1-\omega{}_\eta{})I_{b\eta{}}+\frac{\omega{}_\eta{}}{4\pi}\int_{4\pi{}}{I_\eta{}(\hat{\textbf{s}})\Phi_\eta{}(\hat{\textbf{s}}_i,\hat{\textbf{s}})}\,d\Omega{}_i ~,
     \label{eq:RTE_S}
 \end{equation}
 where $\omega_\eta$ is the single-scatter albedo, $\omega_\eta=\sigma_\eta/(\sigma_\eta+\kappa_\eta)$. The first and second components of the source term describe the emission of radiation along $\hat{\textbf{s}}$ and the in-scattering of radiation into direction $\hat{\textbf{s}}$. Within a plane-parallel medium, properties only vary along the axis normal to the walls. Therefore, the coordinate $\tau{}_\eta{}$ may be transformed to a wall-perpendicular coordinate as $\tau{}_{p\eta{}}=\tau{}_\eta{}\cos{\theta}$, where $\theta$ is the angle between the ray direction and the perpendicular axis. Extending this transformation to Eq.~\ref{eq:RTEintegrated} results in
 \begin{equation}
-    I^+_\eta{}(\tau_{p\eta},\theta) = I_{1\eta{}}e^{-\tau_{p\eta}/\cos{\theta}} + \int_0^{\tau_{p\eta}}{S(\tau_{p\eta}',\theta)e^{-(\tau_{p\eta}-\tau_{p\eta}')/\cos{\theta}}}\frac{d\tau_{p\eta}}{\cos{\theta}}' \ ,
+    I^+_\eta{}(\tau_{p\eta},\theta) = I_{1\eta{}}e^{-\tau_{p\eta}/\cos{\theta}} + \int_0^{\tau_{p\eta}}{S(\tau_{p\eta}',\theta)e^{-(\tau_{p\eta}-\tau_{p\eta}')/\cos{\theta}}}\frac{d\tau_{p\eta}}{\cos{\theta}}' \ \text{ , and}
     \label{eq:RTEplus}
 \end{equation}
-and
 \begin{equation}
     I^-_\eta{}(\tau_{p\eta},\theta) = I_{2\eta{}}e^{-(\tau_{Lp\theta}-\tau_{p\eta})/\cos{\theta}} + 
     \int_{\tau_{Lp\eta}}^{\tau_{p\eta}}{S(\tau_{p\eta}',\theta)e^{(\tau_{p\eta}-\tau_{p\eta}')/\cos{\theta}}}\frac{d\tau_{p\eta}}{\cos{\theta}}' \ .
@@ -300,7 +298,7 @@ and
 \end{equation}
 $I^+_\eta$ and $I^-_\eta$ are spectral intensities propagating in the positive and negative $\tau_{p}$ directions, respectively. Also, $I_{1\eta}$ and $I_{2\eta}$ are the emitted intensities from walls 1 and 2 at $\tau_{p\eta}=0$ and $\tau_{p\eta}=\tau_{Lp\eta}$, respectively. The split of Eq.~\ref{eq:RTEintegrated} into Eqs.~\ref{eq:RTEplus} and \ref{eq:RTEminus} is convenient by allowing the emission from each boundary to be individually accounted for. As a whole, Eq.~\ref{eq:RTEplus} represents the emission of radiative intensity from below the point of interest $\tau_{p\eta}$ (including the boundary at $\tau_{p\eta}=0$ with intensity $I_2{\eta}$) up to the point of interest, and Eq.~\ref{eq:RTEminus} represents the same but for above the point of interest.
 
-With the solution for spectral radiative intensity obtained, the overall divergence of heat flux can also be evaluated by completely solving Eq.~\ref{eq:DivHeatFlux2}. The first term in Eq.~\ref{eq:DivHeatFlux2} can be calculated using the provided parameters for $\kappa_\eta$ and $I_{b\eta}$. The second term, which represents the absorption coefficient times \textit{irradiance} $G_\eta$ may be calculated as
+With the solution for spectral radiative intensity obtained, the overall divergence of heat flux can also be evaluated by completely solving Eq.~\ref{eq:DivHeatFlux2}. The first term in Eq.~\ref{eq:DivHeatFlux2} can be calculated using the provided parameters for $\kappa_\eta$ and $I_{b\eta}$. The second term, which represents the absorption coefficient times irradiance $G_\eta$ may be calculated as
 \begin{equation}
     \centering
     G_\eta{}(\tau{}_{p\eta})=\int_{4\pi}I_\eta \, d\Omega{}
@@ -356,21 +354,23 @@ The speed of light in a vacuum may be much higher than even the fastest processe
 A \textit{frozen-field analysis} is one approach used in many thermal radiation models. In frozen-field analysis, a single time-step of a Computational Fluid Dynamics (CFD) simulation is extracted, and a solution for the RTE is evaluated using a radiation model. 
 This approach is convenient and less computationally expensive for testing a radiation solver because a full solution of radiation at every timestep from initial conditions is not required.
 
-\section{Influences of radiation}
+\section{Influences of radiation in combustion}
 % The redistribution of thermal energy facilitated by radiation may effect a combustion system in a number of ways.
 % combustion systems from both a physical and modeling perspective. A variety of these influences will be discussed in this section. 
 
 % First, the direct influences on fluid-dynamics are presented, followed by influences specific to turbulent flows, to the enclosing walls or surrounding objects, and to the chemical propagation and product mixture compositions.
 
 \subsection{Coupling to fluid dynamics}
-There exists a strong coupling between radiation and fluid dynamics within many combustion systems. Redistribution of thermal energy results in changes to local thermodynamic states. This may lead to, for example, density changes that result in buoyant fluid motion. Furthermore, changes in fluid motion from external influences like wind may result in stymied combustion, which can lead to decreases in radiative emission~\cite{Hu2017AChallenges}.
+There exists a strong coupling between radiation and fluid dynamics within many combustion systems. Redistribution of thermal energy results in changes to local thermodynamic states. This may lead to, for example, density changes that result in buoyant fluid motion. Furthermore, changes in fluid motion from the environment like wind may result in stymied combustion, which can lead to decreases in radiative emission~\cite{Hu2017AChallenges}.
 
 A key area of study in radiating flames are wild-land fires. The large length scales and high degrees of emissive power from fires result in a significant, non-negligible influence of radiation within the flame and to the surroundings~\cite{Drysdale2011AnDynamics}. If surrounding objects are flammable, then radiation can ignite new flames at a distance resulting in increased fire spread and damage~\cite{Valendik2008EffectEnvironment}. Extensive research has been conducted in determining the exact contribution of radiation in these flames~\cite{Sacadura2005RadiativeScience} in order develop preventative methods to inhibit flame radiation such as water droplets~\cite{Wu2018RadiationStudy}. 
-Recent technological advances have seen improvements in modeling and diagnostic methods, resulting in more informed computational and experimental findings, but many fundamental questions on the contributions of radiation to the flame and fluid dynamics remain to be answered~\cite{Finney2013OnSpread}. Broadly speaking, it is known the coupling of radiation to momentum fields largely take place over long length and time scales~\cite{Tieszen2001ONFIRES}. Turbulent puffing motions and toroidal vortices resulting from buoyant and baroclinic forces~\cite{Cetegen1993ExperimentsFires} may result in changes in soot production~\cite{Chen2023PoolAdvances}. Soot is often a primary radiator from many hydrocarbon flames, amounting to 25 to 35\% energy escaping~\cite{Tieszen2001ONFIRES}. However, high concentrations of soot surrounding a large flame may also block radiation to the surroundings~\cite{Hamins1995CharacteristicsBurning}. Evidence largely supports that larger fires have more significant contribution of radiation~\cite{Chen2023PoolAdvances}. However, \citet{Hiroshi1988AirFires} experimentally tested flames ranging from $0.3$ and $6$ meters in diameter and determined the soot radiation blocking effect appeared in sizes $2$ meters and above.
+Recent technological advances have seen improvements in modeling and diagnostic methods, resulting in more informed computational and experimental findings, but many fundamental questions on the contributions of radiation to the flame and fluid dynamics remain to be answered~\cite{Finney2013OnSpread}. 
+Broadly speaking, it is known the coupling of radiation to momentum fields largely take place over long length and time scales~\cite{Tieszen2001ONFIRES}. Turbulent puffing motions and toroidal vortices resulting from buoyant and baroclinic forces~\cite{Cetegen1993ExperimentsFires} may result in changes in soot production~\cite{Chen2023PoolAdvances}. Soot is often a primary radiator from many hydrocarbon flames, amounting to 25 to 35\% energy escaping~\cite{Tieszen2001ONFIRES}. However, high concentrations of soot surrounding a large flame may also block radiation to the surroundings~\cite{Hamins1995CharacteristicsBurning}. Evidence largely supports that larger fires have more significant contribution of radiation~\cite{Chen2023PoolAdvances}. However, \citet{Hiroshi1988AirFires} experimentally tested flames ranging from $0.3$ and $6$ meters in diameter and determined the soot radiation blocking effect appeared in sizes $2$ meters and above.
 
 
-Pool-fires are the most common type of fire scenario that occurs in chemical process industries~\cite{Miao2014AccidentDike} and are also a common surrogate used to experimentally and computationally model many other kinds of real fires~\cite{Chen2023PoolAdvances}. A pool fire is a canonical configuration where a liquid pool of fuel is vaporized, ignited, and reacts with surrounding oxidizer. Much research has been conducted using this configuration to determine the influence of turbulent fluid motion, wind, and flow structures on radiative heat flux and vice versa~\cite{Chen2023PoolAdvances}.
+Pool-fires are also a common fire scenario that occurs in chemical process industries~\cite{Miao2014AccidentDike} and can be used as a surrogate to for many other kinds of real fires~\cite{Chen2023PoolAdvances}. A pool fire is a canonical configuration where a liquid pool of fuel is vaporized, ignited, and reacts with surrounding oxidizer. Much research has been conducted using this configuration to determine the influence of turbulent fluid motion, wind, and flow structures on radiative heat flux and vice versa~\cite{Chen2023PoolAdvances}.
 For example,~\citet{Hu2017AChallenges} discussed the influences of flame tilt to the view-angle of a flame to a boundary. When a powerful gust of wind tilts the flame, less of the flame is visible to an adjacent object, resulting in reduced radiation. This effect results in a decrease of the incident heat flux, and therefore vaporization rate, of the pool, and can therefore limit the fuel supply and have a concomitant influence on all characteristics of the flame.
+
 
 In general, radiation is a `dissapative process'. As a result, redistribution of thermal energy may lead to a reduction in local turbulence intensity~\cite{Modest2016RadiativeSystems}. \citet{Li2002InvestigationMethod.} studied the influence of radiation in scaled flames and determined increasing radiation resulted in considerable decreases in temperature fluctuation. \citet{Wang2008MonteFlames} calculated radiation reductions of 5\% in their artificially scaled Sandia D flames. \citet{Consalvi2012InfluenceFires} presented reductions approaching 10\% in simulations with radiation compared to those without. In all, the exact influences of radiation on turbulence are masked due to computational expense and lack of adequate turbulence/radiation interaction (TRI) modeling to accounting for the non-linear influence of unresolved turbulent fluctuations in LES and RANS simulations~\cite{Modest2016RadiativeSystems}.
 
@@ -403,20 +403,20 @@ These extreme conditions pose a risk of harmful wear and damage to the combustio
 As a result, an understanding of the influence of all modes of heat transfer along the boundaries has seen increased importance.
 
 \citet{Lefebvre1984FlameChambers} provided an early review on radiation in gas-turbine chambers. Radiative emission is known to contribute significantly to wall heat flux, in particular for high pressure and highly luminous flames. Also, the challenge of predicting radiative emission and absorption rates while accounting for soot formation, non-gray modeling, and other variables were described. \citet{Claus1981SpectralCombustor} conducted an experimental study of radiation from a Pratt \& Whitney JT8D tubular can combustor and found that soot contributed 70–80\% of radiative emission in the primary zone, 50-70\% in the intermediate zone, and 35–50\% in the dilution zone.
-\citet{Berger2016OnLoads} conducted time-accurate simulations of a helicopter engine combustor to compare the influences of conjugate convection and radiation on the system boundaries. They applied the Discrete Ordinates Method (DOM), a relatively low-cost radiation model with high accuracy, combined with a statistical narrow-band non-gray model accounting for CO$_2$, CO, and H$_2$O, and a large-eddy simulation with the thickened-flame approach for chemistry modeling. Their results showed convection and radiation contributed similar orders of magnitude to wall heat fluxes, with radiation primarily contributing heat to the colder-wall regions and reducing flame temperatures. Radiative energy was shown to contribute a neglegible difference to the thermodynamics of the flame, contributing two orders of magnitude less energy than the chemical heat release. Finally, good agreement was obtained to experimental results. 
+\citet{Berger2016OnLoads} conducted transient simulations of a helicopter engine combustor to compare the influences of conjugate convection and radiation on the system boundaries. They applied the Discrete Ordinates Method (DOM), a relatively low-cost radiation model with high accuracy, combined with a statistical narrow-band non-gray model accounting for CO$_2$, CO, and H$_2$O, and a large-eddy simulation with the thickened-flame approach for chemistry modeling. Their results showed convection and radiation contributed similar orders of magnitude to wall heat fluxes, with radiation primarily contributing heat to the colder-wall regions and reducing flame temperatures. Radiative energy was shown to contribute a neglegible difference to the thermodynamics of the flame, contributing two orders of magnitude less energy than the chemical heat release. Finally, good agreement was obtained to experimental results. 
 \citet{Paul2006RadiativeCombustor} applied the DOM to a CFD simulation of the Rolls Royce Tay gas turbine geometry. Soot and non-gray absorption were neglected. Emission was shown to maximize in regions where temperature is maximized. However, the authors noted the contribution of soot may effect these results.
 \citet{Gamil2020AssessmentChamber} compared the contribution of radiation in a Rolls-Royce RB-183 turbofan engine combustor using the DOM and the P-1 approximation, another radiation model. The influences of soot and non-gray absorption were again neglected.
 The combustor geometry follows a Rich-Quenched-Lean (RQL) design, where a high temperature, non-premixed flame is followed by a high degree of mixing with dilution gases, which is followed by a premixed fuel-lean reaction to the aft section of the combustor.
 Apparently, radiation resulted in a 10\% higher temperature in the liner near the fuel-rich zone, and a 15\% reduction of temperature after the dilution zone.
-In total, radiation was shown to reduce peak flame temperatures by 200K compared to with no radiation for their time-accurate simulation.
+In total, radiation was shown to reduce peak flame temperatures by 200K compared to with no radiation for their transient simulation.
 The P-1 model was shown to over-exaggerate the effect of radiation compared to the more accurate DOM.
-\citet{Ghose2016PredictionLevels} conducted similar time-accurate simulations of a mock gas-turbine combustor using the DOM radiation method with a weighted-sum of gray gases non-gray model and an empirical correlation for soot. They observed that radiation exhibited significant control over the incident heat flux to the injector and combustor walls, and soot played a significant role in emission. They also observed a strong dependence of radiation on the geometry: where increasing injector swirl resulted in an axially tightened flame with lower peak radiative heat flux to the walls.
+\citet{Ghose2016PredictionLevels} conducted similar transient simulations of a mock gas-turbine combustor using the DOM radiation method with a weighted-sum of gray gases non-gray model and an empirical correlation for soot. They observed that radiation exhibited significant control over the incident heat flux to the injector and combustor walls, and soot played a significant role in emission. They also observed a strong dependence of radiation on the geometry: where increasing injector swirl resulted in an axially tightened flame with lower peak radiative heat flux to the walls.
 
 
 
-Radiation has also been shown to contribute significantly in rocket engines. Between 5\% and 30\% of the overall heat flux at the walls can be attributed to emission from the medium \cite{Johnson2021AnalysisMethod,Sutton2001RocketElements,Naraghi2005ModelingEngines,Pizzarelli2021OverviewChambers}. \citet{Leccese2018ConvectiveChambers} evaluated the influence of radiation and convection using a RANS CFD model with gray-gas radiation. 
+Radiation has also been shown to contribute significantly in rocket engines. Between 5\% and 30\% of the overall heat flux at the walls can be attributed to emission from the medium \cite{Sutton2001RocketElements,Naraghi2005ModelingEngines,Pizzarelli2021OverviewChambers}. \citet{Leccese2018ConvectiveChambers} evaluated the influence of radiation and convection using a RANS CFD model with gray-gas radiation. 
 They observed radiation contributions totaling to 15\% and 11\% for liquid methane/liquid oxygen and liquid hydrogen/liquid oxygen, respectively.
-\citet{Leccese2019NumericalChambers} later studied the influences of radiation in a Space Shuttle Main Engine (SSME) in a time-accurate simulation, but with no radiative contribution to the energy equation.
+\citet{Leccese2019NumericalChambers} later studied the influences of radiation in a Space Shuttle Main Engine (SSME) in a transient simulation, but with no radiative contribution to the energy equation.
 They observed peak wall-incident radiative heat flux follows where peak temperatures occur, within the combustion chamber rather than the throat or nozzle. They also developed a resource to gather predictions of wall heat transfer coefficients and fractional contributions of radiation as a function of chamber pressure and diameter for both liquid methane/liquid oxygen and liquid hydrogen/liquid oxygen.
 Radiative contribution was shown to increase with a decrease in pressure and an increase in chamber diameter.
 
@@ -425,9 +425,9 @@ Additional studies have shown that radiation plays a very significant role in th
 
 \subsubsection{Thermal Barrier Coatings}
 In many systems, the high temperatures associated with combustion may exceed the melting points of the materials of the outer casing~\cite{Flamant2019OpportunitiesCoatings}. This can potentially be a limiting factor to consider during the design of these systems, such as in a gas-turbine combustor.
-A Thermal Barrier Coating (TBC) is a protective ceramic coating often applied to the interior walls of combustion systems to manage the heat loads to the outer surfaces. 
+A Thermal Barrier Coating (TBC) is a protective material often applied to the interior walls of combustion systems to manage the heat loads to the outer surfaces. 
 TBCs are usually constructed from a specialized Zirconia ceramic, which has the capability to resist heat
-better than most materials~\cite{Miller1997ThermalDirections}. Specifically, Yttria-stabilized zirconia (YSZ) provides adequate performance for modern TBCs~\cite{Padture2002ThermalApplications,Padture2016AdvancedPropulsion}. At high temperatures, these materials become transparent to most thermal radiation, and the resulting heat transfer analysis becomes more complex~\cite{Howell2010ThermalTransfer, Siegel1998AnalysisCoatings} because radiative heat transfer plays a more significant role within the mechanism. The
+better than most materials~\cite{Miller1997ThermalDirections}. Specifically, Yttria-stabilized zirconia (YSZ) provides adequate performance for modern TBCs~\cite{Padture2002ThermalApplications,Padture2016AdvancedPropulsion}. At high temperatures, these materials become more transparent to thermal radiation, and the resulting heat transfer analysis becomes more complex~\cite{Howell2010ThermalTransfer, Siegel1998AnalysisCoatings}. The
 introduction of gas-filled pores also induces ray scattering, which has been shown to reduce metal temperatures~\cite{Boissonnet2019EvolutionTemperature,Spuckler1996Two-FluxLayers}, but further complicates the understanding of the system.
 
 Analysis between the flame, TBC, metal, and cooling impingement flow includes all three forms of heat
@@ -451,9 +451,9 @@ Results where comparable to Siegel's method, and three dimensional influences we
 The physics of combustion processes are often highly dependent on the accompanying chemical reaction network.
 The multitude of reactions that proceed during the conversion from the reactant molecules to the product species in combination with changes to the existing macroscopic thermodynamic properties results in a complex modeling procedure.
 For one, radiation has been shown to influence the temperature of a system. Temperature has a high degree of control on the chemical reaction rates of combustion.
-This presents an additional, indirect, influence of radiation on the chemical process, one that requires coupled modeling of thermal, fluid, and chemical processes within a combustion simulation for an adequate analysis.
+This presents an additional, indirect influence of radiation on the hydrodynamic process, one that requires coupled modeling of thermal, fluid, and chemical processes within a combustion simulation for an adequate analysis.
 
-\subsubsection{Extinction and Flame Speed}
+\subsubsection{Flammability}
 Characterizing the extinction limits of a flame is a useful measure for many applications. Radiation has been a known contributor the lean flammability limits of many flames~\cite{Ju2000AsymptoticFlames,Liu2020TheFlames}.
 Many one-dimensional simulations and experiments have been performed for the purpose of investigating this phenomenon.
 \citet{Lakshmisha1991OnChemistry} simulated one-dimensional CH$_4$/air flames with the OTA radiation model near lean flammability limits. They demonstrated that radiant heat loss is the primary cause of flame extinction when the lean flammability limit is approached.
@@ -467,9 +467,9 @@ And because temperature and chemistry are coupled, radiation also influences the
 \citet{Medwell2011TheRadiation} experimentally measured the influence of radiation in a laminar ethylene flame irradiated by a CO$_2$ laser. High incident radiation was shown to increase peak soot volume fraction by $250$\%, suggesting there exists a strong correlation of soot production with radiation.
 \citet{Ihme2008ModelingFormulation} demonstrated the influence of radiation on NO$_x$ production by including an additional dimension to the flamelet progress variable approach for chemistry tabulation.
 They applied the optically thin assumption (OTA) to simulations of the Sandia D. flame and the Pratt \& Whitney PW6000 combustor.
-For both cases, production of nitric oxide was reduced by more than $60$\% compared to simulations without radiation included as a result of the lower peak temperatures. \citet{Ren2017MonteChamber} calculated the change in NOx output resulting from radiative emission within a gas-turbine combustion chamber. They determined that radiation modeled with line-by-line Monte-Carlo enhanced re-absorption in the flame and enhanced NOx emissions by almost $20$\% compared to combustors modeled without radiation.
-\citet{Wu2021LimitationsFires} later highlighted the importance of including radiative absorption in these simulations using a budget analysis of relative contributions of various physics on temperature. 
-They used mixture fraction ($Z$), a quantity to quantify the mixing between fuel ($Z=1$) and oxidizer ($Z=0$), to demonstrate the range of contributions of emission and absorption.
-It was shown that radiative emission is very high near the stoichiometric mixture fraction, but decreases quickly around the fuel-rich and fuel-lean sides of the flame. Radiative absorption, in contrast, retains its magnitude across the mixture fraction range.
-Additionally, to reduce the computational intensity of joint combustion-radiation calculations, they developed a cylindrical flamelet model to pre-tabulate the contribution of radiation to the pool-fire simulation with promising results.
+For both cases, production of nitric oxide was reduced by more than $60$\% compared to simulations without radiation included as a result of the lower peak temperatures. \citet{Ren2017MonteChamber} calculated the change in NO$_x$ output resulting from radiative emission within a gas-turbine combustion chamber. They determined that radiation modeled with line-by-line Monte Carlo enhanced re-absorption in the flame and enhanced NOx emissions by almost $20$\% compared to combustors modeled without radiation.
+% \citet{Wu2021LimitationsFires} later highlighted the importance of including radiative absorption in these simulations using a budget analysis of relative contributions of various physics on temperature. 
+% They used mixture fraction ($Z$), a quantity to quantify the mixing between fuel ($Z=1$) and oxidizer ($Z=0$), to demonstrate the range of contributions of emission and absorption.
+% It was shown that radiative emission is very high near the stoichiometric mixture fraction, but decreases quickly around the fuel-rich and fuel-lean sides of the flame. Radiative absorption, in contrast, retains its magnitude across the mixture fraction range.
+% Additionally, to reduce the computational intensity of joint combustion-radiation calculations, they developed a cylindrical flamelet model to pre-tabulate the contribution of radiation to the pool-fire simulation with promising results.
 
