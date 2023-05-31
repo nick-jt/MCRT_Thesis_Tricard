@@ -511,7 +511,7 @@ The inner sums can be made independent of all preceding MPI ranks by splitting t
 \begin{equation}
     \begin{aligned}
     I_\eta{}(\textbf{r}_i,-\hat{s}_i)& = 
-    \epsilon{}_\eta{}(r_w)I_{b\eta{}}(r_w)\exp{\left(-\sum_{m}^{e_1\rightarrow{}e_{N+1}}\tau{}_{\eta{},m}~\right)}\\
+    \epsilon{}_\eta{}(r_w)I_{b\eta{}}(r_w)\exp{\left(-\sum_{m}^{e_1\rightarrow{}e_{N}}\tau{}_{\eta{},m}-\sum_{m}^{e_N\rightarrow{}e_{N+1}}\tau{}_{\eta{},m}~\right)}\\
     &+\sum_{n}^{N}\sum_{m}^{e_n\rightarrow{}e_{n+1}}\left\{ I_{b\eta}(T_m)\left[ \exp{\left(-\sum_{p}^{e_1\rightarrow{}e_n}\tau{}_{\eta{},p}-\sum_{p}^{e_n\rightarrow{}m}\tau{}_{\eta,p}\right)}\right.{} \right.{} \\
     &\quad \left.{}\left.{} -\exp{\left(-\sum_{p}^{e_1\rightarrow{}e_n}\tau{}_{\eta{},p}-\sum_{p}^{e_n\rightarrow{}m+1}\tau{}_{\eta{},p}\right)} \vphantom{\frac12}\right] \vphantom{\frac12}\right\}~\text{, and}
     \end{aligned}
@@ -519,7 +519,8 @@ The inner sums can be made independent of all preceding MPI ranks by splitting t
 \begin{equation}
     \begin{aligned}
     I_\eta{}(\textbf{r}_i,-\hat{s}_i)& = 
-    \epsilon{}_\eta{}(r_w)I_{b\eta{}}(r_w)\exp{\left(-\sum_{m}^{e_1\rightarrow{}e_{N+1}}\tau{}_{\eta{},m}~\right)}\\
+    \epsilon{}_\eta{}(r_w)I_{b\eta{}}(r_w)\exp{\left(-
+\sum_{m}^{e_1\rightarrow{}e_{N}}\tau{}_{\eta{},m}~\right)}\exp{\left(-\sum_{m}^{e_N\rightarrow{}e_{N+1}}\tau{}_{\eta{},m}~\right)}\\
     &+\sum_{n}^{N}\exp\left(-\sum_{p}^{e_1\rightarrow{}e_n}\tau{}_{\eta{},p}\right)\sum_{m}^{e_n\rightarrow{}e_{n+1}}\left\{ I_{b\eta}(T_m)\left[ \exp{\left(-\sum_{p}^{e_n\rightarrow{}m}\tau{}_{\eta,p}\right)}\right.{} \right.{} \\
     &\quad \left.{}\left.{} -\exp{\left(-\sum_{p}^{e_n\rightarrow{}m+1}\tau{}_{\eta{},p}\right)} \vphantom{\frac12}\right] \vphantom{\frac12}\right\}~,
     \end{aligned}
@@ -528,13 +529,13 @@ where $\exp\left(-\sum_{p}^{e_1\rightarrow{}e_n}\tau{}_{\eta{},p}\right)$ has be
 \begin{equation}
     \begin{aligned}
     I_\eta{}(\textbf{r}_i,-\hat{s}_i)& = 
-    I_{bndry}+\sum_{n}^{N}I_{cont,n}\exp\left(-\sum_l^{n-1}\tau{}_{\eta{},l}\right)~.
+    I_{bndry}\exp\left(-\sum_l^{N}\tau{}_{\eta{},l}\right)+\sum_{n}^{N}I_{cont,n}\exp\left(-\sum_l^{n-1}\tau{}_{\eta{},l}\right)~.
     \end{aligned}
     \label{eq:NewRMCRTintensity}
 \end{equation}
 $I_{bndry}$, $\tau{}_{\eta{},l}$, and $I_{cont,n}$ are the intensity contribution from the boundary, the optical distance traversed through rank $l$, and the intensity contribution from rank $n$ without consideration of the decay of that contribution before reaching the absorbing cell, respectively. These three terms are defined as:
 \begin{equation}
-    I_{bndry}=\epsilon{}_\eta{}(r_w)I_{b\eta{}}(r_w)\exp{\left(-\sum_{m}^{e_1\rightarrow{}e_{N+1}}\tau{}_{\eta{},m}~\right)}~,
+    I_{bndry}=\epsilon{}_\eta{}(r_w)I_{b\eta{}}(r_w)\exp{\left(-\sum_{m}^{e_N\rightarrow{}e_{N+1}}\tau{}_{\eta{},m}~\right)}~,
     \label{eq:Ibndry}
 \end{equation}
 \begin{equation}
